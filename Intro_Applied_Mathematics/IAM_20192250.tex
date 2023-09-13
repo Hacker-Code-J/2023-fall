@@ -1,0 +1,426 @@
+\documentclass[12pt,openany]{book}
+
+\usepackage{amsmath,amsthm,amsfonts,amscd} % Packages for mathematics
+
+% Colors
+\usepackage[dvipsnames]{xcolor}
+\definecolor{titleblue}{RGB}{0,53,128}
+\definecolor{chaptergray}{RGB}{140,140,140}
+\definecolor{sectiongray}{RGB}{180,180,180}
+
+\definecolor{thmcolor}{RGB}{231, 76, 60}
+\definecolor{defcolor}{RGB}{52, 152, 219}
+\definecolor{lemcolor}{RGB}{155, 89, 182}
+\definecolor{corcolor}{RGB}{46, 204, 113}
+\definecolor{procolor}{RGB}{241, 196, 15}
+
+% Fonts
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{newpxtext,newpxmath}
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\color{titleblue}\mdseries}
+
+% Page layout
+\usepackage{geometry}
+\geometry{a4paper,left=1.325in,right=1in,top=1in,bottom=1in,heightrounded}
+\usepackage{fancyhdr}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[LO]{\nouppercase{\rightmark}}
+\fancyhead[RE]{\nouppercase{\leftmark}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Chapter formatting
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+{\normalfont\sffamily\Huge\bfseries\color{titleblue}}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titleformat{\section}
+{\normalfont\sffamily\Large\bfseries\color{titleblue!100!gray}}{\thesection}{1em}{}
+\titleformat{\subsection}
+{\normalfont\sffamily\large\bfseries\color{titleblue!75!gray}}{\thesubsection}{1em}{}
+
+% Table of contents formatting
+\usepackage{tocloft}
+\renewcommand{\cftchapfont}{\sffamily\color{titleblue}\bfseries}
+\renewcommand{\cftsecfont}{\sffamily\color{chaptergray}}
+\renewcommand{\cftsubsecfont}{\sffamily\color{sectiongray}}
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+
+% Hyperlinks
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=titleblue,
+	filecolor=black,      
+	urlcolor=titleblue,
+}
+
+%Listing
+\usepackage{listings} %Code
+\renewcommand{\lstlistingname}{Code}%
+
+\definecolor{sagegreen}{rgb}{0.0,0.6,0.4}
+\definecolor{sagepurple}{rgb}{0.6,0.0,0.4}
+\definecolor{sageblue}{rgb}{0.0,0.4,0.6}
+\definecolor{sageorange}{rgb}{1.0,0.4,0.0}
+\definecolor{sagegray}{rgb}{0.4,0.4,0.4}
+
+\lstdefinestyle{sage}{
+	language=Python,
+	backgroundcolor=\color{white},
+	basicstyle=\small\ttfamily\color{black}, 
+	basicstyle=\footnotesize\ttfamily\color{black},
+	keywordstyle=\color{blue!60!black},
+	commentstyle=\color{green!60!black},
+	stringstyle=\color{purple!60!black},
+	showstringspaces=false,
+	breaklines=true,
+	tabsize=4,
+	morekeywords={True, False, None},
+	frame=leftline, % Remove the border
+	framesep=3pt,
+	frameround=tttt,
+	framexleftmargin=3pt,
+	numbers=left,
+	numberstyle=\small\color{gray},
+	xleftmargin=15pt, % Increase the left margin
+	xrightmargin=5pt,
+	captionpos=b,
+	belowskip=0pt,
+	aboveskip=4pt
+}
+
+%Ceiling and Floor Function
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+
+%Algorithm
+\usepackage[ruled,linesnumbered]{algorithm2e}
+\usepackage{setspace}
+\usepackage{algpseudocode}
+\SetKwComment{Comment}{/* }{ */}
+\SetKw{Break}{break}
+\SetKw{Downto}{downto}
+\SetKwProg{Fn}{Function}{:}{end}
+\SetKwFunction{KeyGen}{KeyGen}
+
+
+%---------------------------My Preamble
+\usepackage{marvosym} %Lightning
+\usepackage{booktabs}
+\usepackage{multicol}
+\setlength{\columnsep}{2cm}
+\setlength{\columnseprule}{1.25pt}
+\usepackage{enumerate}
+\usepackage{soul}
+\newcommand{\mathcolorbox}[2]{\colorbox{#1}{$\displaystyle #2$}}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows, arrows.meta, positioning, shapes.multipart}
+\usepackage{pgfplots}
+
+%Tcolorbox
+\usepackage[most]{tcolorbox}
+\tcbset{colback=white, arc=5pt}
+%\tcbset{enhanced, colback=white,colframe=black,fonttitle=\bfseries,arc=4mm,boxrule=1pt,shadow={2mm}{-1mm}{0mm}{black!50}}
+%White box with black text and shadow
+%\begin{tcolorbox}[colback=white,colframe=black,fonttitle=\bfseries,title=Black Shadow Box,arc=4mm,boxrule=1pt,shadow={2mm}{-1mm}{0mm}{black!50}]
+%	This is a white box with black text and a subtle shadow. The shadow adds some depth and dimension to the box without overpowering the design.
+%\end{tcolorbox}
+
+%Theorem
+\newtheorem{axiom}{Axiom}[chapter]
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{remark}{Remark}[chapter]
+\newtheorem{exercise}{Exercise}[chapter]
+\newtheorem{example}{Example}[chapter]
+\newtheorem*{note}{Note}
+
+%New Command
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+
+\newcommand{\ie}{\textnormal{i.e.}}
+\newcommand{\eg}{\textnormal{e.g.}}
+
+\newcommand{\of}[1]{\left( #1 \right)} 
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+
+\newcommand{\nbhd}{\mathcal{N}}
+\newcommand{\Id}{\operatorname{\textnormal{id}}}
+
+\newcommand{\Caratheodroy}{Carath\'{e}odory}
+
+% Begin document
+\begin{document}
+	
+	% Title page
+	\begin{titlepage}
+		\begin{center}
+			{\Huge\textsf{\textbf{Introduction to Applied Mathematics}}\par}
+			\vspace{0.5in}
+			{\Large Ji Yong-Hyeon\par}
+			\vspace{1in}
+			\includegraphics[scale=1.75]{iam2.jpg}\par
+			\vspace{1in}
+			{\bf Department of Information Security, Cryptology, and Mathematics\par}
+			{College of Science and Technology\par}
+			{Kookmin University\par}
+			%\includegraphics[width=1.5in]{school_logo.jpg}\par
+			\vspace{.25in}
+			{\large \today\par}
+		\end{center}
+	\end{titlepage}
+	
+	% Table of contents
+	\tableofcontents
+	
+	% Chapters
+	\mainmatter
+	
+	\chapter{Differentiation}
+	\section{Derivative and \Caratheodroy's Theorem}
+	\begin{tcolorbox}[colback=white,colframe=defcolor,arc=5pt,title={\color{white}\bf Derivative}]
+		\begin{definition}
+			Let $f:I\to\R$ and $a\in I$. We say that $L\in\R$ is the \textbf{derivative of} $f$ at $a$ if \[
+			\forall\epsilon>0:\exists\delta>0:x\in\nbhd_\delta^*(a)\cap I\implies\abs{\frac{f(x)-f(a)}{x-a}-L}<\epsilon.
+			\]
+		\end{definition}
+	\end{tcolorbox}
+	\begin{remark}
+		We say that $f$ is \textbf{differentiable} at $a$, and we write $L=f'(a)$. In other words, $\displaystyle f'(a)=\lim\limits_{x\to a} \frac{f(x)-f(a)}{x-a}$.
+	\end{remark}
+	\vspace{8pt}
+	\begin{tcolorbox}[colback=white,colframe=procolor,arc=5pt,title={\color{white}\bf }]
+		\begin{proposition}
+			If $f:I\to\R$ has a derivative at $a\in I$ then $f$ is continuous at $a$. That is, \[
+			\exists f'(a)\implies f(a)=\lim\limits_{x\to a}f(x).
+			\]
+		\end{proposition}
+	\end{tcolorbox}
+	\begin{proof}
+		Let $\exists f'(a)$. Then \begin{align*}
+			\lim\limits_{x\to a} [f(x)-f(a)]&=\lim\limits_{x\to a}\left[\frac{f(x)-f(a)}{x-a}\cdot (x-a)\right]\quad\because x\in\nbhd_\delta^*(a)\Rightarrow x\neq a\\
+			&=\lim\limits_{x\to a}\frac{f(x)-f(a)}{x-a}\lim\limits_{x\to a}(x-a)\\
+			&=f'(a)\cdot 0=0.
+		\end{align*}
+	\end{proof}
+	\vspace{4pt}
+	\begin{remark}
+		The continuity of $f:I\to\R$ at point does not assure the existence of the derivative at that point, \eg, $f(x):=\abs{x}$ for $x\in\R$.
+	\end{remark}
+	
+	\begin{tcolorbox}[colback=white,colframe=thmcolor,arc=5pt,title={\color{white}\bf $\star$ \Caratheodroy's Theorem $\star$}]
+		\begin{theorem}
+			Let $f$ be defined on an interval $I$ containing the point $a$. Then \[
+			\exists f'(a)\iff\exists\varphi\in\R^I\quad\textnormal{such that}\quad
+			\begin{cases}
+				\textnormal{$\varphi$ is continuous on $I$}&\cdots\textnormal{(1)}\\
+				\\
+				f(x)-f(a)=\varphi(x)(x-a)&\cdots\textnormal{(2)}
+			\end{cases}
+			\] In this case, we have $\varphi(a)=f'(a)$.
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		\begin{itemize}
+			\item[($\Rightarrow$)] Assume that $\exists f'(a)$. Define a function $\varphi:I\to\R$ as following \[
+			\varphi(x)=\begin{cases}
+				\displaystyle\frac{f(x)-f(a)}{x-a} &:x\neq a\\
+				\\
+				f'(a) &:x=a.
+			\end{cases}
+			\] Then \begin{enumerate}[(i)]
+				\item $\phi$ is continuous on $I$, \ie, for all $a\in I$, $$\lim\limits_{x\to a}\varphi(x)=\lim\limits_{x\to a}\frac{f(x)-f(a)}{x-a}=f'(a)=\varphi(a).$$
+				\item \[
+				\begin{cases}
+					f(x)-f(a)=\varphi(x)(x-a) &: x\neq a\\
+					0=\varphi(x)\cdot 0 &: x=a.
+				\end{cases}
+				\]
+			\end{enumerate}
+			\item[($\Leftarrow$)] Let $x\neq a$ and $x\to a$. The continuity of $\varphi$ gives that \[
+			\exists\phi(a)=\lim\limits_{x\to a}\varphi(x)=\lim\limits_{x\to a}\frac{\varphi(x)(x-a)}{(x-a)}=\lim\limits_{x\to a}\frac{f(x)-f(a)}{x-a}=f'(a).
+			\] That is, $f$ is differentiable at $a$ and $f'(a)=\varphi(a)$.
+		\end{itemize}
+	\end{proof}
+	\vspace{4pt}
+	\begin{example}
+		Let us consider the function $f$ defined by $f(x):=x^3$ for $x\in\R$. For any $a\in\R$, we see from the factorization \[
+		f(x)-f(a)=x^3-a^3=(x^2+ax+a^2)(x-a)
+		\] that $\varphi(x):=x^2+ax+a^2$ satisfies the condition of \Caratheodroy's Theorem. Therefore, we conclude that $f$ is differentiable at $a\in\R$ and that $f'(a)=\varphi(a)=3a^2$.
+	\end{example}
+	
+	\newpage
+	\begin{tcolorbox}[colback=white,colframe=thmcolor,arc=5pt,title={\color{white}\bf Chain Rule}]
+		\begin{theorem}
+			Let $I,J$ be intervals in $\R$, let $g:J\to\R$ and $f:I\to\R$ be functions such that $f[I]\subseteq J$, and let $a\in I$. Then \[
+			\exists f'(a)\exists g'(f(a))\implies\exists(g\circ f)'(a)
+			\] and $(g\circ f)'(a)=g'(f(a))f'(a)$.
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		We must show that there exists a continuous function $\varphi(x)$ s.t. \[
+		g(f(x))-g(f(a))=\varphi(x)(x-a).
+		\]
+		\begin{enumerate}[(1)]
+			\item Since $\exists f'(a)$, by \Caratheodroy's Theorem, $\exists\sigma:I\to\R$ s.t. \begin{enumerate}[(i)]
+				\item $\sigma$ is continuous at $a\in I$;
+				\item $f(x)-f(a)=\sigma(x)(x-a)$;
+				\item $f'(a)=\sigma(a)$.
+			\end{enumerate}
+			\item Since $\exists g'(f(a))$, by \Caratheodroy's Theorem, $\exists\tau:J\to\R$ s.t. \begin{enumerate}[(i)]
+				\item $\tau$ is continuous at $f(a)\in J$;
+				\item $g(f(x))-g(f(a))=\tau(f(x))(f(x)-f(a))$;
+				\item $g'(f(a))=\tau(f(a))$.
+			\end{enumerate}
+		\end{enumerate} Then \begin{align*}
+			g(f(x))-g(f(a))&=\tau(f(x))(f(x)-f(a))\quad\text{by (2)-(ii)}\\
+			&=\tau(f(x))\sigma(x)(x-a)\quad\text{by (1)-(ii)}.
+		\end{align*} Let $\varphi(x):=\tau(f(x))\sigma(x)$. Then \begin{enumerate}[(i)]
+			\item $\phi:I\to\R$ is continuous at $a$ and
+			\item $g(f(x))-g(f(a))=\varphi(x)(x-a)$,
+		\end{enumerate} and so, by \Caratheodroy's Theorem, \[
+		\exists(g\circ f)'(a)=\varphi(a)=\tau(f(a))\cdot \sigma(a)=g'(f(a))\cdot f'(a).
+		\]
+	\end{proof}
+	\vspace{4pt}
+	\begin{remark}
+		If $f$ is a differentiable function, then the chain rule implies that the function $g\circ f=\abs{f}$ is also differentiable at all points $x$ where $f(x)\neq 0$, and its derivative is given by \[
+		\abs{f(x)}'(x)=\mathsf{sgn}(f(x))\cdot f'(x)=\begin{cases}
+			f'(x) &:f(x)>0,\\
+			-f'(x) &:f(x)<0.
+		\end{cases}
+		\]
+	\end{remark}
+	\vspace{4pt}
+	\begin{remark}\it
+		A function $f$ that is differentiable at every point of $\R$ \textbf{need not} have a continuous derivative $f'$.
+	\end{remark}
+	
+	\newpage
+	\begin{tcolorbox}[colback=white,colframe=thmcolor,arc=5pt,title={\color{white}\bf Differentiablility of The Inverse Function}]
+		\begin{theorem}
+			Let $f:I\to\R$ be strictly monotone and continuous on $I$. Let $J:=f[I]$ and $g:J\to\R$ be the strictly monotone and continuous function inverse to $f$. Then \[
+			\exists f'(a)\neq 0\implies\exists g'(f(a))=\frac{1}{f'(a)}.
+			\]
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		Since $\exists f'(a)$, by \Caratheodroy's Theorem, $\exists\sigma:I\to\R$ s.t. \begin{enumerate}[(i)]
+			\item $\sigma$ is continuous at $a\in I$;
+			\item $f(x)-f(a)=\sigma(x)(x-a)$;
+			\item $f'(a)=\sigma(a)\neq 0$.
+		\end{enumerate} Since $\sigma(a)\neq 0$, $\exists\delta>0$ s.t. $\sigma(x)\neq0$, $x\in\nbhd_\delta(a)\cap I$.
+		Let $\Omega:=f[\nbhd_\delta(a)\cap I]$. Since $g=f^{-1}$, we have \begin{align*}
+			f(\textcolor{red}{x})-f(\textcolor{blue}{a})&=f(\textcolor{red}{(g\circ f)(x)})-f(\textcolor{blue}{(g\circ f)(a)})\quad\because f\circ g=\Id\\
+			&=\sigma(\textcolor{red}{(g\circ f)(x)})(\textcolor{red}{(g\circ f)(x)}-\textcolor{blue}{(g\circ f)(a)})\quad\text{by (ii)}.
+		\end{align*} Since $f(x)\in\Omega\Rightarrow\sigma(x)\neq 0\Rightarrow \sigma((g\circ f)(x))\neq 0$, \[
+		g(f(x))-g(f(a))=\frac{1}{\sigma((g\circ f)(x))}(f(x)-f(a)).
+		\] Let $\varphi(x):=1/\sigma((g\circ f)(x))$. Then $\varphi$ is continuous at $f(a)$. By \Caratheodroy's Theorem, \[
+		g'(f(a))=\varphi(a)=\frac{1}{\sigma((g\circ f)(a))}=\frac{1}{\sigma(a)}=\frac{1}{f'(a)}.
+		\]
+	\end{proof}
+	
+	\newpage
+	\section{Mean Value Theorem}
+	\begin{tcolorbox}[colback=white,colframe=defcolor,arc=5pt,title={\color{white}\bf }]
+		\begin{definition}
+			Let $f:I\to\R$ be a function.
+			\begin{itemize}
+				\item $f$ has an \textbf{absolute maximum} at $a\in I$ if $x\in I\implies f(x)\leq f(a)$.
+				\item $f$ has an \textbf{absolute minimum} at $a\in I$ if $x\in I\implies f(a)\leq f(x)$.
+				\item $f$ is said to have a \textbf{local (or relative) maximum} at $a\in I$ if \[
+				\exists\nbhd_\delta(a):f(x)\leq f(a),\ x\in\nbhd_\delta(a)\cap I.
+				\]
+				\item $f$ is said to have a \textbf{local (or relative) minimum} at $a\in I$ if \[
+				\exists\nbhd_\delta(a):f(a)\leq f(x),\ x\in\nbhd_\delta(a)\cap I.
+				\]
+				\item $f$ has a \textbf{local (or relative extremum)} at $a\in I$ either a relative maximum or a relative minimum at $a$.
+			\end{itemize}
+		\end{definition}
+	\end{tcolorbox}
+	\vspace{8pt}
+	\begin{tcolorbox}[colback=white,colframe=thmcolor,arc=5pt,title={\color{white}\bf Interior Extremum Theorem}]
+		\begin{theorem}
+		Let $c$ be an interior pint of the interval $I=(a,b)$ at which $f:I\to\R$ has a relative extremum. Then \[
+		\exists f'(c)\implies f'(c)=0.
+		\]
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		Let $f$ has a local maximum at $c$, \ie, \[
+		\exists\nbhd_\delta(a): x\in\nbhd_\delta(a)\cap I\implies f(x)\leq f(a).
+		\] Assume that $f'(c)>0$. Then, for $x\in\nbhd_\delta(c)\cap I$, \[
+		\exists\nbhd_\delta(c):\frac{f(x)-f(c)}{x-c}>0.
+		\] For $x>c$, we have \[
+		f(x)-f(c)=(x-c)\cdot\frac{f(x)-f(c)}{x-c}>0.
+		\] Similarly if $f'(c)<0$ then we have a contradiction. Hence $f'(c)=0$.
+	\end{proof}
+	\vspace{4pt}
+	\begin{tcolorbox}[colback=white,colframe=corcolor,arc=5pt,title={\color{white}\bf }]
+		\begin{corollary}
+			Let $f:(a,b)\to\R$ be continuous on $(a, b)$ and suppose that $f$ has a relative
+			extremum at an interior point $c\in(a, b)$. Then either \[
+			\nexists f'(c)\quad\text{or}\quad f'(c)=0.
+			\]
+		\end{corollary}
+	\end{tcolorbox}
+	\vspace{8pt}
+	
+	\begin{tcolorbox}[colback=white,colframe=thmcolor,arc=5pt,title={\color{white}\bf $\star$ Rolle's Theorem}]
+		\begin{theorem}
+			Let $f$ is continuous on $I = [a, b]$, and let $f$ is differentiable on $(a,b)$. Then \[
+			f(a)=f(b)\implies\exists c\in(a,b):f'(c)=0.
+			\]
+		\end{theorem}
+	\end{tcolorbox}
+	\vspace{8pt}
+	\begin{tcolorbox}[colback=white,colframe=thmcolor,arc=5pt,title={\color{white}\bf $\star$ Mean Value Theorem of Differential Calculus $\star$}]
+		\begin{theorem}
+			Let $f$ is continuous on $I = [a, b]$, and let $f$ is differentiable on $(a,b)$. Then \[
+			\exists c\in(a,b):f(a)-f(b)=f'(c)(b-a).
+			\]
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		content...
+	\end{proof}
+	\begin{remark}
+		The geometric view of the mean value theorem is that there is some pint on the curve $y=f(x)$ at which the tangent line is parallel to the line segment through the point $(a,f(a))$ and $(b,f(b))$.
+	\end{remark}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	% End document
+\end{document}
