@@ -141,6 +141,7 @@
 
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[chapter]
+\newtheorem{construction}{Construction}[chapter]
 \newtheorem{remark}{Remark}[chapter]
 \newtheorem{exercise}{Exercise}[chapter]
 \newtheorem{example}{Example}[chapter]
@@ -185,7 +186,11 @@
 \newcommand{\true}{\texttt{true}}
 \newcommand{\false}{\texttt{false}}
 \newcommand{\randomness}{\$}
+\newcommand{\uniform}{\xleftarrow{\randomness}}
 \newcommand{\binaryfield}{\set{\zero,\one}}
+
+\newcommand{\ctxt}{\texttt{CTXT}}
+\newcommand{\eavesdrop}{\texttt{Eavesdrop}}
 
 % Begin document
 \begin{document}
@@ -222,12 +227,72 @@
 		\( \randomness \) & Randomeness \\
 	\end{tabular}
 	
-	\chapter*{One-Time Pad \& Kerckhoff's Principle}
-	\addcontentsline{toc}{chapter}{One-Time Pad \& Kerckhoff's Principle}
+	\chapter{One-Time Pad \& Kerckhoff's Principle}
+	
+	\begin{tcolorbox}[colback=white,colframe=gray,arc=5pt,title={\color{white}\bf }]
+		\textbf{Kerchkhoffs' Principle:}
+		\begin{quote}
+			Design your system to be secure even if the attacker has complete knowledge of all its algorithms.
+		\end{quote}
+	\end{tcolorbox}
+	\vspace{8pt}
+	\begin{tcolorbox}[colback=white,colframe=defcolor,arc=5pt,title={\color{white}\bf One-time Pad (OTP)}]
+		\begin{construction}
+			The specific \(\KeyGen,\Enc\), and \(\Dec\) algorithms for \textbf{one-time pad} are given below: \begin{center}
+				\begin{tabular}{|lll|}
+					\hline
+					$\underline{\KeyGen:}$ & \(\underline{\Enc(k,m\in\binaryfield^\lambda):}\) & \(\underline{\Dec(k,c\in\binaryfield^\lambda):}\)\\
+					\tab$k\uniform\binaryfield^\lambda$ & \tab return \(k\xor m\) & \tab return \(k\xor c\)\\
+					\tab return $k$ &&\\
+					\hline
+				\end{tabular}\\
+			\end{center}
+		\end{construction}
+	\end{tcolorbox}
+	\vspace{8pt}
+	\begin{tcolorbox}[colback=white,colframe=procolor,arc=5pt,title={\color{white}\bf Corectness of OTP}]
+		\begin{proposition}
+			\[
+			(\forall k,m\in\binaryfield^\lambda)\quad\Dec(k,\Enc(k,m))=m.
+			\]
+		\end{proposition}
+	\end{tcolorbox}
+	\begin{proof}
+		Let \(k,m\in\binaryfield^\lambda\) then \begin{align*}
+			\Dec(k,\Enc(k,m))=\Dec(k,k\xor m)&=k\xor(k\xor m)\\
+			&=(k\xor k)\xor m\\
+			&=\zero^\lambda\xor m\\
+			&=m.
+		\end{align*}
+	\end{proof}
+
+	\newpage
+	\begin{remark}[\eavesdrop\ Algorithm]
+		From Eve’s perspective, seeing a ciphertext corresponds to receiving
+		an output from the following algorithm: \\ \begin{center}
+		\begin{tabular}{|l|}
+			\hline
+			\(\underline{\eavesdrop(m\in\binaryfield^\lambda)}\)\\
+			\tab\(k\uniform\binaryfield^\lambda\)\\
+			\tab\(c:=k\xor m\)\\
+			\tab return \(c\)\\
+			\hline
+		\end{tabular}
+		\end{center}
+	\end{remark}
+
+	\begin{tcolorbox}[colback=white,colframe=thmcolor,arc=5pt,title={\color{white}\bf }]
+		\begin{theorem}
+			Let \(m\in\binaryfield^\lambda\). The distribution \(\eavesdrop(m)\) is the \textbf{uniform distribution} on \(\binaryfield^\lambda\). In other words, \[
+			m,m'\in\binaryfield^\lambda\implies\textnormal{dist}(\eavesdrop(m))\sim\textnormal{dist}(\eavesdrop(m')).
+			\]
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		content...
+	\end{proof}
 	
 	\chapter{The Basics of Provable Security}
-	
-	We introduce to many schemes whose security we can prove in a very specific sense. The code-makers can win against the code-breakers.
 	
 	\section{How to Write a Security Definition}
 	\subsection{Syntax and Correctness}
@@ -235,12 +300,19 @@
 	\begin{tcolorbox}[colback=white,colframe=defcolor,arc=5pt,title={\color{white}\bf Encryption Syntax}]
 		\begin{definition}
 			A \textbf{symmetric-key encryption (SKE) scheme} consists of the following algorithms: \begin{itemize}
-				\item $\KeyGen:\binaryfield^*\to\keyspace$
+				\item $\KeyGen$ outputs a key $k=\KeyGen(1^\lambda)\in\keyspace$
 				\item $\Enc:\keyspace\times\messagespace\to\ciphertextspace$
 				\item $\Dec:\keyspace\times\ciphertextspace\to\messagespace$
-			\end{itemize} We call $\keyspace$ the \textbf{key space}, $\messagespace$ the \textbf{message space}, $\ciphertextspace$ the \textbf{ciphertext space}, and $\binaryfield^*$ the \textbf{random space} of the scheme.
+			\end{itemize} We call $\keyspace$ the \textbf{key space}, $\messagespace$ the \textbf{message space}, and $\ciphertextspace$ the \textbf{ciphertext space} of the scheme.
 		\end{definition}
 	\end{tcolorbox}
+	\begin{remark}
+		Note that \begin{itemize}
+			\item \(\KeyGen\) is a randomized algorithm\footnote{An algorithm that makes use of random numbers.}.
+			\item \(\Enc\) is a (possibly randomized) algorithm\footnote{It could operate deterministically or non-deterministically depending on specific conditions or parameters.}.
+			\item \(\Dec\) is a deterministic algorithm\footnote{An algorithm that does produces the same output for the same input, every time it's run.}.
+		\end{itemize}
+	\end{remark}
 	\begin{remark}
 		We refer to the entire scheme by a single variable $\scheme$, \ie, $$
 		\scheme=(\KeyGen, \Enc, \Dec).
