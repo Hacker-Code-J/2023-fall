@@ -1,5 +1,4 @@
 \documentclass[12pt,openany]{book}
-
 \usepackage{amsmath,amsthm,amsfonts,amscd} % Packages for mathematics
 
 % Colors
@@ -155,6 +154,10 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\C}{\mathbb{C}}
 \newcommand{\F}{\mathbb{F}}
+\newcommand{\G}{\mathbb{G}}
+
+\newcommand{\img}{\operatorname{\textnormal{Img}}}
+\newcommand{\id}{\operatorname{\textnormal{Id}}}
 
 \newcommand{\inv}[1]{#1^{-1}}
 
@@ -164,6 +167,8 @@
 \newcommand{\of}[1]{\left( #1 \right)} 
 \newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
 \newcommand{\norm}[1]{\left\| #1 \right\|}
+
+\newcommand{\sol}{\textcolor{magenta}{\bf Sol}}
 
 \newcommand{\KeyGen}{\mathsf{KeyGen}}
 \newcommand{\Enc}{\mathsf{Enc}}
@@ -191,6 +196,10 @@
 
 \newcommand{\ctxt}{\texttt{CTXT}}
 \newcommand{\eavesdrop}{\texttt{Eavesdrop}}
+
+\newcommand{\ots}{\mathsf{ots}}
+\newcommand{\sL}{\mathsf{L}}
+\newcommand{\sR}{\mathsf{R}}
 
 % Begin document
 \begin{document}
@@ -225,6 +234,7 @@
 		\( \zero^\lambda, \one^\lambda\) & \(\underbrace{\zero\zero\cdots\zero}_{\lambda\ \text{times}}, \underbrace{\one\one\cdots\one}_{\lambda\ \text{times}}\) : \(\lambda\)-bit zero/one sequence \\
 		\( \adversary\linking\library \) & The result of \textbf{linking} $\adversary$ to  $\library$ \\
 		\( \randomness \) & Randomeness \\
+		\( \equiv \) & Interchangability; Identical
 	\end{tabular}
 	
 	\chapter{One-Time Pad \& Kerckhoff's Principle}
@@ -416,7 +426,7 @@
 					\hline
 					\begin{tabular}{l}
 						\underline{\texttt{CTXT}($m$):}\\
-						\tab $k\gets\set{\zero, \one}^\lambda$\\
+						\tab $k\uniform\set{\zero, \one}^\lambda$\\
 						\tab $c:=k\xor m$\\
 						\tab return $c$
 					\end{tabular}\\
@@ -486,10 +496,170 @@
 			\end{center}
 		\end{definition}
 	\end{tcolorbox}
+
+	\begin{tcolorbox}[colback=white,colframe=defcolor,arc=5pt,title={\color{white}\bf One-Time Secrecy (\(\mathsf{OTS})\)}]
+		\begin{definition}\textbf{
+			One-time secrecy} is a property of an encryption scheme where an adversary cannot gain any information about the plaintext message from the ciphertext, even if they know the encryption key was used only once.
+			\begin{center}
+				\begin{minipage}{.3\textwidth}
+					\begin{tabular}{|c|}
+						\hline
+						\cellcolor{blue!25}$\library_{\ots-\sL}^\scheme$\\
+						\hline
+						\begin{tabular}{l}
+							\underline{\texttt{Eve}($m_L,m_R\in\scheme.\messagespace$):}\\
+							\tab $k\gets\scheme.\KeyGen$\\
+							\tab $c\gets\scheme.\Enc(k,m_L)$\\
+							\tab return $c$
+						\end{tabular}\\
+						\hline
+					\end{tabular}
+				\end{minipage}
+				$\equiv$
+				\begin{minipage}{.3\textwidth}
+					\begin{tabular}{|c|}
+						\hline
+						\cellcolor{blue!25}$\library_{\ots-\sR}^\scheme$\\
+						\hline
+						\begin{tabular}{l}
+							\underline{\texttt{Eve}($m_L,m_R\in\scheme.\messagespace$):}\\
+							\tab $k\gets\scheme.\KeyGen$\\
+							\tab $c\gets\scheme.\Enc(k,m_R)$\\
+							\tab return $c$
+						\end{tabular}\\
+						\hline
+					\end{tabular}
+				\end{minipage}
+			\end{center}
+		\end{definition}
+	\end{tcolorbox}
 	
 	\section{How to Demonstrate Insecurity with Attacks}
 	\section{How to Prove Security with The Hybrid Technique}
 	\section{How to Compare/Contract Security Definitions}
+	
+	\newpage
+	\section*{Exercises}
+	
+	\begin{itemize}
+		\item[\bf 2.5.] In abstract algebra, a (finite) group is a finite set $\mathbb{G}$ of items together with an operator $\otimes$ satisfying the following axioms:
+		\begin{itemize}
+			\item \textbf{Closure:} for all \(a,b\in\mathbb{G}\), we have $a\otimes b\in \mathbb{G}$
+			\item \textbf{Identity:} there is a special \textit{identity element} $e\in\G$ that satisfies \(e\otimes a = a\otimes e = a\) for
+			all \(a\in\G\). We typically write ``1'' rather than $e$ for the identity element.
+			\item \textbf{Associativity:} for all \(a, b, c\in\G\), we have \((a\otimes b)\otimes c = a\otimes (b\otimes c)\).
+			\item \textbf{Inverses:} for all \(a\in\G\), there exists an inverse element \(b\in\G\) such that \(a\otimes b = b\otimes a\)
+			is the identity element of $\G$. We typically write ``$a^{-1}$'' for the inverse of $a$.
+		\end{itemize}
+	
+		Define the following encryption scheme in terms of an arbitrary group \((\G, \otimes)\):
+		\begin{center}
+			\begin{tabular}{|clll|}
+				\hline
+				\(\keyspace=\G\) & \(\underline{\KeyGen:}\) & \(\underline{\Enc(k,m):}\) &\(\underline{\Dec(k,c):}\) \\
+				\(\messagespace=\G\) & \tab\(k\gets\G\) & \tab return \(k\otimes m\) & \tab ??\\
+				\(\ciphertextspace=\G\) & \tab return \(k\) &&\\
+				\hline
+			\end{tabular}
+		\end{center}
+		\begin{enumerate}[(a)]
+			\item Prove that \(\binaryfield^\lambda\) is a group with respect to the xor operator. What is the identity
+			element, and what is the inverse of a value $x\in\binaryfield^\lambda$?
+			\item Fill in the details of the $\Dec$ algorithm and prove (using the group axioms) that the scheme satisfies correctness.
+			\item Prove that the scheme satisfies one-time secrecy.
+		\end{enumerate}
+		\begin{tcolorbox}[colframe=magenta, breakable, enhanced]
+			\begin{proof}[\sol]
+				\begin{enumerate}[(a)]
+					\item We show that \((\binaryfield^\lambda,\xor)\) satisfies the group axioms:
+					\begin{itemize}
+						\item[] \textbf{Closure:} \(x,y\in\binaryfield^\lambda\implies x\xor y\in\binaryfield^\lambda\)
+						\item[] \textbf{Associativity:} The XOR operation is associative, so this property holds.
+						\item[] \textbf{Identity:} The identity for XOR is the all-zero \(\lambda\)-bit string \(\zero^\lambda\) because \[
+						(\forall x\in\binaryfield^\lambda)\quad x\xor\zero^\lambda=\zero^\lambda\xor x= x.
+						\]
+						\item[] \textbf{Inverse:} The inverse of $x$ under XOR is $x$ itself because \[
+						x\xor x=\zero^\lambda.
+						\]
+					\end{itemize}
+					\vspace{4pt}
+					\item Decryption Algorithm: \begin{center}
+						\begin{tabular}{l}
+							\(\underline{\Dec(k,c):}\) \\ \tab return \(\inv{k}\otimes c\)
+						\end{tabular}
+					\end{center}
+					Proof of Correctness: \begin{align*}
+						\Dec(k,\Enc(k,m))&=\inv{k}\otimes\Enc(k,m)\\
+						&=\inv{k}\otimes(k\otimes m)\\
+						&=(\inv{k}\otimes k)\otimes m\\
+						&=1\otimes m\\
+						&=m.
+					\end{align*}
+					\item Let $m_L,m_R\in\G$ with $m_L\neq m_R$, and let $k\in\G$. The ciphertexts for theses message are \begin{align*}
+						&c_L:=m_L\otimes k,\\
+						&c_R:=m_R\otimes k.
+					\end{align*} Let $\G:=\binaryfield^\lambda$ and $\otimes:=\xor$. Then \begin{align*}
+						c_L\otimes c_R&=(m_L\otimes k)\otimes(m_R\otimes k)\\
+						&=m_L\otimes m_R\otimes(k\otimes k)\\
+						&=m_L\otimes m_R.
+					\end{align*} This result does not reveal any information about $k$, and it would be the same if the attacker knew $m_L$ and $m_R$ but did not know $k$. Therefore, the scheme satisfies one-time secrecy.
+					
+					Note that if $\G=\binaryfield^\lambda$ and $\otimes=\xor$ then
+					\begin{center}
+						\begin{minipage}{.46\textwidth}
+							\begin{tabular}{|c|}
+								\hline
+								\cellcolor{blue!25}$\library_{\ots-\sL}^\scheme$ \\
+								\hline
+								\begin{tabular}{l}
+									\underline{\texttt{Eve}($m_L,m_R\in\G$):}\\
+									\tab $k\gets\G$\quad\textcolor{gray}{//\(\scheme.\KeyGen\)}\\
+									\tab $c\gets k\otimes m_L$\quad\textcolor{gray}{//\(\scheme.\Enc(k,m_L)\)}\\
+									\tab return $c$
+								\end{tabular}\\
+								\hline
+							\end{tabular}
+						\end{minipage}$\equiv$
+					\begin{minipage}{.46\textwidth}
+					\begin{tabular}{|c|}
+						\hline
+						\cellcolor{blue!25}$\library_{\ots-\sR}^\scheme$ \\
+						\hline
+						\begin{tabular}{l}
+							\underline{\texttt{Eve}($m_L,m_R\in\G$):}\\
+							\tab $k\gets\G$\quad\textcolor{gray}{//\(\scheme.\KeyGen\)}\\
+							\tab $c\gets k\otimes m_R$\quad\textcolor{gray}{//\(\scheme.\Enc(k,m_R)\)}\\
+							\tab return $c$
+						\end{tabular}\\
+						\hline
+					\end{tabular}
+				\end{minipage}
+					\end{center}
+				\end{enumerate}
+			\end{proof}
+		\end{tcolorbox}
+		\vspace{8pt}
+		\item[\bf 2.11] \(\mathcolorbox{yellow}{\text{Prove that if an encryption scheme}\ \scheme\ \text{has}\ \abs{\scheme.\keyspace}<\abs{\scheme.\messagespace}}\) \hl{then it cannot satisfy one-time secrecy}. Try to structure your proof as an explicit attack on such a scheme (\ie, a distinguisher against the appropriate libraries).
+		
+		The $\Enc$ algorithm of one-time pad is deterministic, but our definitions of encryption allow $\Enc$ to be randomized (\ie, it may give different outputs when called twice with the same $k$ and $m$).
+		\textbf{For full credit}, you should prove the statement even for the case of $\Enc$ is randomized. However, you may assume that $\Dec$ is deterministic.
+		
+		\textcolor{gray}{[Hint: The definition of interchangeability does not place any restriction on the running time of the distinguisher/calling program. Even an exhaustive brute-force attack would be valid]}
+		\begin{tcolorbox}[colframe=magenta]
+			\begin{proof}[\sol]
+				There must exists at least one message that cannot be encrypted by and key in the key space.
+				
+				Let's consider two distinct messages
+				
+				The adversary's goal is to distinguish between these two libraries. If the adversary can do this with a probability significantly better than random guessing, then the encryption scheme does not satisfy one-time secrecy.
+				
+				Let \(\abs{\scheme.\keyspace}<\abs{\scheme.\messagespace}\) then \[
+				\exists m^*\in\scheme.\messagespace:m^*\notin\img(\Enc_{k\in\scheme.\keyspace}).
+				\]
+			\end{proof}
+		\end{tcolorbox}
+		
+	\end{itemize}
 	
 	\newpage
 	\chapter{Basing Cryptography on Intractable Computations}
