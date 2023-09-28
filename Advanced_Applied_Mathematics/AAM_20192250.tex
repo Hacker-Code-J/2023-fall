@@ -176,22 +176,6 @@
 		\end{center}
 	\end{titlepage}
 	
-	\iffalse
-	% Title page
-	\begin{titlepage}
-		\begin{center}
-			{\Huge\textsf{\textbf{Abstract Algebra}}\par}
-			\vspace{0.5in}
-			{\Large Ji Yong-Hyeon\par}
-			\vspace{1in}
-			\includegraphics[width=3in]{algebra.png}\par
-			\vspace{1in}
-			{\large Ji Yong-Hyeon\par}
-			{\large \today\par}
-		\end{center}
-	\end{titlepage}
-	\fi
-	
 	% Table of contents
 	\tableofcontents
 	=m
@@ -319,6 +303,51 @@
 	
 	\section{Vector Space, Linear Transformation, Basis}
 	
+	\newpage
+	\section{Matrix Representation of Linear Mappings}
+	
+	
+	\section{Basis Change}
+	
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf Basis Change}]
+		\begin{theorem}
+			For a linear mapping $\Phi:V\to W$, ordered bases \[
+			\mathscr{B}=(\textbf{b}_1,\dots,\textbf{b}_n),\quad\tilde{\mathscr{B}}=(\tilde{\textbf{b}}_1,\cdots\tilde{\textbf{b}}_n)
+			\] of \(V\) and \[
+			\mathscr{C}=(\textbf{c}_1,\dots,\textbf{c}_m),\quad\tilde{\mathscr{C}}=(\tilde{\textbf{c}}_1,\cdots\tilde{\textbf{c}}_m)
+			\] of \(W\), and a transformation matrix \(\textbf{A}_{\Phi}\) w.r.t. \(\mathscr{B}\) and \(\mathscr{C}\), the corresponding transformation matrix \(\tilde{\textbf{A}}_\Phi\) w.r.t. the bases \(\tilde{\mathscr{B}}\) and \(\tilde{\mathscr{C}}\) is given \[
+			\tilde{\textbf{A}}_\Phi=\textbf{T}^{-1}\textbf{A}_\Phi \textbf{S}.
+			\]
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		We define \(\textbf{S}=(s_{ij})\)We can write the vectors of the new basis \(\tilde{\mathscr{B}}\) of \(V\) as follow: \[
+		\tilde{\textbf{b}}_j=\begin{bmatrix}
+			s_{1j} \\ \vdots \\ s_{nj}
+		\end{bmatrix}_{\mathscr{B}}=\sum_{i=1}^ns_{ij}\textbf{b}_j\quad\text{for}\quad j=1,\dots,n.
+		\] Similarly, we write the new basis vectors \(\tilde{\mathscr{C}}\) of \(W\) as follow: \[
+		\tilde{\textbf{c}}_j=\begin{bmatrix}
+			t_{1k} \\ \vdots \\ t_{mk}
+		\end{bmatrix}_{\mathscr{C}}=\sum_{l=1}^mt_{lk}\textbf{c}_l\quad\text{for}\quad k=1,\dots,m.
+		\]
+	\end{proof}
+	
+	\begin{center}
+	\begin{tikzcd}
+		\text{Vector spaces} &  &  & V \arrow[rr, "\Phi"]                                             &  & W                                    &  &  & V \arrow[rr, "\Phi"]                                             &  & W                                \\
+		&  &  & \mathscr{B} \arrow[rr, "\textbf{A}_\Phi"]                                 &  & \mathscr{C}                          &  &  & \mathscr{B} \arrow[rr, "\textbf{A}_\Phi"]                                 &  & \mathscr{C} \arrow[dd, "\textbf{T}^{-1}"] \\
+		\text{Ordered bases} &  &  &                                                                  &  &                                      &  &  &                                                                  &  &                                  \\
+		&  &  & \tilde{\mathscr{B}} \arrow[uu, "\textbf{S}"] \arrow[rr, "\tilde{A}_\Phi"] &  & \tilde{\mathscr{C}} \arrow[uu, "\textbf{T}"'] &  &  & \tilde{\mathscr{B}} \arrow[uu, "\textbf{S}"] \arrow[rr, "\tilde{A}_\Phi"] &  & \tilde{\mathscr{C}}             
+	\end{tikzcd}
+	\end{center}
+	
+	\begin{example}
+		Consider the linear mapping $T:\R^2\to\R^2$ whose transformation is \[
+		A_T=
+		\] with respect to the base
+	\end{example}
+	
+	\newpage
 	\chapter{Analytic Geometry}
 	\section{Rank-Nullity Theorem}
 	\section{Positive Definite, Gram-Schmidt Process}
