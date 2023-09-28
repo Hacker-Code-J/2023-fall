@@ -165,6 +165,8 @@
 \newcommand{\nbhd}{\mathcal{N}}
 \newcommand{\Id}{\operatorname{\textnormal{id}}}
 
+\newcommand{\sol}{\textcolor{magenta}{\bf Sol}}
+
 \newcommand{\Caratheodroy}{Carath\'{e}odory}
 
 % Begin document
@@ -359,25 +361,25 @@
 	\vspace{8pt}
 	\begin{tcolorbox}[colback=white,colframe=thmcolor,arc=5pt,title={\color{white}\bf Interior Extremum Theorem}]
 		\begin{theorem}
-		Let $c$ be an interior pint of the interval $I=(a,b)$ at which $f:I\to\R$ has a relative extremum. Then \[
+		Let $f:(a,b)\to\R$ has a relative extremum and $c\in(a,b)$. Then \[
 		\exists f'(c)\implies f'(c)=0.
 		\]
 		\end{theorem}
 	\end{tcolorbox}
 	\begin{proof}
-		Let $f$ has a local maximum at $c$, \ie, \[
-		\exists\nbhd_\delta(a): x\in\nbhd_\delta(a)\cap I\implies f(x)\leq f(a).
-		\] Assume that $f'(c)>0$. Then, for $x\in\nbhd_\delta(c)\cap I$, \[
-		\exists\nbhd_\delta(c):\frac{f(x)-f(c)}{x-c}>0.
-		\] For $x>c$, we have \[
+		Let $f$ has a relative maximum at $c$, \ie, \[
+		\exists\nbhd_\delta(a): x\in\nbhd_\delta(a)\cap (a,b)\implies f(x)\leq f(a).
+		\] Assume that $f'(c)>0$ then \[
+		\exists\nbhd_\delta(c)\subseteq(a,b):x\in\nbhd_\delta^*(c)\Rightarrow\frac{f(x)-f(c)}{x-c}>0.
+		\] If $c\in\nbhd_\delta(c)$ and $x>c$, then we have \[
 		f(x)-f(c)=(x-c)\cdot\frac{f(x)-f(c)}{x-c}>0.
-		\] Similarly if $f'(c)<0$ then we have a contradiction. Hence $f'(c)=0$.
+		\] But this contradicts the hypothesis that $f$ has a relative maximum at $c$. Similarly if $f'(c)<0$ then we have a contradiction. Hence $f'(c)=0$.
 	\end{proof}
 	\vspace{4pt}
 	\begin{tcolorbox}[colback=white,colframe=corcolor,arc=5pt,title={\color{white}\bf }]
 		\begin{corollary}
 			Let $f:(a,b)\to\R$ be continuous on $(a, b)$ and suppose that $f$ has a relative
-			extremum at an interior point $c\in(a, b)$. Then either \[
+			extremum at $c\in(a, b)$. Then either \[
 			\nexists f'(c)\quad\text{or}\quad f'(c)=0.
 			\]
 		\end{corollary}
@@ -387,7 +389,7 @@
 	\begin{tcolorbox}[colback=white,colframe=thmcolor,arc=5pt,title={\color{white}\bf $\star$ Rolle's Theorem}]
 		\begin{theorem}
 			Let $f$ is continuous on $I = [a, b]$, and let $f$ is differentiable on $(a,b)$. Then \[
-			f(a)=f(b)\implies\exists c\in(a,b):f'(c)=0.
+			f(a)=0=f(b)\implies\exists c\in(a,b):f'(c)=0.
 			\]
 		\end{theorem}
 	\end{tcolorbox}
@@ -395,17 +397,45 @@
 	\begin{tcolorbox}[colback=white,colframe=thmcolor,arc=5pt,title={\color{white}\bf $\star$ Mean Value Theorem of Differential Calculus $\star$}]
 		\begin{theorem}
 			Let $f$ is continuous on $I = [a, b]$, and let $f$ is differentiable on $(a,b)$. Then \[
-			\exists c\in(a,b):f(a)-f(b)=f'(c)(b-a).
+			\exists c\in(a,b):f(b)-f(a)=f'(c)(b-a).
 			\]
 		\end{theorem}
 	\end{tcolorbox}
 	\begin{proof}
-		content...
+		Consider the function whose graph is the line segment joining the points \((a,f(a))\) and \((b,f(b))\): \[
+		f(x)-f(a)=\frac{f(b)-f(a)}{b-a}(x-a).
+		\] Define a function \(g:[a,b]\to\R\) s.t. \[
+		g(x):=f(x)-f(a)-\frac{f(b)-f(a)}{b-a}(x-a)
+		\] Then \begin{enumerate}[(i)]
+			\item \(g\) is continuous on \([a,b]\);
+			\item \(g\) is differentiable on \((a,b)\);
+			\item \(g(a)=0=g(b)\). 
+		\end{enumerate} By Rolle's Theorem, \(\exists c\in(a,b):g'(c)=0\). Then \[
+		g'(x)=f'(x)-\frac{f(b)-f(a)}{b-a}\implies g'(c)=f'(c)-\frac{f(b)-f(a)}{b-a}=0\implies
+		f'(c)=\frac{f(b)-f(a)}{b-a}.
+		\]
 	\end{proof}
-	\begin{remark}
-		The geometric view of the mean value theorem is that there is some pint on the curve $y=f(x)$ at which the tangent line is parallel to the line segment through the point $(a,f(a))$ and $(b,f(b))$.
-	\end{remark}
+	\vspace{8pt}
+	\begin{example}
+		Prove that $e^x\geq 1+x$ for $x\in\R$.
+		\begin{proof}[\sol]
+			\begin{enumerate}[(1)]
+				\item \(x=0\implies e^x=1+x\).
+				\item Let \(x>0\) and \(f(x)=e^x\). Then, by MVT, \[
+				\exists c\in(0,x):f(x)-f(0)=f'(c)(x-0),
+				\] and so \[
+				e^x-1=e^cx> x\implies e^x>1+x.
+				\]
+				\item Let $x<0$ and $f(x)=e^x$. Then, by MVT, \[
+				\exists c\in(x,0): f(0)-f(x)=f'(c)(0-x),
+				\] and so \[
+				1-e^x=e^c(-x)< -x\implies 1+x<e^x.
+				\]
+			\end{enumerate}
+		\end{proof}
+	\end{example}
 	
+	\newpage
 	
 	
 	
