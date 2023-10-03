@@ -15,224 +15,76 @@
 *       standard data types.
 **********************************************************************/
 
-#include <stdio.h>
-#include <stdlib.h>
-#include "PUBAO.h"
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<memory.h>
+#include<errno.h>
 
-BIGINT* create_bigint(int sign, int wordlen) {
-    BIGINT* bigint = (BIGINT*)malloc(sizeof(BIGINT));
-    if (!bigint) {
-        perror("Memory allocation failed");
-        exit(EXIT_FAILURE);
-    }
-    
-    bigint->sign = sign;
-    bigint->wordlen = wordlen;
-    bigint->val = (u32*)malloc(wordlen * sizeof(u32));
-    if (!bigint->val) {
-        perror("Memory allocation failed");
-        free(bigint);
-        exit(EXIT_FAILURE);
-    }
-    
-    // Initialize bigint->val to zero or your desired initial value
-    
-    return bigint;
-}
-
-void destroy_bigint(BIGINT* bigint) {
-    if (bigint) {
-        free(bigint->val);
-        free(bigint);
-    }
-}
-
-BIGINT* add_bigint(const BIGINT* a, const BIGINT* b, BIGINT* result) {
-    int carry = 0;
-    int max_wordlen = (a->wordlen > b->wordlen) ? a->wordlen : b->wordlen;
-    
-    if (result == NULL) {
-        result = create_bigint(a->sign, max_wordlen + 1);
-    }
-    
-    for (int i = 0; i < max_wordlen; i++) {
-        u32 sum = carry;
-        if (i < a->wordlen) {
-            sum += a->val[i];
-        }
-        if (i < b->wordlen) {
-            sum += b->val[i];
-        }
-        
-        result->val[i] = sum & 0xFFFFFFFF;
-        carry = sum >> 32;
-    }
-    
-    result->val[max_wordlen] = carry;
-    
-    return result;
-}
-
-char* bigint_to_string(const BIGINT* bigint) {
-    if (bigint == NULL) {
-        return NULL;
-    }
-    
-    int num_digits = bigint->wordlen * 8; // Assuming 32-bit u32 elements
-    char* result = (char*)malloc(num_digits + 2); // +2 for sign and null terminator
-    
-    if (!result) {
-        perror("Memory allocation failed");
-        exit(EXIT_FAILURE);
-    }
-    
-    int offset = 0;
-    
-    if (bigint->sign == -1) {
-        result[offset++] = '-';
-    }
-    
-    int word_index = bigint->wordlen - 1;
-    
-    // Skip leading zeros
-    while (word_index >= 0 && bigint->val[word_index] == 0) {
-        word_index--;
-    }
-    
-    if (word_index < 0) {
-        // The entire number is zero
-        result[offset++] = '0';
-    } else {
-        // Convert each word to a string and append to result
-        while (word_index >= 0) {
-            u32 word = bigint->val[word_index];
-            for (int i = 0; i < 8; i++) {
-                result[offset++] = '0' + (word % 10);
-                word /= 10;
-            }
-            word_index--;
-        }
-    }
-    
-    result[offset] = '\0'; // Null-terminate the string
-    return result;
-}
-
+#include "pubao_setup.h"
 
 int main() {
-    BIGINT* operand1 = create_bigint(1, 2); // Positive, wordlen = 3
-    operand1->val[0] = 0xaabbccdd;
-    operand1->val[1] = 0x33334444;
-
-    BIGINT* operand2 = create_bigint(1, 3); // Negative, wordlen = 2
-    operand2->val[0] = 0x99aabbcc;
-    operand2->val[1] = 0x55667788;
-    operand2->val[2] = 0x11223344;
-
-    BIGINT* result = NULL;
-    result = add_bigint(operand1, operand2, result);
-
-    printHex(operand1);
-    printHex(operand2);
-    printHex(result);
-    // Print the result
-    //printf("Result: %s\n", bigint_to_string(result));
-
-    // Clean up memory
-    destroy_bigint(operand1);
-    destroy_bigint(operand2);
-    destroy_bigint(result);
-
-    return OK;
-}
-
-/*
-void delete_BIGINT(BIGINT** bigint) {
-    if (*bigint == NULL)
-        return;
-
-    free((*bigint)->val);
-    free(*bigint);
-    *bigint = NULL;
-}
-
-void create_BIGINT(BIGINT** bigint, int wordlen) {
-    *bigint = (BIGINT*)malloc(sizeof(BIGINT));
-    if(*bigint == NULL)
-        exit(Err_Overflow);
+    WORD k;
+    printf("Word: 2^%lu\n\n",8*sizeof(k));
     
-    (*bigint)->wordlen = wordlen;
-    (*bigint)->val = (u32*)malloc(wordlen * sizeof(u32));
-    if ((*bigint)->val == NULL)
-        exit(Err_Overflow);
-}
-*/
+    u64 f = 0x99aabbcc;
+    u64 g = 0xaabbccdd;
+    printf("%16lx", f+g);
 
-void printHex(BIGINT* bigint) {
-    printf("Hex: ");
-    for (int i = bigint->wordlen - 1; i >= 0; i--) {
-        printf("%08x ", bigint->val[i]);
-    }
-    printf("\n");
-}
+    printf("\n *************[xyz]*************\n\n");
+    
+    BINT* x = NULL;
+    BINT* y = NULL;
+    BINT* z = NULL;
 
-void printBin(BIGINT* bigint) {
-    printf("Bin: ");
-    for (int i = bigint->wordlen - 1; i >= 0; i--) {
-        for (int j = 31; j >= 0; j--) {
-            printf("%d", (bigint->val[i] >> j) & 1);
-        }
-        printf(" ");
-    }
-    printf("\n");
-}
+    init_bint(&x, 3);
+    x->val[0] = 0x99aabbcc;
+    x->val[1] = 0x55667788;
+    x->val[2] = 0x11223344;
+    printHex(x);
 
-int Compare_ABS (BIGINT* x, BIGINT* y)//A>B =1 ,A=B =0 , A<B -1
-{
-    int n = x->wordlen; 
-    int m = y->wordlen;
-    if (n>m)
-    {
-        return 1;
-    } 
-    if (n<m)
-    {
-        return -1;
-    }
-    for (int i = n-1;i>=0;i--)
-    {
-        if ((x->val)[i] > (y->val)[i])
-        {
-            return 1;
-        }
-        else if ((x->val)[i] < (y->val)[i])
-        {
-           return -1;
-        }
-        
-    }
+    init_bint(&y, 2);
+    y->val[0] = 0xaabbccdd;
+    y->val[1] = 0x33334444; 
+    printHex(y);
+    
+    z = add_xy(x,y);
+
+    printf("\n\nResult:\n\n");
+    printHex(x);
+    printHex(y);
+    printHex(z);
+
+    delete_bint(&x);
+    delete_bint(&y);
+    delete_bint(&z);
+
+    printf("\n *************[abc]*************\n\n");
+    
+    BINT* a = NULL;
+    BINT* b = NULL;
+    BINT* c = NULL;
+
+    init_bint(&a, 2);
+    a->val[0] = 0x5e6f789a;
+    a->val[1] = 0x1a2b3c4d;
+    printHex(a);
+
+    init_bint(&b, 2);
+    b->val[0] = 0x76543210; 
+    b->val[1] = 0xfedcba98; 
+    printHex(b);
+    
+    c = add_xy(a,b);
+
+    printf("\n\nResult:\n\n");
+    printHex(a);
+    printHex(b);
+    printHex(c);
+
+    delete_bint(&a);
+    delete_bint(&b);
+    delete_bint(&c);
+    
     return 0;
-}
-
-int bi_Compare(BIGINT* x , BIGINT* y)//A>B =1 ,A=B =0 , A<B -1
-{
-    if ((x->sign = 0) && (y->sign =-1))
-    {
-        return 1;
-    }
-
-    if ((x->sign = -1) && (y->sign =0))
-    {
-        return -1;
-    }
-
-    int ret = Compare_ABS(x,y);
-    if (x->sign = 0)
-    {
-        return ret;
-    }
-    else
-    {
-        return (ret * -1);
-    }
 }
