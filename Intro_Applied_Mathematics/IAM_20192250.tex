@@ -1,7 +1,9 @@
 \documentclass[12pt,openany]{book}
 
 \usepackage{amsmath,amsthm,amsfonts,amscd} % Packages for mathematics
+\usepackage{commath}
 
+\usepackage{transparent}
 % Colors
 \usepackage[dvipsnames]{xcolor}
 \definecolor{titleblue}{RGB}{0,53,128}
@@ -23,7 +25,7 @@
 
 % Page layout
 \usepackage{geometry}
-\geometry{a4paper,left=1.325in,right=1in,top=1in,bottom=1in,heightrounded}
+\geometry{a4paper,left=.8in,right=.6in,top=.75in,bottom=1in,heightrounded}
 \usepackage{fancyhdr}
 \fancyhf{}
 \fancyhead[LE,RO]{\thepage}
@@ -148,7 +150,6 @@
 \newtheorem*{note}{Note}
 
 %New Command
-\newcommand{\set}[1]{\left\{#1\right\}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\Q}{\mathbb{Q}}
@@ -160,7 +161,6 @@
 \newcommand{\eg}{\textnormal{e.g.}}
 
 \newcommand{\of}[1]{\left( #1 \right)} 
-\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
 
 \newcommand{\nbhd}{\mathcal{N}}
 \newcommand{\Id}{\operatorname{\textnormal{id}}}
@@ -168,6 +168,13 @@
 \newcommand{\sol}{\textcolor{magenta}{\bf Sol}}
 
 \newcommand{\Caratheodroy}{Carath\'{e}odory}
+
+\newcommand{\upRiemannint}[2]{
+	\overline{\int_{#1}^{#2}}
+}
+\newcommand{\loRiemannint}[2]{
+	\underline{\int_{#1}^{#2}}
+}
 
 % Begin document
 \begin{document}
@@ -436,21 +443,276 @@
 	\end{example}
 	
 	\newpage
+	\chapter{The Riemann Integral}
 	
+	\section{Introduction to Riemann Integral}
+	\begin{tcolorbox}[colframe=defcolor, title={\color{white}\bf Parition}]
+		\begin{definition}
+			Consider a closed bounded interval \(\sbr{a,b}\subseteq\R\). A \textbf{partition} of \(\sbr{a,b}\) is a finite ordered set \[
+			P:=\set{a=x_0,x_1,\cdots,x_{n-1},x_n=b}\ \text{s.t.}\ x_0<x_1<\cdots<x_{n-1}<x_n.
+			\]
+		\end{definition}
+	\end{tcolorbox}
+	\vspace{8pt}
+	\begin{tcolorbox}[colframe=defcolor, title={\color{white}\bf Upper and Lower Sum}]
+		\begin{definition}
+			Let \(f:[a,b]\to\R\) be bounded on \(\sbr{a,b}\) and \(P=\set{x_0,x_1,\cdots,x_{n-1},x_n}\) be a partition of \(\sbr{a,b}\).
+			\begin{enumerate}[(1)]
+				\item The \textbf{upper sum} of \(f\) for the partition \(P\) is the sum \[
+				U(f,P):=\sum_{i=1}^{n}M_i[f](x_i-x_{i-1}),\quad M_i[f]:=\sup\set{f\of{x}:x\in\sbr{x_{i-1},x_i}}
+				\] for \(i=1,2,\cdots, n\).
+				\item The \textbf{lower sum} of \(f\) for the partition \(P\) is the sum \[
+				L(f,P):=\sum_{i=1}^{n}m_i[f](x_i-x_{i-1}),\quad m_i[f]:=\inf\set{f\of{x}:x\in\sbr{x_{i-1},x_i}}
+				\] for \(i=1,2,\cdots, n\).
+			\end{enumerate}
+		\end{definition}
+	\end{tcolorbox}
+	\begin{tcolorbox}[colframe=procolor, title={\color{white}\bf }]
+		\begin{proposition}
+			Let \(f:[a,b]\to\R\) be bounded on \(\sbr{a,b}\) and \(P\) be a partition of \(\sbr{a,b}\). Then \[
+			L(f,P)\leq U(f,P).
+			\]
+		\end{proposition}
+	\end{tcolorbox}
+	\begin{proof}
+		\(M_i[f]\geq m_i[f]\implies L(f,P)\leq U(f,P)\).
+	\end{proof}
 	
+	\begin{tcolorbox}[colframe=defcolor, title={\color{white}\bf Refinement}]
+		\begin{definition}
+			Let $Q$ and $P$ are partitions of \(\sbr{a,b}\) and $P\subseteq Q$. We say that $Q$ is a \textbf{refinement} of $P$.
+		\end{definition}
+	\end{tcolorbox}
+	\vspace{8pt}
+	\begin{tcolorbox}[colframe=thmcolor, title={\color{white}\bf }]
+		\begin{theorem}
+			Let \(f:[a,b]\to\R\) be bounded on \(\sbr{a,b}\) and \(P=\set{a=x_0,x_1,\cdots,x_n=b}\) be a partition of \(\sbr{a,b}\). Let \(Q\) is a refinement of \(P\). Then \[
+			L(f,P)\leq L(f,Q)\leq U(f,Q)\leq U(f,P).
+			\]
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		Assume that \(Q:=P\cup\set{x*}\) s.t. \begin{align*}
+			Q&=\set{a=x_0,x_1,x_2,\cdots,x_n=b}\cup\set{x^*}\\
+			&=\set{a,x_1,x_2,\cdots,x_{j-1},x^*,x_j,x_{j+1},\cdots,x_{n-1},b}.
+		\end{align*}
+		Let \(M_j^L=\sup\set{f(x):[x_{j-1},x^*]}\) and \(
+			M_j^R=\sup\set{f(x):[x^*,x_{j}]}\) then \[
+		M_j^L[f]\leq M_j[f]\quad\text{and}\quad M_j^R[f]\leq M_j[f],
+		\] and we have \begin{align*}
+			U(f,Q)
+			&=\del{\sum_{i=1}^{j-1}M_f[f]\Delta x_i}+\del{M_j^L[f](x^*-x_{j-1})}+\del{M_j^R(x_{j}-x^*)}+\del{\sum_{i=j+1}^nM_i[f]\Delta x_i}\\
+			&\leq\del{\sum_{i=1}^{j-1}M_f[f]\Delta x_i}+{M_j[f](x^*-x_{j-1})}+{M_j(x_{j}-x^*)}+\del{\sum_{i=j+1}^nM_i[f]\Delta x_i}\\
+			&=\sum_{i=1}^nM_i[f]\Delta x_i=U(f,P).
+		\end{align*} Similarly, we have \(L(f,P)\leq L(f,Q)\).
+	\end{proof}
+	\vspace{4pt}
+	\begin{tcolorbox}[colframe=corcolor, title={\color{white}\bf }]
+		\begin{corollary}
+			Let \(f:[a,b]\to\R\) be bounded on \(\sbr{a,b}\) and \(P\) and \(Q\) are partitions of \(\sbr{a,b}\) then \[
+			L(f,Q)\leq U(f,P).
+			\]
+		\end{corollary}
+	\end{tcolorbox}
+	\begin{proof}
+		Let \(R=P\cup Q\). By \textbf{Theorem 2.2}, we have \[
+		L(f,Q)\leq L(f,R)\leq U(f,R)\leq U(f, P)
+		\] since \(R\) is a refinement of both \(P\) and \(Q\).
+	\end{proof}
 	
+	\newpage
+	\begin{remark}
+		By the completeness property of real number, there exist the followings:
+		\begin{align*}
+			L(f)&:=\sup\set{L(f,P):\text{$P$ is a partition of $[a,b]$}},\\
+			U(f)&:=\inf\set{U(f,P):\text{$P$ is a partition of $[a,b]$}}.
+		\end{align*} Moreover, \(L(f)\leq U(f)\).
+	\end{remark}
+
+	\begin{tcolorbox}[colframe=defcolor, title={\color{white}\bf Upper and Lower Integral}]
+		\begin{definition}
+			Let \(f:[a,b]\to\R\) be bounded on \(\sbr{a,b}\).
+			\begin{enumerate}[(1)]
+				\item The \textbf{upper integral} of \(f\) on \([a,b]\) is defined by \[
+				\upRiemannint{a}{b}f(x)dx:=U(f)=\inf\set{U(f,P):\text{$P$ is a partition of $[a,b]$}}.
+				\]
+				\item The \textbf{lower integral} of \(f\) on \([a,b]\) is defined by \[
+				\loRiemannint{a}{b}f(x)dx:=L(f)=\sup\set{L(f,P):\text{$P$ is a partition of $[a,b]$}}.
+				\]
+			\end{enumerate}
+		\end{definition}
+	\end{tcolorbox}
+	\vspace{8pt}
+	\begin{tcolorbox}[colframe=defcolor, title={\color{white}\bf Riemann Integral}]
+		\begin{definition}
+			Let \(f:[a,b]\to\R\) be bounded on \(\sbr{a,b}\).
+			We say that \(f\) is \textbf{Riemann integrable} (or \textbf{integrable}) on \([a,b]\) if \(L(f)=U(f)\). We define the \textbf{Riemann integral} of \(f\) on \([a,b]\) as follow: \[
+			\int_a^b f(x)dx =\upRiemannint{a}{b}f(x)dx=\loRiemannint{a}{b}f(x)dx.
+			\]
+		\end{definition}
+	\end{tcolorbox}
+	\begin{example}
+		Let \(f:[0,1]\to\R\) be a Dirichlet's discontinuous function defined by \[
+		f(x):=\begin{cases}
+			1 &: x\in\Q,\\
+			0 &: x\in\R\setminus\Q.
+		\end{cases}
+		\] We claim that \(f\) is not Riemann integrable.
+		\begin{proof}[\sol]
+			Let \(P=\set{x_0,x_1,\cdots,x_{n-1},x_n}\) be a partition of \([0,1]\). Note that \[
+			M_i[f]\equiv 1\quad\text{and}\quad m_i[f]\equiv 0
+			\] for \(i=1,2,\dots, n\). Then \begin{align*}
+				L(f,P)&=\sum_{i=1}^n m_i[f]\Delta x_i=\sum_{i=1}^n(0\cdot\Delta x_i)=0,\\
+				U(f,P)&=\sum_{i=1}^n M_i[f]\Delta x_i=\sum_{i=1}^n(1\cdot\Delta x_i)=1.
+			\end{align*} Therefore \(L(f)=0\neq 1=U(f)\), and so \(f\) is not Riemann integrable on \([0,1]\).
+		\end{proof}
+	\end{example}
 	
+	\newpage
+	\begin{tcolorbox}[colframe=thmcolor, title={\color{white}\bf $\star$ Riemann's Condition $\star$}]
+		\begin{theorem}
+			Let \(f:[a,b]\to\R\) be bounded on \([a,b]\). Then \[
+			\upRiemannint{a}{b}f(x)dx=\loRiemannint{a}{b}f(x)dx\iff \forall\varepsilon>0:\exists P: U(f,P)-L(f,P)<\varepsilon.
+			\]
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		\begin{itemize}
+			\item[\((\Rightarrow)\)] 
+			Let \(\varepsilon>0\). Then \(\exists P_1,P_2\) such that \[
+			L(f)-\frac{\varepsilon}{2}<L(f,P_1)\quad\text{and}\quad U(f,P_2)<U(f)+\frac{\varepsilon}{2}.
+			\] Let \(P:=P_1\cup P_2\). Since \(L(f)=U(f)\), we have \begin{align*}
+				U(f,P)-L(f,P)&\leq U(f,P_2)-L(f,P_1)\\
+				&<U(f)+\frac{\varepsilon}{2}-\del{L(f)-\frac{\varepsilon}{2}}\\
+				&=\varepsilon.
+			\end{align*}
+			\item[\((\Leftarrow)\)] Let \(P\) be a partition of \([a,b]\). Since \(U(f)\leq U(f,P)\) and \(L(f,P)\leq L(f)\), for \(\varepsilon>0\), \[
+			0\leq U(f)-L(f)\leq U(f,P)-(f,P)<\varepsilon.
+			\] That is, \(L(f)=U(f)\).
+		\end{itemize}
+	\end{proof}
 	
+	\section{Properties of Riemann Integral}
+	\begin{tcolorbox}[colframe=thmcolor, title={\color{white}\bf }]
+		\begin{theorem}
+			If \(f:[a,b]\to\R\) is is monotone on \([a,b]\) then \(f\) is Riemann integrable on \([a,b]\).
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		Suppose that \(f\) is increasing on \([a,b]\). Let \(\varepsilon>0\). By the completeness property of \(\R\), \[
+		\exists N\in\N:\sbr{f(b)-f(a)}\frac{b-a}{N}<\varepsilon.
+		\] Correspondingly, there exists a partition \(P_N=\set{x_0,x_1,\dots,x_{N-1},x_N}\) such that \[
+		\Delta x_i=x_i-x_{i-1}=\frac{b-a}{N}
+		\] for \(i=1,2,\cdots,N\). Since \(\begin{cases}
+			M_i[f]=\sup\set{f(x):x\in[x_{i-1},x_i]}=f(x_i)\\
+			m_i[f]=\inf\set{f(x):x\in[x_{i-1},x_i]}=f(x_{i-1})
+		\end{cases}\), \begin{align*}
+		U(f,P_N)-L(f,P_N)&=\sum_{i=1}^NM_i[f]\Delta x_i-\sum_{i=1}^Nm_i[f]\Delta x_i\\
+		&=\sum_{i=1}^N\sbr{f(x_i)-f(x_{i-1})}\Delta x_i\\
+		&=\sbr{f(b)-f(a)}\frac{b-a}{N}<\varepsilon.
+	\end{align*} By Riemann's Condition, \(f\) is Riemann integrable. Similarly a decreasing function on \([a,b]\) is also Riemann integrable on \([a,b]\).
+	\end{proof}
+	\vspace{8pt}
+	\begin{tcolorbox}[colframe=thmcolor!50!, title={\color{white}\bf Uniform Continuity Theorem}]
+			If \(f:[a,b]\to\R\) is is continuous on \([a,b]\) then \(f\) is uniformly continuous on \([a,b]\).
+	\end{tcolorbox}
+	\begin{tcolorbox}[colframe=thmcolor!50!, title={\color{white}\bf Maximum-Minimum Theorem}]
+		Let \(f:[a.b]\to\R\) be a continuous function on \([a,b]\). Then \[
+		\exists p,q\in[a,b]:f(p)\leq f(x)\leq f(q).
+		\]
+	\end{tcolorbox}
+	\begin{tcolorbox}[colframe=thmcolor, title={\color{white}\bf }]
+		\begin{theorem}
+			If \(f:[a,b]\to\R\) is is continuous on \([a,b]\) then \(f\) is Riemann integrable on \([a,b]\).
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		Let \(\varepsilon>0\). Since \(f\) is continuous on \([a,b]\), \(f\) is uniformly continuous on \([a,b]\). Then \[
+		\exists\delta:\forall x,y\in [a,b]:\abs{x-y}<\delta\implies\abs{f(x)-f(y)}<\frac{\varepsilon}{b-a}.
+		\] Let \(P=\set{a=x_0,x_1,\cdots,x_n=b}\) be a partition of \([a,b]\) such that \[
+		\Delta_i=x_i-x_{i-1}<\delta\quad\text{for}\quad i=1,2,\dots,n.
+		\] By Maximum-Minimum Theorem, \[
+		\exists s_i,t_i\in[x_{i-1},x_i]: m_i[f]=f(s_i)\land M_i[f]=f(t_i)\quad\text{for}\quad i=1,2,\cdots,n.
+		\] Since \(\abs{s_i-t_i}<\delta\), we have \[
+		0\leq M_i[f]-m_i[f] = f(t_i)-f(s_i)<\frac{\varepsilon}{b-a}\quad\text{for}\quad i=1,2,\cdots,n.
+		\] Therefore, \begin{align*}
+			U(f,P)-L(f,P)&=\sum_{i=1}^n\del{M_i[f]-m_i[f]}\Delta x_i\\
+			&<\sum_{i=1}^n\del{\frac{\varepsilon}{b-a}}\Delta x_i=\frac{\varepsilon}{b-a}(b-a)=\varepsilon.
+		\end{align*}
+	\end{proof}
+	\vspace{8pt}
+	\begin{example}
+		Let \(f:[0,1]\to\R\) be a function defined as \[
+		f(x)=\begin{cases}
+			x\sin\frac{1}{x} &:x\neq 0\\
+			0 &:x = 0.
+		\end{cases}
+		\] Since \(f\) is continuous on \([0,1]\), \(f\) is Riemann integrable on \([a,b]\).
+	\end{example}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	\newpage
+	\begin{tcolorbox}[colframe=thmcolor, title={\color{white}\bf Linearity of Riemann Integral}]
+		\begin{theorem}
+			Let \(f,g:[a,b]\to\R\) be Riemann integrable functions.
+			\begin{enumerate}[(1)]
+				\item For \(\alpha\in\R\), \(\alpha f\) is Riemann integrable and \[
+				\int_a^b\alpha f(x)\ dx = \alpha\int_a^bf(x)\ dx.
+				\]
+				\item \(f+g\) is Riemann integrable and \[
+				\int_a^b(f+g)(x)\ dx = \int_a^bf(x)\ dx + \int_a^b g(x)\ dx.
+				\]
+			\end{enumerate}
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		\begin{enumerate}[(1)]
+			\item We must show that \(U(\alpha f)=L(\alpha f)\). Let \(P=\set{x_0,x_1,\cdots, x_n}\) be a partition of \([a,b]\).
+			\begin{enumerate}[(i)]
+				\item \((\alpha=0)\) \(U(\alpha f)=0=L(\alpha f)\).
+				\item \((\alpha>0)\) Since \begin{align*}
+					M_i[\alpha f]&=\sup\set{\alpha f(x):x\in\sbr{x_{i-1},x_i}}\\
+					&=\alpha\sup\set{f(x):x\in\sbr{x_{i-1},x_i}}\\					&=\alpha M_i[f],
+				\end{align*} we have \begin{align*}
+				U(\alpha f)&=\inf\set{U(\alpha f, P):\text{$P$ be a partition of $[a,b]$}}\\
+				&=\inf\set{\alpha U(f, P):\text{$P$ be a partition of $[a,b]$}}\quad\because \sum_{i=1}^nM_i[\alpha f]\Delta x_i=\alpha\sum_{i=1}^nM_i[f]\Delta x_i\\
+				&=\alpha \inf\set{U(f, P):\text{$P$ be a partition of $[a,b]$}}\\
+				&=\alpha U(f).
+			\end{align*} Similarly, \(L(\alpha f)=\alpha L(f)\). Since \(f\) is Riemann integrable, \ie, \(L(f)=U(f)\), thus, \[
+			U(\alpha f)=\alpha U(f)=\alpha L(f)=L(\alpha f).
+			\]
+			\item \((\alpha<0)\) Similarly, it holds.
+			\end{enumerate}
+			Moreover, \[
+			\int_a^b\alpha f(x)\ dx = U(\alpha f)=\alpha U(f)=\alpha\int_a^b f(x)\ dx.
+			\]
+			\item We must show that \[
+			\forall\varepsilon>0:\exists P:U(f+g,P)-L(f+g,P)<\varepsilon.
+			\] Let \(\varepsilon>0\). Since \(f,g\) are Riemann integrable on \([a,b]\), \(\exists P_1,P_2\) such that \[
+			U(f,P_1)-L(f,P_1)<\frac{\varepsilon}{2}\quad\text{and}\quad U(g,P_2)-L(g,P_2)<\frac{\varepsilon}{2}.
+			\] Let \(P=P_1\cup P_2=\set{x_0,x_1,\dots,x_n}\). Then P is a partition of \([a,b]\), and is a refinement of \(P_1\) and \(P_2\).
+			Since \[
+			m_i[f]+m_i[g]\leq m_i[f+g]\leq M_i[f+g]\leq M_i[f]+M_i[g],
+			\] we have \[
+			L(f,P)+L(g,P)\leq L(f+g,P)\leq U(f+g,P)\leq U(f,P)+U(g,P). 
+			\] Hence \begin{align*}
+				U(f+g,P)-L(f+g,P)&\leq U(f,P)+U(g,P)-\sbr{L(f,P)+L(g,P)}\\
+				&\leq U(f,P_1)+U(g,P_2)-\sbr{L(f,P_1)+L(g,P_2)}\\
+				&=\sbr{U(f,P_1)-L(f,P_2)}+\sbr{U(g,P_2)-L(g,P_2)}\\
+				&<\frac{\varepsilon}{2}+\frac{\varepsilon}{2}=\varepsilon.
+			\end{align*}
+			We want to show that \[
+			\forall\varepsilon>0:\abs{\int_a^b(f+g)(x)\ dx- \int_a^bf(x)\ dx- \int_a^b g(x)\ dx}<\varepsilon.
+			\]
+		\end{enumerate}
+	\end{proof}
+	\vspace{4pt}
+	\begin{tcolorbox}[colframe=corcolor, title={\color{white}\bf }]
+		\begin{corollary}
+			Let \(f,g:[a,b]\to\R\) be Riemann integrable functions. Then for \(\alpha,\beta\in\R\), \[
+			\int_a^b(\alpha f+\beta g)(x)\ dx = \alpha\int_a^b f(x)\ dx+\beta\int_a^b g(x)\ dx.
+			\]
+		\end{corollary}
+	\end{tcolorbox}
 	
 	% End document
 \end{document}
