@@ -25,11 +25,7 @@
 
 int main() {
     WORD k;
-    printf("Word: 2^%lu\n\n",8*sizeof(k));
-    
-    u64 f = 0x99aabbcc;
-    u64 g = 0xaabbccdd;
-    printf("%16lx", f+g);
+    printf("W = 2^%lu\n\n",8*sizeof(k));
 
     printf("\n *************[xyz]*************\n\n");
     
@@ -41,11 +37,13 @@ int main() {
     x->val[0] = 0x99aabbcc;
     x->val[1] = 0x55667788;
     x->val[2] = 0x11223344;
+    printf("x: ");
     printHex(x);
 
     init_bint(&y, 2);
     y->val[0] = 0xaabbccdd;
     y->val[1] = 0x33334444; 
+    printf("y: ");
     printHex(y);
     
     z = add_xy(x,y);
@@ -66,13 +64,15 @@ int main() {
     BINT* c = NULL;
 
     init_bint(&a, 2);
-    a->val[0] = 0x5e6f789a;
-    a->val[1] = 0x1a2b3c4d;
+    a->val[0] = 0xffffffff;
+    a->val[1] = 0xffffffff;
+    printf("a: ");
     printHex(a);
 
     init_bint(&b, 2);
-    b->val[0] = 0x76543210; 
-    b->val[1] = 0xfedcba98; 
+    b->val[0] = 0xffffffff; 
+    b->val[1] = 0xffffffff; 
+    printf("b: ");
     printHex(b);
     
     c = add_xy(a,b);
