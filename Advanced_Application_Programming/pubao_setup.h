@@ -90,13 +90,12 @@ void delete_bint(BINT** bint_ptr) {
 
 
 void printHex(BINT* X) {
-    printf("Hex: ");
+    printf("0x ");
     for (int i = X->wordlen - 1; i >= 0; i--) {
-        printf("%*x ", 3, X->val[i]);
+        printf("%08x ", X->val[i]);
     }
     printf("\n");
 }
-
 
 void refine_BINT(BINT* X) {
     if(X == NULL) return;
@@ -123,7 +122,7 @@ typedef struct {
     WORD carry;
 } SumAndCarry;
 
-SumAndCarry ADD_XYk(WORD x, WORD y, WORD k) {
+SumAndCarry add_xyk(WORD x, WORD y, WORD k) {
     SumAndCarry sc;
     unsigned long long res = (unsigned long long) x + y + k;  // casting to prevent overflow
     sc.sum = (WORD) (res & 0xFFFFFFFF); // assuming 32-bit words, adjust mask as needed
@@ -136,24 +135,17 @@ BINT* add_xy(BINT* X, BINT* Y) {
     int n = X->wordlen;
     int m = Y->wordlen;
 
-    // Allocate space for Z and perform addition
+    // Allocate space for Z = X + Y
     BINT* Z = malloc(sizeof(BINT));
     if (Z == NULL) {
         perror("Unable to allocate memory");
-        exit(EXIT_FAILURE);
+        exit(1);
     }
-
-    // Allocate space for Z and perform addition
     Z->val = malloc((n + 1) * sizeof(WORD)); // +1 for possible carry
     if (Z->val == NULL) {
         perror("Unable to allocate memory");
         free(Z);
         exit(1);
-    }
-
-    // Ensure Y <= X, if not, swap X and Y
-    if (Y->wordlen > X->wordlen) {
-        BINT* temp = X; X = Y; Y = temp;
     }
 
     // Extend Y.val with zeros to make Y and X the same length
@@ -165,17 +157,17 @@ BINT* add_xy(BINT* X, BINT* Y) {
     } else {
         Y->val = tmp_val;
     }
-    for (int i = Y->wordlen; i < X->wordlen; i++) {
+    for (int i=m; i<n; i++) {
         Y->val[i] = (WORD)0;
     }
 
-    WORD k = 0;
-    for (int i = 0; i < X->wordlen; i++) {
-        SumAndCarry sc = ADD_XYk(X->val[i], Y->val[i], k);
+    WORD k = (WORD)0;
+    for (int i = 0; i < n; i++) {
+        SumAndCarry sc = add_xyk(X->val[i], Y->val[i], k);
         Z->val[i] = sc.sum;
         k = sc.carry;
     }
-    Z->val[X->wordlen] = k;
+    Z->val[n] = k;
 
     // Set the sign and word length of Z
     Z->sign = X->sign; // assuming the same sign for X and Y
@@ -183,7 +175,7 @@ BINT* add_xy(BINT* X, BINT* Y) {
 
     // Free or reset the memory for Y->val if needed
     // free(Y->val); // if needed
-    // Y->wordlen = original_length; // if needed
+    // Y->wordlen = original_wordlen; // if needed
 
     return Z;
 }
