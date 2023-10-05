@@ -60,35 +60,61 @@
 \usepackage{listings} %Code
 \renewcommand{\lstlistingname}{Code}%
 
-\definecolor{sagegreen}{rgb}{0.0,0.6,0.4}
-\definecolor{sagepurple}{rgb}{0.6,0.0,0.4}
-\definecolor{sageblue}{rgb}{0.0,0.4,0.6}
-\definecolor{sageorange}{rgb}{1.0,0.4,0.0}
-\definecolor{sagegray}{rgb}{0.4,0.4,0.4}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{1,1,1}
+
 
 \lstdefinestyle{sage}{
 	language=Python,
-	backgroundcolor=\color{white},
-	basicstyle=\small\ttfamily\color{black}, 
-	basicstyle=\footnotesize\ttfamily\color{black},
-	keywordstyle=\color{blue!60!black},
-	commentstyle=\color{green!60!black},
-	stringstyle=\color{purple!60!black},
+	aboveskip=1.5em,
+	belowskip=1.5em,
+	basicstyle=\small\ttfamily,
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{blue},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
 	showstringspaces=false,
-	breaklines=true,
-	tabsize=4,
-	morekeywords={True, False, None},
-	frame=leftline, % Remove the border
-	framesep=3pt,
-	frameround=tttt,
-	framexleftmargin=3pt,
-	numbers=left,
-	numberstyle=\small\color{gray},
-	xleftmargin=15pt, % Increase the left margin
-	xrightmargin=5pt,
-	captionpos=b,
-	belowskip=0pt,
-	aboveskip=4pt
+	showtabs=false,                  
+	tabsize=2,
+	frame=tb,
+	framerule=0pt,
+	framesep=8pt,
+	rulecolor=\color{codegray},         
+	backgroundcolor=\color{backcolour},   
+	emph={[2]sage, var, plot, diff, integrate, limit, sum, prod},
+	emphstyle=[2]\color{red},
+	escapeinside={\%*}{*)},
+	%language=Python,
+	%backgroundcolor=\color{white},
+	%basicstyle=\small\ttfamily\color{black}, 
+	%basicstyle=\footnotesize\ttfamily\color{black},
+	%keywordstyle=\color{blue!60!black},
+	%commentstyle=\color{green!60!black},
+	%stringstyle=\color{purple!60!black},
+	%showstringspaces=false,
+	%breaklines=true,
+	%tabsize=4,
+	%orekeywords={True, False, None},
+	%frame=leftline, % Remove the border
+	%framesep=3pt,
+	%frameround=tttt,
+	%framexleftmargin=3pt,
+	%numbers=left,
+	%numberstyle=\small\color{gray},
+	%xleftmargin=15pt, % Increase the left margin
+	%xrightmargin=5pt,
+	%captionpos=b,
+	%belowskip=0pt,
+	%aboveskip=4pt
 }
 
 %Ceiling and Floor Function
@@ -121,6 +147,7 @@
 \usepackage{tikz-cd}
 \usetikzlibrary{calc}
 \usetikzlibrary{arrows, arrows.meta, positioning, shapes.multipart}
+\usepackage{pgfplots}
 
 %Tcolorbox
 \usepackage[most]{tcolorbox}
@@ -662,7 +689,206 @@
 	\end{itemize}
 	
 	\newpage
-	\chapter{Basing Cryptography on Intractable Computations}
+	\chapter{Cryptography on Intractable Computations}
 	
+	
+	\section{What Qualifies as a ``Computationally Infeasible'' Attack?}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Polynomial Time}]
+		\begin{definition}
+			A program runs in \textbf{polynomial time} if \[
+			\exists c>0:\forall n\geq n_0:\mathsf{Time}(n)\leq n^c,
+			\] where \(\mathsf{Time}\) is the time taken by the algorithm on inputs of size \(n\). \(n_0\) is constant size of  the input. That is, there exists a constant $c > 0$ such that for all sufficiently long input strings $x$ with $\abs{x}=n$, the program stops after no more than $O(n^c)$ steps.
+		\end{definition}
+	\end{tcolorbox}
+	\begin{remark}
+		We see ``\textcolor{blue}{polynomial-time}'' as a synonym for ``\textcolor{blue}{efficient}.''
+	\end{remark}
+
+	\begin{example}
+		\(\gcd(a,b)\) can be computed using \(O((\log_2a)^3)\) bit operation if \(a>b\).
+	\end{example}
+	\begin{example}
+		\ \begin{table}[h!]\centering
+			\begin{tabular}{l|l}
+				\textbf{Efficient algorithm known:} & \textbf{No known efficient algorithm:}\\
+				Computing GCDs & Factoring integers\\
+				Arithmetic \(\bmod N\) & Computing \(\phi(N)\) given \(N\) \\
+				Inverses \(\bmod N\) & Discrete logarithm \\
+				Exponentiation \(\bmod N\) & Square roots \(\bmod\) composite \(N\) \\
+			\end{tabular}
+		\end{table}
+	
+		Again, ``efficient'' means polynomial-time. Furthermore, we only consider polynomial-time algorithms that run on standard, \textit{classical} computers. In fact, all of the problems in the right-hand column \textit{do} have known polynomial-time algorithms on \textit{quantum} computers.
+	\end{example}
+
+	\newpage
+	\section{What Qualifies as a ``Negligible'' Success Probability?}
+	For a cryptographic system to be considered secure, we often want the success probability of any polynomial-time adversary to be negligible in the security parameter \(\lambda\).  
+	\begin{quote}
+		\(\frac{1}{2^\lambda}\) \textbf{approaches zero so fast that no polynomial can ``rescue''}.
+	\end{quote} 
+	\begin{proof}
+		Assume that \(f(\lambda)=\frac{1}{2^\lambda}\). \begin{center}
+			\begin{tikzpicture}[scale=.9]
+				\begin{axis}[
+					axis lines = left,
+					xlabel = \(\lambda\),
+					ylabel = \(f\),
+					ymin = 0, ymax = 1.5,
+					xmin = 0, xmax = 5,
+					]
+					\addplot [
+					domain=0:5, 
+					samples=100, 
+					color=red,
+					]
+					{1/2^x};
+					\addlegendentry{\(\frac{1}{2^\lambda}\)}
+				\end{axis}
+			\end{tikzpicture}
+		\end{center} Consider any polynomial \(p(\lambda)\) of degree \(n\), written as: \[
+		p(\lambda)=a_0+a_1\lambda+a_2\lambda^2+\cdots+a_n\lambda^n=\sum_{i=0}^{n}a_i\lambda^i.
+		\] The product \(p(\lambda)\) and \(f(\lambda)\) is \[
+		p(\lambda)f(\lambda)=a_0\frac{1}{2^\lambda}+a_1\frac{\lambda}{2^\lambda}+\cdots+a_n\frac{\lambda^n}{2^\lambda}.
+		\] We claim that $\displaystyle
+		\lim\limits_{\lambda\to\infty}a_k\frac{\lambda^k}{2^\lambda}=0,
+		$ where \(k\in\Z_{\geq 0}\). Let \(g(\lambda)=\lambda^k\) and \(h(\lambda)=2^\lambda\). Note that 
+		\begin{align*}
+			h'(\lambda)=2^\lambda(\ln 2),\quad &g'(\lambda)=k\lambda^{k-1}\\
+			h''(\lambda)=2^\lambda(\ln 2)^2,\quad &g''(\lambda)=k(k-1)\lambda^{k-2}\\
+			&\vdots\\
+			h^{(k)}(\lambda)=2^\lambda(\ln 2)^k,\quad&g^{(k)}(\lambda)=k!.
+		\end{align*} By applying L'H\^{o}pital's Rule \(k\) times, we have \[
+		\lim\limits_{\lambda\to\infty}=\frac{\lambda^k}{2^\lambda}=\lim\limits_{\lambda\to\infty}\frac{k!}{2^\lambda(\ln 2)^k}=0.
+		\] Thus, \(\lim\limits_{\lambda\to\infty}p(\lambda)f(\lambda)=0\).
+	\end{proof}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Negligible}]
+		\begin{definition}
+			A function \(f\) is \textbf{negligible} if, \[
+			\forall\text{polynomial}\ p:\lim\limits_{\lambda\to\infty}p(\lambda)f(\lambda)=0.
+			\] In other words, a negligible function approaches zero so fast that you can never catch up when mutiplying by a polynomial.
+		\end{definition}
+	\end{tcolorbox}
+	\begin{remark}
+		As $\textcolor{blue}{\lambda}$ (\textcolor{blue}{security parameter}) gets larger and larger, the product of \(\textcolor{blue}{p(\lambda)}\) (\textcolor{blue}{resources or capabilities for an adversary}) and \(\textcolor{blue}{f(\lambda)}\) (\textcolor{blue}{success probability}) approaches \(0\).
+	\end{remark}
+	\vspace{8pt}
+	\begin{tcolorbox}[colframe=procolor,title={\color{white}\bf }]
+		\begin{proposition}
+			Let \(c\in\Z\). \[
+			\lim\limits_{\lambda\to\infty}\lambda^cf(\lambda)=0\implies\text{$f$ is negligible}.
+			\]
+		\end{proposition}
+	\end{tcolorbox}
+	\begin{proof}
+		Suppose that \(f\) satisfies \(\lim\limits_{\lambda\to\infty}\lambda^c f(\lambda)=0\) for any \(c\in\Z\), and take an arbitrary polynomial \(p\) of degree \(n\). Since \(\lim\limits_{\lambda\to\infty}\frac{p(\lambda)}{\lambda^{n+1}}=0\), we have \[
+		\lim\limits_{\lambda\to\infty}p(\lambda)f(\lambda)=\lim\limits_{\lambda\to\infty}\left[\frac{p(\lambda)}{\lambda^{n+1}}\left(\lambda^{n+1}\cdot f(\lambda)\right)\right]=\left(\lim\limits_{\lambda\to\infty}\frac{p(\lambda)}{\lambda^{n+1}}\right)\left(\lim\limits_{\lambda\to\infty}\lambda^{n+1} f(\lambda)\right) = 0\cdot 0=0.
+		\]
+	\end{proof}
+	\vspace{8pt}
+	\begin{example}
+		Let \(c\in\Z\). Then \[
+		\lim\limits_{\lambda\to\infty}\lambda^c\frac{1}{2^\lambda}=
+		\lim\limits_{\lambda\to\infty}\frac{(\lambda^c)^{\log_2 2}}{2^\lambda}=
+		\lim\limits_{\lambda\to\infty}\frac{2^{c\log_2\lambda}}{2^\lambda}=
+		\lim\limits_{\lambda\to\infty}2^{c\log_2(\lambda)-\lambda}=0
+		\] since \(c\log_2(\lambda)-\lambda\to-\infty\) as \(\lambda\to\infty\).
+		 Thus, \(1/2^\lambda\) is negligible.
+	\end{example}
+
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf \(f\approx g\)}]
+		\begin{definition}
+			Let \(f,g:\N\to\R\) are real-valued functions. We write \(f\approx g\) to mean that \(\abs{f(\lambda)-g(\lambda)}\) is a negligible function.
+		\end{definition}
+	\end{tcolorbox}
+
+	\begin{remark}
+		We use the terminology of negligible functions exclusively when discussing probabilities, so the following are common: \begin{align*}
+			\Pr[X]\approx 0 &\Leftrightarrow \text{``event $X$ almost never happens''}\\
+			\Pr[Y]\approx 1 &\Leftrightarrow \text{``event $Y$ almost always happens''}\\
+			\Pr[A]\approx \Pr[B] &\Leftrightarrow \text{``event $A$ and $B$ happen with essentially the same probability''}
+		\end{align*}
+		Additionally, the \(\approx\) symbol is \textit{transitive}: \[
+		\Pr[X]\approx\Pr[Y]\land\Pr[Y]\approx\Pr[Z]\implies\Pr[X]\approx\Pr[Z].
+		\]
+	\end{remark}
+
+	\newpage
+	\section{Indistinguishability}
+	\section{Birthday Probabilities \& Sampling With/out Replacement}
+	
+	
+	\newpage
+	\newpage
+	\section*{Exercises}
+	
+	\begin{itemize}
+		\item[\bf 4.12.] Suppose you want to enforce password rules so that at least \(2^{128}\) passwords satisfy the
+		rules. How many characters long must the passwords be, in each of these cases?
+		\begin{enumerate}[(a)]
+			\item Passwords consist of lowercase \textcolor{red!70!black}{\texttt{a}} through \textcolor{red!70!black}{\texttt{z}} only.
+			\item Passwords consist of lowercase and uppercase letters \textcolor{red!70!black}{\texttt{a}}-\textcolor{red!70!black}{\texttt{z}} and \textcolor{red!70!black}{\texttt{A}}-\textcolor{red!70!black}{\texttt{Z}}.
+			\item Passwords consist of lower/uppercase letters and digits \textcolor{red!70!black}{\texttt{0}}-\textcolor{red!70!black}{\texttt{9}}.
+			\item Passwords consist of lower/uppercase letters, digits, and any symbol characters that appear on a standard US keyboard (including the space character).\begin{figure}[h!]
+				\centering
+				\includegraphics[scale=.8]{us_std_keyboard.png}
+				\caption{Standard US Keyboard ( \url{https://kbd-intl.narod.ru/english/layouts})}
+			\end{figure}
+		\end{enumerate}
+		\begin{tcolorbox}[colframe=magenta, breakable, enhanced]
+			\begin{proof}[\sol]
+				We want to create a password system that allows for at least \(2^{128}\) (16 bytes) different passwords.
+				\begin{enumerate}[(a)]
+					\item We are only using lowercase letters \textcolor{red!70!black}{\texttt{a}}-\textcolor{red!70!black}{\texttt{z}}, which gives us \textbf{26} different possibilities for each character in the password. We need to solve the following equation for 
+					\(n\) (the length of the password): \[
+					26^n\geq 2^{128}.
+					\] Then \[
+					n\log(26)\geq 128\log(2)\implies n\geq\frac{128\cdot\log(2)}{\log(26)}\approx 27.2.
+					\]
+					\item \[
+					52^n\geq 2^{128}\implies
+					n\geq\frac{128\cdot\log(2)}{\log(52)}\approx 22.4.
+					\]
+					\item \[
+					62^n\geq 2^{128}\implies n\geq\frac{128\cdot\log(2)}{\log(62)}\approx 21.5
+					\]
+					\item \[
+					95^n\geq 2^{128}\implies n\geq\frac{128\cdot\log(2)}{\log(95)}\approx 19.5
+					\]
+				\end{enumerate}
+			\end{proof}
+		\end{tcolorbox}
+		\begin{figure}[h!]
+			\centering
+			\includegraphics[scale=.75]{4_12.png}
+		\end{figure}
+		\begin{lstlisting}[style=sage, caption={},captionpos=t]
+import matplotlib.pyplot as plt
+
+# Given values of X and Y
+X_values = [8, 16, 32, 64, 128, 256]
+Y_values = [26, 52, 62, 95]
+
+# Initialize a plot
+plt.figure(figsize=(10,6))
+
+# Loop through each Y value
+	for Y in Y_values:
+	# Calculate the expression for each X value
+	Z = [x * log(2) / log(Y) for x in X_values]
+	
+	# Plot the result
+	plt.plot(X_values, Z, label='Y=' + str(Y), marker='o')
+
+# Labeling the plot
+plt.title(r'Graph of $\frac{X \log(2)}{\log(Y)}$')
+plt.xlabel('X')
+plt.ylabel(r'$\frac{X \log(2)}{\log(Y)}$')
+plt.xscale("log", base=2) # for logarithmic scale on x-axis
+plt.legend()
+plt.grid(True)
+plt.show()
+\end{lstlisting}
+	\end{itemize}
 	% End document
 \end{document}
