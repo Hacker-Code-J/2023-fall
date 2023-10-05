@@ -1,6 +1,7 @@
 \documentclass[12pt,openany]{book}
 
 \usepackage{amsmath,amsthm,amsfonts,amscd} % Packages for mathematics
+\usepackage{commath}
 
 % Colors
 \usepackage[dvipsnames]{xcolor}
@@ -23,7 +24,7 @@
 
 % Page layout
 \usepackage{geometry}
-\geometry{a4paper,left=1.325in,right=1in,top=1in,bottom=1in,heightrounded}
+\geometry{a4paper,left=1.2in,right=.7in,top=1in,bottom=1in,heightrounded}
 \usepackage{fancyhdr}
 \fancyhf{}
 \fancyhead[LE,RO]{\thepage}
@@ -147,13 +148,34 @@
 \newtheorem*{note}{Note}
 
 %New Command
-\newcommand{\set}[1]{\left\{#1\right\}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\Q}{\mathbb{Q}}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\C}{\mathbb{C}}
 \newcommand{\F}{\mathbb{F}}
+
+\newcommand{\ie}{\textnormal{i.e.}}
+\newcommand{\eg}{\textnormal{e.g.}}
+
+\newcommand{\of}[1]{\left( #1 \right)} 
+
+\newcommand{\nbhd}{\mathcal{N}}
+\newcommand{\Id}{\operatorname{\textnormal{id}}}
+
+%\newcommand{\norm}[1]{\left\| #1 \right\|}
+
+\newcommand{\sol}{\textcolor{magenta}{\bf Sol}}
+
+\newcommand{\inv}[1]{{#1}^{-1}}
+\newcommand{\img}{\textnormal{Im}}
+
+\newcommand{\by}{\times}
+\newcommand{\Span}[1]{\textnormal{span}\langle #1\rangle}
+\newcommand{\Sspan}[1]{\textnormal{span}\bigg\langle #1\bigg\rangle}
+\newcommand{\basis}{\mathscr{B}}
+\newcommand{\scrC}{\mathscr{C}}
+\newcommand{\rank}{\textnormal{rank}}
 
 % Begin document
 \begin{document}
@@ -178,7 +200,7 @@
 	
 	% Table of contents
 	\tableofcontents
-	=m
+	
 	% Chapters
 	\mainmatter
 	
@@ -306,8 +328,9 @@
 	\newpage
 	\section{Matrix Representation of Linear Mappings}
 	
-	
-	\section{Basis Change}
+	\section{Basis and Rank}
+	\section{Linear Mappings}
+	\subsection{Basis Change}
 	
 	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf Basis Change}]
 		\begin{theorem}
@@ -315,42 +338,269 @@
 			\mathscr{B}=(\textbf{b}_1,\dots,\textbf{b}_n),\quad\tilde{\mathscr{B}}=(\tilde{\textbf{b}}_1,\cdots\tilde{\textbf{b}}_n)
 			\] of \(V\) and \[
 			\mathscr{C}=(\textbf{c}_1,\dots,\textbf{c}_m),\quad\tilde{\mathscr{C}}=(\tilde{\textbf{c}}_1,\cdots\tilde{\textbf{c}}_m)
-			\] of \(W\), and a transformation matrix \(\textbf{A}_{\Phi}\) w.r.t. \(\mathscr{B}\) and \(\mathscr{C}\), the corresponding transformation matrix \(\tilde{\textbf{A}}_\Phi\) w.r.t. the bases \(\tilde{\mathscr{B}}\) and \(\tilde{\mathscr{C}}\) is given \[
-			\tilde{\textbf{A}}_\Phi=\textbf{T}^{-1}\textbf{A}_\Phi \textbf{S}.
+			\] of \(W\), and a transformation matrix \(\textbf{A}_{\Phi}=\sbr[1]{a_{ij}}_{m\by n}\) w.r.t. \(\mathscr{B}\) and \(\mathscr{C}\), the corresponding transformation matrix \(\tilde{\textbf{A}}_\Phi=\sbr[1]{\tilde{a}_{ij}}_{m\by n}\) w.r.t. the bases \(\tilde{\mathscr{B}}\) and \(\tilde{\mathscr{C}}\) is given \[
+			\boxed{\tilde{\textbf{A}}_\Phi=\textbf{T}^{-1}\textbf{A}_\Phi \textbf{S}}.
 			\]
+			\begin{tikzcd}
+				&& V \arrow[rr, "\Phi"] && W && V \arrow[rr, "\Phi"] && W\\
+				&& \mathscr{B} \arrow[rr, "\textbf{A}_\Phi"] && \mathscr{C} && \mathscr{B} \arrow[rr, "\textbf{A}_\Phi"] && \mathscr{C} \arrow[dd, "\textbf{T}^{-1}"] \\
+				&& && && &&\\
+				&& \tilde{\mathscr{B}} \arrow[uu, "\textbf{S}"] \arrow[rr, "\tilde{\textbf{A}}_\Phi"] && \tilde{\mathscr{C}} \arrow[uu, "\textbf{T}"'] && \tilde{\mathscr{B}} \arrow[uu, "\textbf{S}"] \arrow[rr, "\tilde{\textbf{A}}_\Phi"] && \tilde{\mathscr{C}}             
+			\end{tikzcd}
 		\end{theorem}
 	\end{tcolorbox}
 	\begin{proof}
-		We define \(\textbf{S}=(s_{ij})\)We can write the vectors of the new basis \(\tilde{\mathscr{B}}\) of \(V\) as follow: \[
+		Let \[
+			\textbf{S}:=\sbr[1]{s_{ij}}_{n\by n}=\sbr[2]{\tilde{\textbf{b}}_1\ \tilde{\textbf{b}}_2\ \cdots\ \tilde{\textbf{b}}_n}_{\basis},\quad
+			\text{and}\quad
+			\textbf{T}:=\sbr[1]{t_{lk}}_{m\by m}=\sbr[2]{\tilde{\textbf{c}}_1\ \tilde{\textbf{c}}_2\ \cdots\ \tilde{\textbf{c}}_m}_{\scrC}.
+		\] That is, \[
 		\tilde{\textbf{b}}_j=\begin{bmatrix}
 			s_{1j} \\ \vdots \\ s_{nj}
-		\end{bmatrix}_{\mathscr{B}}=\sum_{i=1}^ns_{ij}\textbf{b}_j\quad\text{for}\quad j=1,\dots,n.
-		\] Similarly, we write the new basis vectors \(\tilde{\mathscr{C}}\) of \(W\) as follow: \[
-		\tilde{\textbf{c}}_j=\begin{bmatrix}
-			t_{1k} \\ \vdots \\ t_{mk}
-		\end{bmatrix}_{\mathscr{C}}=\sum_{l=1}^mt_{lk}\textbf{c}_l\quad\text{for}\quad k=1,\dots,m.
-		\]
+		\end{bmatrix}_{\mathscr{B}}=\sum_{i=1}^ns_{ij}\textbf{b}_j\quad\text{and}\quad \tilde{\textbf{c}}_k=\begin{bmatrix}
+		t_{1k} \\ \vdots \\ t_{mk}
+		\end{bmatrix}_{\mathscr{C}}=\sum_{l=1}^mt_{lk}\textbf{c}_l
+		\] for $j=1,\dots,n$ and $k=1,\dots,m$, respectively. We must show that \[
+		\textbf{T}\tilde{\textbf{A}_\Phi}=\textbf{A}_\Phi\textbf{S}\in M_{m\by n}(\R).
+		\] \begin{enumerate}[(i)]
+			\item \((\textbf{T}\tilde{\textbf{A}_\Phi})\) For \(j=1,2,\dots,n\), \[
+			\Phi(\tilde{\textbf{b}}_j)=\sum_{k=1}^{m}\tilde{a}_{kj}\tilde{\textbf{c}}_k=\sum_{k=1}^m\sbr{\tilde{a}_{kj}\del{\sum_{l=1}^mt_{lk}\textbf{c}_l}}=\sum_{l=1}^m\sbr{\del{\sum_{k=1}^mt_{lk}\tilde{a}_{kj}}\textbf{c}_l}.
+			\]
+			\item \((\textbf{A}_\Phi\textbf{S})\) For \(j=1,2,\dots,n\), \[
+			\Phi(\tilde{\textbf{b}}_j)=\Phi\of{\sum_{i=1}^ns_{ij}\textbf{b}_j}=\sum_{i=1}^n\sbr{s_{ij}\Phi(\textbf{b}_i)}=\sum_{i=1}^n\sbr{s_{ij}\sum_{i=1}^ma_{li}\textbf{c}_l}=\sum_{l=1}^m\of{\sum_{i=1}^na_{li}s_{ij}}\textbf{c}_l.
+			\]
+		\end{enumerate}
+		 Hence \[
+		 \sum_{k=1}^mt_{lk}\tilde{a}_{kj}=\sum_{i=1}^na_{li}s_{ij}\implies\textbf{T}\tilde{\textbf{A}_\Phi}=\textbf{A}_\Phi\textbf{S}\implies\tilde{\textbf{A}}_\Phi=\textbf{T}^{-1}\textbf{A}_\Phi \textbf{S}.
+		 \]
 	\end{proof}
 	
-	\begin{center}
-	\begin{tikzcd}
-		\text{Vector spaces} &  &  & V \arrow[rr, "\Phi"]                                             &  & W                                    &  &  & V \arrow[rr, "\Phi"]                                             &  & W                                \\
-		&  &  & \mathscr{B} \arrow[rr, "\textbf{A}_\Phi"]                                 &  & \mathscr{C}                          &  &  & \mathscr{B} \arrow[rr, "\textbf{A}_\Phi"]                                 &  & \mathscr{C} \arrow[dd, "\textbf{T}^{-1}"] \\
-		\text{Ordered bases} &  &  &                                                                  &  &                                      &  &  &                                                                  &  &                                  \\
-		&  &  & \tilde{\mathscr{B}} \arrow[uu, "\textbf{S}"] \arrow[rr, "\tilde{A}_\Phi"] &  & \tilde{\mathscr{C}} \arrow[uu, "\textbf{T}"'] &  &  & \tilde{\mathscr{B}} \arrow[uu, "\textbf{S}"] \arrow[rr, "\tilde{A}_\Phi"] &  & \tilde{\mathscr{C}}             
-	\end{tikzcd}
-	\end{center}
-	
 	\begin{example}
-		Consider the linear mapping $T:\R^2\to\R^2$ whose transformation is \[
-		A_T=
-		\] with respect to the base
+		Let \[
+		y_1\textbf{e}_1+y_2\textbf{e}_2=\Phi(x_1\textbf{e}_1+x_2\textbf{e}_2)=(x_1+5x_2)\textbf{e}_1+6x_2\textbf{e}_2.
+		\] Then \[\begin{bmatrix}
+			y_1\\ y_2
+		\end{bmatrix}=\textbf{A}_\Phi\begin{bmatrix}
+	x_1 \\ x_2
+\end{bmatrix},\quad\text{where}\quad
+\textbf{A}_\Phi=\begin{bmatrix}
+	1 & 5\\ 0 & 6
+\end{bmatrix}.
+		\] We define \[
+		\tilde{\basis}=\sbr{\tilde{\textbf{b}}_1\ \tilde{\textbf{b}}_2}:=\begin{bmatrix}
+			1 & 1\\ 1 & 0
+		\end{bmatrix}.
+		\]\[
+		\tilde{\textbf{A}}_\Phi=\textbf{T}^{-1}\textbf{A}_\Phi\textbf{S}=
+		\begin{bmatrix}
+			0 & 1\\ 1 & -1
+		\end{bmatrix}\begin{bmatrix}
+		0 & 5\\ 0 & 6
+	\end{bmatrix}\begin{bmatrix}
+	1 & 1\\ 1 & 0
+\end{bmatrix}=\begin{bmatrix}
+6 & 0\\ 0 & 1
+\end{bmatrix}
+		\] \[
+		\Phi\of{\tilde{x}_1\begin{bmatrix}
+			1 \\ 1
+		\end{bmatrix}+\tilde{x}_2\begin{bmatrix}
+		1 \\ 0
+	\end{bmatrix}}=6\tilde{x}_1\begin{bmatrix}
+1 \\ 1
+\end{bmatrix}+\tilde{x}_2\begin{bmatrix}
+1 \\ 0
+\end{bmatrix}.
+		\]
 	\end{example}
+
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Similarity}]
+		\begin{definition}
+			Let \(\textbf{A},\tilde{\textbf{A}}\in M_{n\by n}(\R)\). \(\textbf{A},\tilde{\textbf{A}}\) are \textbf{similar} if \[
+			\exists\textbf{S}\in M_{n\by n}(\R):\tilde{\textbf{A}}=\textbf{S}^{-1}\textbf{A}\textbf{S}.
+			\]
+		\end{definition}
+	\end{tcolorbox}
+	
+	\newpage
+	\subsection{Image and Kernel}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Image and Kernel}]
+		\begin{definition}
+			Let \(\Phi:V\to W\) be a linear mapping. \begin{enumerate}[(1)]
+				\item The \textbf{kernel (null) space} is defined by \[
+				\ker(\Phi):=\Phi^{-1}(\textbf{0}_W)=\set{\textbf{v}\in V:\Phi(\textbf{v})=\textbf{0}_W}.
+				\]
+				\item The \textbf{image (range)} is defined by \[
+				\img(\Phi):=\Phi[V]=\set{\textbf{w}\in W:(\exists\textbf{v}\in V)\ \Phi(\textbf{v})=\textbf{w}}.
+				\]
+			\end{enumerate}
+		\end{definition}
+	\end{tcolorbox}
+	\begin{remark}
+		\ \begin{enumerate}[(1)]
+			\item \(\textbf{0}_V\in\ker(\Phi)\implies\ker\Phi\neq\emptyset\).
+			\item \(\ker(\Phi)\subseteq V\) is a subspace of $V$.
+			\item \(\img(\Phi)\subseteq W\) is a subspace of $W$.
+			\item \(\Phi:V\rightarrowtail W\iff \ker(\Phi)=\set{\textbf{0}_V}\).
+		\end{enumerate}
+	\end{remark}
+	\vspace{8pt}
+	\begin{remark}[Null Space and Column Space]
+		Let \(\textbf{A}\in M_{m\by n}(\R)\) and $$\fullfunction{\Phi}{\R^n}{\R^m}{\textbf{x}}{\textbf{Ax}}$$
+		\begin{enumerate}[(1)]
+			\item The \textbf{column space} is the image of \(\Phi\), the span of the columns of \(\textbf{A}\),\begin{align*}
+				\img(\Phi)=\set{\textbf{A}\textbf{x}:\textbf{x}\in\R^n}&=\set{\sbr{\textbf{a}_1,\dots,\textbf{a}_n}\begin{bmatrix}
+						x_1\\ \vdots\\ x_n
+					\end{bmatrix}:x_i\in\R}\\
+				&=\set{\sum_{i=1}^nx_i\textbf{a}_i:x_i\in\R}\\
+				&=\Span{\textbf{a}_1,\dots,\textbf{a}_n}\subseteq\R^m.
+			\end{align*}
+			\item \(\rank(\textbf{A})=\dim(\img(\Phi))\).
+			\item The \textbf{null space} \(\ker(\Phi)\) is $\set{\textbf{x}:\textbf{Ax}=\textbf{0}}$.
+		\end{enumerate}
+	\end{remark}
+
+	\newpage
+	\begin{example}[Image and Kernel of Linear Mapping]
+		The mapping \begin{align*}
+			\Phi:\R^4\to\R^2:\begin{bmatrix}
+				x_1\\x_2\\x_3\\x_4
+			\end{bmatrix}\mapsto\begin{bmatrix}
+			1&2&-1&0\\1&0&0&1
+		\end{bmatrix}\begin{bmatrix}
+			x_1\\x_2\\x_3\\x_4
+		\end{bmatrix}&=\begin{bmatrix}
+			x_1+2x_2-x_3\\x_1+x_4
+		\end{bmatrix}\\
+		&=x_1\begin{bmatrix} 1\\1 \end{bmatrix}+x_2\begin{bmatrix} 2\\0 \end{bmatrix}+x_3\begin{bmatrix} -1\\0 \end{bmatrix}+x_4\begin{bmatrix} 0\\1 \end{bmatrix}.
+		\end{align*} is linear. Then \begin{enumerate}[(1)]
+		\item \(\img(\Phi)=\textnormal{span}\bigg\langle
+			\begin{bmatrix}1\\1\end{bmatrix},
+			\begin{bmatrix}2\\0\end{bmatrix},
+			\begin{bmatrix}-1\\0\end{bmatrix},
+			\begin{bmatrix}0\\1\end{bmatrix}
+			\bigg\rangle=\R^2
+			\)
+			\item Since \[
+			\begin{bmatrix}
+				1&2&-1&0\\1&0&0&1
+			\end{bmatrix}\rightsquigarrow\cdots\rightsquigarrow\begin{bmatrix}
+			1&0&0&1\\0&1&-\frac{1}{2}&-\frac{1}{2}
+		\end{bmatrix}\xrightarrow[]{\text{Minus-1 Trick}}
+			\begin{bmatrix}
+				1&0&0&1\\0&1&-\frac{1}{2}&-\frac{1}{2}\\
+				0&0&-1&0\\ 0&0&0&-1
+			\end{bmatrix},
+			\] we have \[
+			\ker(\Phi)=\Sspan{\begin{bmatrix}1\\-1/2\\-1\\0\end{bmatrix},
+					\begin{bmatrix}1\\-1/2\\0\\-1\end{bmatrix}}.
+			\]
+	\end{enumerate}
+	\end{example}
+	\vspace{8pt}
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf Rank-Nullity Theorem (Fundamental Theorem of Linear Mapping)}]
+		\begin{theorem}
+			Let \(\Phi:V\to W\) be a linear mapping for vector spaces \(V,W\). Then \[
+			\dim(\ker\Phi)+\dim(\img\Phi)=\dim V.
+			\]
+		\end{theorem}
+	\end{tcolorbox}
+
+	\section{Affine Spaces}
+	\[
+	\Phi(\textbf{x})=\textbf{A}\textbf{x}+\textbf{b}
+	\] \(\img\Phi\) is not a subspace if \(\textbf{b}\neq 0\).
 	
 	\newpage
 	\chapter{Analytic Geometry}
-	\section{Rank-Nullity Theorem}
+	
+	\section{Norm}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Norm}]
+		\begin{definition}
+			A \textbf{norm} on a vector space \(V\) is a function \[
+			\fullfunction{\norm{\ \cdot\ }}{V}{\R}{\textbf{x}}{\norm{\textbf{x}}}
+			\] such that for all \(\lambda\in\R\) and \(\textbf{x},\textbf{y}\in V\) the following hold: \begin{enumerate}[(i)]
+				\item (Absolutely homogeneous)\quad \(\norm{\lambda x}=\abs{\lambda}\norm{\textbf{x}}\)
+				\item (Triangle inequality)\quad \(\norm{\textbf{x}+\textbf{y}}\leq\norm{\textbf{x}}+\norm{\textbf{y}}\)
+				\item (Positive definite)\quad \(\norm{\textbf{x}}\) and \(\norm{x}=0\Leftrightarrow\textbf{x}=\textbf{0}\).
+			\end{enumerate}
+		\end{definition}
+	\end{tcolorbox}
+	\vspace{8pt}
+	\begin{example}[Manhattan Norm]
+		The Manhattan norm on $\R^n$ is defined for $\textbf{x}\in\R^n$ as $$\norm{\textbf{x}}_1:=\sum_{i=1}^n\abs{x_i}.$$ The Manhattan norm is also called \(\mathscr{l}_1\) norm.
+	\end{example}
+	\begin{example}[Euclidean Norm]
+		The Manhattan norm on $\R^n$ is defined for $\textbf{x}\in\R^n$ as $$\norm{\textbf{x}}_2:=\sqrt{\sum_{i=1}^nx_i^2}=\sqrt{\textbf{x}^T\textbf{x}}.$$ The Euclidean norm is also called \(\mathscr{l}_2\) norm.
+	\end{example}
+
+	\section{Inner Products}
+	\subsection{General Inner Product}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Dot Product (Scalar Product)}]
+		\begin{definition}
+			The \textbf{dot product (scalar product)} in \(\R^n\) is given by \[
+			\textbf{x}\cdot\textbf{y}=\textbf{x}^T\textbf{y}=\sum_{i=1}^nx_iy_i.
+			\]
+		\end{definition}
+	\end{tcolorbox}
+	\vspace{8pt}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Bilinaer Mapping}]
+		\begin{definition}
+			Let \(V\) be a vector space and \(\Omega:V\times V\to\R\) is a \textbf{bilienar mapping} if for all \(\alpha,\beta\in\R\),  \begin{enumerate}[(i)]
+				\item $\Omega(\alpha \textbf{x}_1+\beta\textbf{x}_2,\textbf{y}) = \alpha\Omega(\textbf{x},\textbf{y})+\beta\Omega(\textbf{x}_2,y)$.
+				\item $\Omega(\textbf{y},\alpha\textbf{y}_1+\beta\textbf{y}_2) = \alpha\Omega(\textbf{x},\textbf{y}_1)+\beta\Omega(\textbf{x},y_2)$.
+			\end{enumerate}
+		\end{definition}
+	\end{tcolorbox}
+	\begin{remark}
+		\ \begin{enumerate}[(1)]
+			\item \(\Omega\) is called \textbf{symmetric} if \(\forall\textbf{x},\textbf{y}\in V:\Omega(\textbf{x},\textbf{y})=\Omega(\textbf{y},\textbf{x})\).
+			\item \(\Omega\) is called \textbf{positive definite} if $
+			\forall \textbf{x}\in V\setminus\set{\textbf{0}}:\Omega(\textbf{x},\textbf{x})>0,\ \Omega(\textbf{0},\textbf{0})=0.$
+		\end{enumerate}
+	\end{remark}
+	\vspace{8pt}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Inner Product}]
+		\begin{definition}
+			A bilinear mapping \(V\times V\to\R\) is called an \textbf{inner product} on \(V\) if \(\Omega\) is symmetric and positive definite bilinear mapping. 
+		\end{definition}
+	\end{tcolorbox}
+	
+	\newpage
 	\section{Positive Definite, Gram-Schmidt Process}
+	
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf }]
+		\begin{definition}
+			
+		\end{definition}
+	\end{tcolorbox}
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf }]
+		\begin{theorem}
+			
+		\end{theorem}
+	\end{tcolorbox}
+	
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf }]
+		\begin{definition}
+			
+		\end{definition}
+	\end{tcolorbox}
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf }]
+		\begin{theorem}
+			
+		\end{theorem}
+	\end{tcolorbox}
+
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf }]
+		\begin{definition}
+			
+		\end{definition}
+	\end{tcolorbox}
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf }]
+		\begin{theorem}
+			
+		\end{theorem}
+	\end{tcolorbox}
 	
 	\chapter{Matrix Decompositions}
 	\section{Eigenvalues and Eigenvectors}
