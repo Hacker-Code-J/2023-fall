@@ -68,53 +68,27 @@
 
 \lstdefinestyle{sage}{
 	language=Python,
-	aboveskip=1.5em,
-	belowskip=1.5em,
-	basicstyle=\small\ttfamily,
-	commentstyle=\color{codegreen},
-	keywordstyle=\color{blue},
-	numberstyle=\tiny\color{codegray},
-	stringstyle=\color{codepurple},
-	breakatwhitespace=false,         
-	breaklines=true,                 
-	captionpos=b,                    
-	keepspaces=true,                 
-	numbers=left,                    
-	numbersep=5pt,                  
-	showspaces=false,                
+	backgroundcolor=\color{white},
+	basicstyle=\small\ttfamily\color{black}, 
+	basicstyle=\footnotesize\ttfamily\color{black},
+	keywordstyle=\color{blue!60!black},
+	commentstyle=\color{green!60!black},
+	stringstyle=\color{purple!60!black},
 	showstringspaces=false,
-	showtabs=false,                  
-	tabsize=2,
-	frame=tb,
-	framerule=0pt,
-	framesep=8pt,
-	rulecolor=\color{codegray},         
-	backgroundcolor=\color{backcolour},   
-	emph={[2]sage, var, plot, diff, integrate, limit, sum, prod},
-	emphstyle=[2]\color{red},
-	escapeinside={\%*}{*)},
-	%language=Python,
-	%backgroundcolor=\color{white},
-	%basicstyle=\small\ttfamily\color{black}, 
-	%basicstyle=\footnotesize\ttfamily\color{black},
-	%keywordstyle=\color{blue!60!black},
-	%commentstyle=\color{green!60!black},
-	%stringstyle=\color{purple!60!black},
-	%showstringspaces=false,
-	%breaklines=true,
-	%tabsize=4,
-	%orekeywords={True, False, None},
-	%frame=leftline, % Remove the border
-	%framesep=3pt,
-	%frameround=tttt,
-	%framexleftmargin=3pt,
-	%numbers=left,
-	%numberstyle=\small\color{gray},
-	%xleftmargin=15pt, % Increase the left margin
-	%xrightmargin=5pt,
-	%captionpos=b,
-	%belowskip=0pt,
-	%aboveskip=4pt
+	breaklines=true,
+	tabsize=4,
+	morekeywords={True, False, None},
+	frame=leftline, % Remove the border
+	framesep=3pt,
+	frameround=tttt,
+	framexleftmargin=3pt,
+	numbers=left,
+	numberstyle=\small\color{gray},
+	xleftmargin=15pt, % Increase the left margin
+	xrightmargin=5pt,
+	captionpos=b,
+	belowskip=0pt,
+	aboveskip=4pt
 }
 
 %Ceiling and Floor Function
@@ -862,7 +836,7 @@
 			\centering
 			\includegraphics[scale=.75]{4_12.png}
 		\end{figure}
-		\begin{lstlisting}[style=sage, caption={},captionpos=t]
+		\begin{lstlisting}[style=sage]
 import matplotlib.pyplot as plt
 
 # Given values of X and Y
