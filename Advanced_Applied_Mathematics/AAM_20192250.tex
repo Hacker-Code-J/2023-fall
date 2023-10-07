@@ -176,6 +176,10 @@
 \newcommand{\basis}{\mathscr{B}}
 \newcommand{\scrC}{\mathscr{C}}
 \newcommand{\rank}{\textnormal{rank}}
+\newcommand{\inner}[1]{\langle #1\rangle}
+\newcommand{\norms}[1]{|| #1||}
+
+\renewcommand{\vec}[1]{\textbf{#1}}
 
 % Begin document
 \begin{document}
@@ -522,7 +526,11 @@
 			\] such that for all \(\lambda\in\R\) and \(\textbf{x},\textbf{y}\in V\) the following hold: \begin{enumerate}[(i)]
 				\item (Absolutely homogeneous)\quad \(\norm{\lambda x}=\abs{\lambda}\norm{\textbf{x}}\)
 				\item (Triangle inequality)\quad \(\norm{\textbf{x}+\textbf{y}}\leq\norm{\textbf{x}}+\norm{\textbf{y}}\)
-				\item (Positive definite)\quad \(\norm{\textbf{x}}\) and \(\norm{x}=0\Leftrightarrow\textbf{x}=\textbf{0}\).
+				\item (Positive definite)\quad \(
+				\begin{cases}
+					\norm{\textbf{x}}> 0&:\textbf{x}\neq\textbf{0}\\
+					\norm{\textbf{x}}=0&:\textbf{x}=\textbf{0}
+				\end{cases}\)
 			\end{enumerate}
 		\end{definition}
 	\end{tcolorbox}
@@ -539,7 +547,7 @@
 	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Dot Product (Scalar Product)}]
 		\begin{definition}
 			The \textbf{dot product (scalar product)} in \(\R^n\) is given by \[
-			\textbf{x}\cdot\textbf{y}=\textbf{x}^T\textbf{y}=\sum_{i=1}^nx_iy_i.
+			\langle\textbf{x},\textbf{y}\rangle=\textbf{x}\cdot\textbf{y}=\textbf{x}^T\textbf{y}=\sum_{i=1}^nx_iy_i.
 			\]
 		\end{definition}
 	\end{tcolorbox}
@@ -556,41 +564,163 @@
 		\ \begin{enumerate}[(1)]
 			\item \(\Omega\) is called \textbf{symmetric} if \(\forall\textbf{x},\textbf{y}\in V:\Omega(\textbf{x},\textbf{y})=\Omega(\textbf{y},\textbf{x})\).
 			\item \(\Omega\) is called \textbf{positive definite} if $
-			\forall \textbf{x}\in V\setminus\set{\textbf{0}}:\Omega(\textbf{x},\textbf{x})>0,\ \Omega(\textbf{0},\textbf{0})=0.$
+			\begin{cases}
+				\Omega(\textbf{x},\textbf{x})>0 &:\textbf{x}\in V\setminus\set{\textbf{0}}\\
+				\Omega(\textbf{x},\textbf{x})=0 &:\textbf{x}=\textbf{0}.
+			\end{cases}$.
 		\end{enumerate}
 	\end{remark}
 	\vspace{8pt}
 	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Inner Product}]
 		\begin{definition}
-			A bilinear mapping \(V\times V\to\R\) is called an \textbf{inner product} on \(V\) if \(\Omega\) is symmetric and positive definite bilinear mapping. 
+			A positive definite, symmetric bilinear mapping \(\Omega:V\times V\to\R\) is called an \textbf{inner product} on vector space \(V\). 
 		\end{definition}
 	\end{tcolorbox}
+	\begin{example}[Inner Product That Is Not Dot Product]
+		Consider \(V=\R^2\). We define \[
+		\inner{\textbf{x},\textbf{y}}:=x_1y_1-(x_1y_2+x_2y_1)+2x_2y_2=
+		\begin{bmatrix} x_1&x_2\end{bmatrix}
+		\begin{bmatrix} 1 & -1\\ -1 &2\end{bmatrix}
+		\begin{bmatrix} y_1\\y_2\end{bmatrix}.
+		\] Then \begin{enumerate}[(i)]
+			\item (positive definite) \[
+			\inner{\textbf{x},\textbf{x}}=x_1^2-2x_1x_2+x_2^2+x_2^2=(x_1-x_2)^2+x_2^2\geq0.
+			\] Moreover, \(\inner{\textbf{x},\textbf{x}}=0\iff\textbf{x}=0\).
+			\item (symmetric) It holds.
+			\item (bilinear) It holds.
+		\end{enumerate}
+	\end{example}
 	
 	\newpage
-	\section{Positive Definite, Gram-Schmidt Process}
-	
-	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf }]
+	\subsection{Symmetric, Positive Definite Matrices}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Symmetric, Positive Defintie Matrix}]
 		\begin{definition}
-			
+			Let \(V\) be a vector space with \(\dim V=n\). A symmetric matrix \(\textbf{A}\in M_{n\by n}(\R)\) is called \textbf{symmetric, positive definite} if \(\textbf{x}^T\textbf{Ax}\geq 0\) for all \(\textbf{x}\in V\) and \[
+			\begin{cases}
+				\textbf{x}^T\textbf{Ax}>0 &:\textbf{x}\in V\setminus\set{\textbf{0}}\\
+				\textbf{x}^T\textbf{Ax}=0 &:\textbf{x}=\textbf{0}.
+			\end{cases}
+			\]
 		\end{definition}
 	\end{tcolorbox}
+	\vspace{8pt}
 	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf }]
 		\begin{theorem}
-			
+			Let \(V\) be a vector space with \(\dim V=n\) and \(\basis\) an ordered basis of \(V\). A bilinear mapping \(\inner{\cdot,\cdot}:V\times V\to\R\) is an inner product if and only if \[
+			\exists\text{symmetric, positive definite matrix}\ \textbf{A}\in M_{n\by n}(\R):\inner{\textbf{x},\textbf{y}}=\textbf{x}^T\textbf{A}\textbf{y}.
+			\]
 		\end{theorem}
-	\end{tcolorbox}
+	\end{tcolorbox} 
+	\vspace{8pt}
+	\begin{remark}
+		Let \(\textbf{A}\) be a symmetric, positive definite matrix.
+		\begin{enumerate}[(1)]
+			\item \(\ker\textbf{A}=\set{0}\) because \[
+			\textbf{x}\neq \textbf{0}\implies \textbf{x}^T\textbf{Ax}>0\implies \textbf{Ax}\neq\textbf{0}.
+			\]
+			\item The diagonal element \(a_{ii}\) of \(\textbf{A}\) are positive because \[
+			a_{ii}=\textbf{e}_i^T\textbf{A}\textbf{e}_i=\inner{\textbf{e}_i,\textbf{e}_i}> 0.
+			\]
+		\end{enumerate}
+	\end{remark}
+
+	\subsection{Lengths and Distances}
+	\begin{remark}[Cauchy-Schwarz Inequality]
+		\[
+		\abs{\inner{\textbf{x},\textbf{y}}}\leq\norms{\textbf{x}}\norms{\textbf{y}}.
+		\]
+	\end{remark}
 	
-	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf }]
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Distance and Metric}]
 		\begin{definition}
-			
+			Consider an inner product space \((V,\inner{\cdot,\cdot})\). Let \(\textbf{x},\textbf{y}\in V\). Then \[
+			d(\textbf{x},\textbf{y})=\norms{\textbf{x}-\textbf{y}}=\sqrt{\inner{\textbf{x}-\textbf{y},\textbf{x}-\textbf{y}}}.
+			\] is called \textbf{distance} between \textbf{x} and \textbf{y}. The mapping \[
+			\fullfunction{d}{V\times V}{\R}{(\textbf{x},\textbf{y})}{d(\textbf{x},\textbf{y})}
+			\] is called a \textbf{metric}
 		\end{definition}
-	\end{tcolorbox}
-	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf }]
-		\begin{theorem}
-			
-		\end{theorem}
 	\end{tcolorbox}
 
+	\subsection{Angles and Orthogonality}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Angle}]
+		\begin{definition}
+			Assume that \(\textbf{x},\textbf{y}\in V\setminus\set{\textbf{0}}\). Then \[
+			-1\leq\frac{\inner{\textbf{x},\textbf{y}}}{\norms{\textbf{x}}\norms{\textbf{y}}}\leq 1.
+			\] And \[
+			\exists !\theta\in[0,\pi]:\cos\theta=\frac{\inner{\textbf{x},\textbf{y}}}{\norms{\textbf{x}}\norms{\textbf{y}}}.
+			\] The number \(\theta\) is the \textbf{angle}.
+		\end{definition}
+	\end{tcolorbox}
+	\begin{example}
+		Consider \(\textbf{x}=(1,1)\) and \(\textbf{y}=(-1,1)\) on \(\R^2\).
+		\begin{enumerate}[(1)]
+			\item Dot Product: \[
+			\textbf{x}\cdot \textbf{y}=(1,1)\cdot(-1,1)=-1+1=0.
+			\]
+			\item Inner Product: \[
+			\inner{\textbf{x},\textbf{y}}:=\textbf{x}^T\begin{bmatrix}
+				2&0\\0&1
+			\end{bmatrix}\textbf{y}\implies\cos\theta=-\frac{1}{3}.
+			\]
+		\end{enumerate}
+	\end{example}
+	\vspace{8pt}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Orthogonal Matrix}]
+		\begin{definition}
+			A square matrix \(\textbf{A}\in M_{n\by n}(\R)\) is an \textbf{orthogonal matrix} if and only if \[
+			\textbf{A}\textbf{A}^T=I_n=\textbf{A}^T\textbf{A},
+			\] that is, \(\textbf{A}^{-1}=\textbf{A}^T\).
+		\end{definition}
+	\end{tcolorbox}
+	\begin{remark}
+		\ \begin{enumerate}[(1)]
+			\item \(\textbf{A}^T\textbf{A}=[A_i^TA_j]_{n\by n}=\sbr{\inner{\textbf{A}_i,\textbf{A}_j}}_{n\by n}\), where \(\inner{\textbf{A}_i,\textbf{A}_j}=\begin{cases}
+				1 &:i=j\\ 0&:i\neq j.
+			\end{cases}\)
+			\begin{enumerate}[(i)]
+				\item Column vectors of \(\textbf{A}\) are orthogonal each other.
+				\item \(\inner{\textbf{A}_i,\textbf{A}_i}=1\implies\norms{\textbf{A}_i}=1\).
+			\end{enumerate}
+			\item Let \(\textbf{A}\) is orthogonal. Then a linear mapping \[
+			\fullfunction{\Phi}{\R^n}{\R^m}{\textbf{x}}{\textbf{Ax}}
+			\] has \textbf{length preserving} property, \ie, \(\norms{\textbf{x}}=\norms{\textbf{Ax}}\) because \[
+			\norms{\textbf{Ax}}^2=\inner{\textbf{Ax},\textbf{Ax}}=(\textbf{Ax})^T\textbf{Ax}=\textbf{x}^T\textbf{A}^T\textbf{Ax}=\textbf{x}^T\textbf{x}=\inner{\textbf{x},\textbf{x}}=\norms{\textbf{x}}^2.
+			\] $\Phi$ has also \textbf{angle preserving} property because \[
+			\cos\theta=\frac{(\vec{Ax}^T)(\vec{Ay})}{\norms{\vec{Ax}}\norms{\vec{Ay}}}=\frac{\vec{x}^T\textbf{A}^T\textbf{A}\vec{y}}{\sqrt{\textbf{x}^T\textbf{A}^T\textbf{Ax}\textbf{y}^T\textbf{A}^T\textbf{Ay}}}=\frac{\textbf{x}^T\textbf{y}}{\norms{\vec{x}}\norms{\vec{y}}}.
+			\]
+		\end{enumerate}
+	\end{remark}
+	
+	\newpage
+	\section{Orthonormal Basis}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Orthnormal Bais}]
+		\begin{definition}
+			Consider an \(n\)-dimensional vector space \(V\) and a basis \(\set{\vec{b}_1,\dots,\vec{b}_n}\) of \(V\). The basis is called an \textbf{orthonormal basis (ONB)} if \[
+			\inner{\vec{b}_i,\vec{b}_j}=\begin{cases}
+				0 &:i\neq j\\
+				1 &:i=j
+			\end{cases},\quad\ie,\quad\inner{\vec{b}_i,\vec{b}_j}=\delta_{ij}
+			\] for all \(i,j=1,\dots,n\).
+		\end{definition}
+	\end{tcolorbox}
+	\vspace{8pt}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Orthogonal Complement}]
+		\begin{definition}
+			Consider a \(d\)-dimensional vector space \(V\) and an \(m\)-dimensional subspace \(U\subseteq V\). The \textbf{orthogonal complement} is \[
+			U^\perp:=\set{\textbf{v}\in V:(\forall\vec{u}\in U)\ \inner{\textbf{v},\textbf{u}}=0}
+			\]  is a \((d-m)\)-dimensional subspace of \(V\).
+		\end{definition}
+	\end{tcolorbox}
+	\begin{remark}
+		\ \begin{enumerate}[(1)]
+			\item \(U\cap U^\perp=\set{\vec{0}}\).
+			\item Any vector \(\textbf{x}\in V\) can be uniquely decomposed into \[
+			\textbf{x}=\sum_{i=1}^m\lambda_m\vec{b}_m+\sum_{j=1}^{d-m}\psi_j\vec{b}_j^\perp,\quad\lambda_i,\psi_j\in\R,
+			\] where \((\vec{b}_1,\dots,\vec{b}_m)\) is a basis of \(U\) and \((\vec{b}_1^\perp,\dots,\vec{b}_{d-m}^\perp)\) is a basis of \(U^\perp\).
+		\end{enumerate}
+	\end{remark}
+	
+	\newpage
 	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf }]
 		\begin{definition}
 			
