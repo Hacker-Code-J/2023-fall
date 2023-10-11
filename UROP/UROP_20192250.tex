@@ -1,6 +1,6 @@
 \documentclass[12pt,openany]{book}
 \usepackage{amsmath,amsthm,amsfonts,amscd} % Packages for mathematics
-
+\usepackage{commath}
 % Colors
 \usepackage[dvipsnames, table]{xcolor}
 \definecolor{titleblue}{RGB}{0,53,128}
@@ -148,7 +148,6 @@
 \newtheorem*{note}{Note}
 
 %New Command
-\newcommand{\set}[1]{\left\{#1\right\}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\Q}{\mathbb{Q}}
@@ -166,8 +165,8 @@
 \newcommand{\eg}{\textnormal{e.g.}}
 
 \newcommand{\of}[1]{\left( #1 \right)} 
-\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
-\newcommand{\norm}[1]{\left\| #1 \right\|}
+\renewcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+\renewcommand{\norm}[1]{\left\| #1 \right\|}
 
 \newcommand{\sol}{\textcolor{magenta}{\bf Sol}}
 
@@ -201,6 +200,12 @@
 \newcommand{\ots}{\mathsf{ots}}
 \newcommand{\sL}{\mathsf{L}}
 \newcommand{\sR}{\mathsf{R}}
+
+\newcommand*{\indist}{%
+	\mathrel{\vcenter{\offinterlineskip
+			\hbox{$\sim$}\vskip-.35ex\hbox{$\sim$}\vskip-.35ex\hbox{$\sim$}}}}
+
+\newcommand{\outputs}{\Rightarrow}
 
 % Begin document
 \begin{document}
@@ -789,6 +794,24 @@
 
 	\newpage
 	\section{Indistinguishability}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Indistinguishable ($\indist$)}]
+		\begin{definition}
+			Let \(\library_{1}\) and \(\library_{2}\) be two libraries with a common interface, and let \(\adversary\) is a polynomial-time program that output a single bit. We say that \(\library_1\) and \(\library_2\) are \textbf{indistinguishable}, and write \(\library_{1}\indist\library_{2}\), if \[
+			\Pr\sbr{\adversary\linking\library_{1}\outputs 1}\approx
+			\Pr\sbr{\adversary\linking\library_{2}\outputs 1}.
+			\]
+		\end{definition}
+	\end{tcolorbox}
+	\begin{remark}
+		\ \begin{enumerate}[(1)]
+			\item We call the quantity \[
+			\abs{\Pr\sbr{\adversary\linking\library_{1}\outputs 1}-
+			\Pr\sbr{\adversary\linking\library_{2}\outputs 1}}
+			\] the \textbf{advantage} (or \textbf{bias}) of \(\adversary\) in distinguishing \(\library_{1}\) and \(\library_{2}\).
+			\item Two libraries are indistinguishable if all polynomial-time calling programs have negligible advantage in distinguishing them.
+		\end{enumerate}
+	\end{remark}
+	
 	\section{Birthday Probabilities \& Sampling With/out Replacement}
 	
 	
@@ -797,6 +820,36 @@
 	\section*{Exercises}
 	
 	\begin{itemize}
+		\item[\bf 4.4.] Show that when $f$ is negligible, then for every polynomial $p$, the function $p(\lambda)f(\lambda)$ not only approaches $0$, but it is also negligible itself.
+		\begin{tcolorbox}[colframe=magenta, breakable, enhanced]
+			\begin{proof}[\sol]
+				We want to show that \[
+				p(\lambda)f(\lambda)\ \text{is non-negligible}\implies\text{$f$ is non-negligible}.
+				\] Suppose that \[
+				\exists\text{polynomial}\ q(\lambda):\lim\limits_{\lambda\to\infty}q(\lambda)p(\lambda)f(\lambda)=c\neq0.
+				\] Then \(p\) is non-zero polynomial and $f$ is non-zero function, and so \[
+				\lim\limits_{\lambda\to\infty} q(\lambda)=\frac{c}{\lim\limits_{\lambda\to\infty}p(\lambda)f(\lambda)}=\frac{c}{\text{constant}}.
+				\] Thus \(\lim\limits_{\lambda\to\infty}p(\lambda)f(\lambda)\) cannot be a zero.
+			\end{proof}
+		\end{tcolorbox}
+		\vspace{8pt}
+		\item[\bf 4.8.] A deterministic program is one that uses no random choices. Suppose $\library_{1}$ and $\library_{2}$ are two deterministic libraries with a common interface. Show that either $\library_{1}\equiv\library_{2}$, or else $\library_{1}\&\library_{2}$ can be distinguished with advantage 1.
+		\begin{tcolorbox}[colframe=magenta, breakable, enhanced]
+			\begin{proof}[\sol]
+				Since both \(\library_{1}\) and \(\library_{2}\) are deterministic libraries, either \[
+				\library_{1}(x)=\library_{2}(x)\quad\text{or}\quad \library_{1}(x)\neq\library_{2}(x)
+				\] for any input \(x\).
+				\begin{enumerate}[(i)]
+					\item ($\library_{1}(x)=\library_{2}(x)$) Clearly, \[
+					(\forall\text{input}\ x:\library_{1}(x)=\library_{2}(x)) \implies(\library_{1}\equiv\library_{2}).
+					\]
+					\item ($\library_{1}(x)\neq\library_{2}(x)$) Suppose that \[
+					\exists\text{input}\ x:\library_{1}(x)\neq\library_{2}(x).
+					\] 
+				\end{enumerate}
+			\end{proof}
+		\end{tcolorbox}
+		\vspace{8pt}
 		\item[\bf 4.12.] Suppose you want to enforce password rules so that at least \(2^{128}\) passwords satisfy the
 		rules. How many characters long must the passwords be, in each of these cases?
 		\begin{enumerate}[(a)]
