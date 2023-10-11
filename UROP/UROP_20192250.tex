@@ -703,9 +703,11 @@
 	\newpage
 	\section{What Qualifies as a ``Negligible'' Success Probability?}
 	For a cryptographic system to be considered secure, we often want the success probability of any polynomial-time adversary to be negligible in the security parameter \(\lambda\).  
-	\begin{quote}
+	\vspace{8pt}
+	\begin{tcolorbox}
 		\(\frac{1}{2^\lambda}\) \textbf{approaches zero so fast that no polynomial can ``rescue''}.
-	\end{quote} 
+	\end{tcolorbox}
+	
 	\begin{proof}
 		Assume that \(f(\lambda)=\frac{1}{2^\lambda}\). \begin{center}
 			\begin{tikzpicture}[scale=.9]
@@ -738,7 +740,7 @@
 			&\vdots\\
 			h^{(k)}(\lambda)=2^\lambda(\ln 2)^k,\quad&g^{(k)}(\lambda)=k!.
 		\end{align*} By applying L'H\^{o}pital's Rule \(k\) times, we have \[
-		\lim\limits_{\lambda\to\infty}=\frac{\lambda^k}{2^\lambda}=\lim\limits_{\lambda\to\infty}\frac{k!}{2^\lambda(\ln 2)^k}=0.
+		\lim\limits_{\lambda\to\infty}\frac{\lambda^k}{2^\lambda}=\lim\limits_{\lambda\to\infty}\frac{k!}{2^\lambda(\ln 2)^k}=0.
 		\] Thus, \(\lim\limits_{\lambda\to\infty}p(\lambda)f(\lambda)=0\).
 	\end{proof}
 	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Negligible}]
@@ -820,6 +822,113 @@
 	\section*{Exercises}
 	
 	\begin{itemize}
+		\item[\bf 4.2.] Which of the following are negligible functions in $\lambda$? Justify your answers.\[
+		\frac{1}{2^{\lambda/2}}\quad\frac{1}{2^{\log(\lambda^2)}}\quad\frac{1}{\lambda^{\log(\lambda)}}\quad\frac{1}{\lambda^2}\quad\frac{1}{2^{(\log\lambda)^2}}\quad\frac{1}{(\log\lambda)^2}\quad\frac{1}{\lambda^{1/\lambda}}\quad\frac{1}{\sqrt{\lambda}}\quad\frac{1}{2^{\sqrt{\lambda}}}
+		\]
+		\begin{center}
+			\begin{tikzpicture}
+				\begin{axis}[
+					axis lines = left,
+					xlabel = \(\lambda\),
+					ylabel = \(f\),
+					ymin = 0, ymax = 5,
+					xmin = 0, xmax = 5,
+					legend pos=north east,
+					]
+					% Original plot
+					\addplot [
+					domain=0.1:5, 
+					samples=100, 
+					color=red,
+					]
+					{1/2^x};
+					\addlegendentry{\(\frac{1}{2^\lambda}\)}
+					
+					% New plots
+					\addplot [
+					domain=0.1:5, 
+					samples=100, 
+					color=blue,
+					]
+					{1/2^(x/2)};
+					\addlegendentry{\(\frac{1}{2^{\lambda/2}}\)}
+					
+					\addplot [
+					domain=0.1:5, 
+					samples=100, 
+					color=green,
+					]
+					{1/2^(ln(x^2)/ln(2))};
+					\addlegendentry{\(\frac{1}{2^{\log(\lambda^2)}}\)}
+					
+					\addplot [
+					domain=1.1:5, 
+					samples=100, 
+					color=orange,
+					]
+					{1/x^(ln(x)/ln(2))};
+					\addlegendentry{\(\frac{1}{\lambda^{\log(\lambda)}}\)}
+					
+					\addplot [
+					domain=0.1:5, 
+					samples=100, 
+					color=purple,
+					]
+					{1/x^2};
+					\addlegendentry{\(\frac{1}{\lambda^2}\)}
+					
+					\addplot [
+					domain=1.1:5, 
+					samples=100, 
+					color=brown,
+					]
+					{1/2^(ln(x)*ln(x)/ln(2))};
+					\addlegendentry{\(\frac{1}{2^{(\log\lambda)^2}}\)}
+					
+					\addplot [
+					domain=1.1:5, 
+					samples=100, 
+					color=pink,
+					]
+					{1/(ln(x)*ln(x))};
+					\addlegendentry{\(\frac{1}{(\log\lambda)^2}\)}
+					
+					\addplot [
+					domain=1.1:5, 
+					samples=100, 
+					color=gray,
+					]
+					{1/x^(1/x)};
+					\addlegendentry{\(\frac{1}{\lambda^{1/\lambda}}\)}
+					
+					\addplot [
+					domain=0.1:5, 
+					samples=100, 
+					color=cyan,
+					]
+					{1/sqrt(x)};
+					\addlegendentry{\(\frac{1}{\sqrt{\lambda}}\)}
+					
+					\addplot [
+					domain=0.1:5, 
+					samples=100, 
+					color=olive,
+					]
+					{1/2^(sqrt(x))};
+					\addlegendentry{\(\frac{1}{2^{\sqrt{\lambda}}}\)}
+				\end{axis}
+			\end{tikzpicture}
+		\end{center}
+		\begin{tcolorbox}[colframe=magenta, breakable, enhanced]
+			
+			\begin{proof}[\sol]
+				\ 
+				\begin{enumerate}[(1)]
+					\item $\frac{1}{2^{\lambda/2}},\frac{1}{2^{\log(\lambda^2)}},\frac{1}{\lambda^{\log(\lambda)}},\frac{1}{\lambda^2},\frac{1}{2^{(\log\lambda)^2}},\frac{1}{2^{\sqrt{\lambda}}}$ are negligible functions.
+					\item  $\frac{1}{(\log\lambda)^2},\frac{1}{\lambda^{1/\lambda}},\frac{1}{\sqrt{\lambda}}$ are non-negligible functions.
+				\end{enumerate}
+			\end{proof}
+		\end{tcolorbox}
 		\item[\bf 4.4.] Show that when $f$ is negligible, then for every polynomial $p$, the function $p(\lambda)f(\lambda)$ not only approaches $0$, but it is also negligible itself.
 		\begin{tcolorbox}[colframe=magenta, breakable, enhanced]
 			\begin{proof}[\sol]
@@ -836,7 +945,7 @@
 		\item[\bf 4.8.] A deterministic program is one that uses no random choices. Suppose $\library_{1}$ and $\library_{2}$ are two deterministic libraries with a common interface. Show that either $\library_{1}\equiv\library_{2}$, or else $\library_{1}\&\library_{2}$ can be distinguished with advantage 1.
 		\begin{tcolorbox}[colframe=magenta, breakable, enhanced]
 			\begin{proof}[\sol]
-				Since both \(\library_{1}\) and \(\library_{2}\) are deterministic libraries, either \[
+				Since both \(\library_{1}\) and \(\library_{2}\) are deterministic libraries,  they will always produce the same output for the same input, \ie, either \[
 				\library_{1}(x)=\library_{2}(x)\quad\text{or}\quad \library_{1}(x)\neq\library_{2}(x)
 				\] for any input \(x\).
 				\begin{enumerate}[(i)]
@@ -845,7 +954,11 @@
 					\]
 					\item ($\library_{1}(x)\neq\library_{2}(x)$) Suppose that \[
 					\exists\text{input}\ x:\library_{1}(x)\neq\library_{2}(x).
-					\] 
+					\] We construct a adversary \(\adversary\) as follows:
+					\begin{enumerate}[(a)]
+						\item \(\abs{\Pr\sbr{\adversary\linking\library_{1}\outputs 1}-\Pr\sbr{\adversary\linking\library_{2}\outputs 1}}=\abs{1-0}=1.\)
+						\item \(\abs{\Pr\sbr{\adversary\linking\library_{1}\outputs 1}-\Pr\sbr{\adversary\linking\library_{2}\outputs 1}}=\abs{0-1}=1.\)
+					\end{enumerate}
 				\end{enumerate}
 			\end{proof}
 		\end{tcolorbox}
