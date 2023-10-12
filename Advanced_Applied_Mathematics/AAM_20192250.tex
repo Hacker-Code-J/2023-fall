@@ -178,8 +178,13 @@
 \newcommand{\rank}{\textnormal{rank}}
 \newcommand{\inner}[1]{\langle #1\rangle}
 \newcommand{\norms}[1]{|| #1||}
+\newcommand{\tr}{\textnormal{tr}}
+\newcommand{\conjugate}[1]{\overline{#1}}
+
 
 \renewcommand{\vec}[1]{\textbf{#1}}
+
+
 
 % Begin document
 \begin{document}
@@ -719,8 +724,659 @@
 			\] where \((\vec{b}_1,\dots,\vec{b}_m)\) is a basis of \(U\) and \((\vec{b}_1^\perp,\dots,\vec{b}_{d-m}^\perp)\) is a basis of \(U^\perp\).
 		\end{enumerate}
 	\end{remark}
+
+	\section{Orthogonal Projections}
+	\begin{quote}
+		``To minimize the compression loss, we have to find the most informative dimensions in the data''
+	\end{quote}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Projection}]
+		\begin{definition}
+		Let \(V\) be a vector space and $U\subseteq V$ a subspace of $V$. A linear mapping \(\pi:V\to U\) is called a \textbf{projection} if \[
+		\pi^2=\pi\circ\pi=\pi.
+		\]
+		\end{definition}
+	\end{tcolorbox}
+
+	\subsection{Projection onto One-Dimensional Subspaces (Lines)}
+	\begin{center}
+		\begin{tikzpicture}[scale=2]
+			% draw axes
+			\draw[->] (-.5,0) -- (3.5,0) node[right] {$\Re(z)$};
+			\draw[->] (0,-.5) -- (0,3.5) node[above] {$\Im(z)$};
+			% add arrow
+			%\draw[->] (0,0) -- (1,1) node[midway, above left] {};
+			% draw point
+			\draw[thick, ->, dashed, red] (1.5,{1.5*sqrt(3)}) -- ({9/4},{3*sqrt(3)/4}) node[] {};
+			\draw[thick, ->, orange] (0,0) -- ({2*sqrt(3)},2) node[right] {$\textbf{b}$};
+			\draw[thick, ->] (0,0) -- (1.5,{1.5*sqrt(3)}) node[right] {$\textbf{x}$};
+			\draw[->, thick] ({sqrt(3)/2},1/2) arc (30:60:1) node[midway, right] {$\omega$};
+			\fill ({9/4},{3*sqrt(3)/4}) circle (1.5pt) node[below] {$\pi_U(\vec{x})$};
+		\end{tikzpicture}
+	\end{center}
+	We determine the coordinate \(\lambda\), the projection \(\pi_U(\vec{x})\in U\), and the projection matrix \(\textbf{P}_\pi\) that maps any \(\vec{x}\in\R^n\) onto $U$:
+	\begin{enumerate}[(Step 1)]
+		\item Finding the coordinate \(\lambda\). \(\pi_U\in U\Rightarrow\pi_U(\vec{x})=\lambda\vec{b}\). Note that \begin{align*}
+			0&=\inner{\vec{x}-\pi_U(\vec{x}),\vec{b}}\\
+			&=\inner{\vec{x}-\lambda\vec{b},\vec{b}}\quad\because\pi_U(\vec{x})=\lambda\vec{b}\\
+			&=\inner{\vec{x},\vec{b}}-\lambda\inner{\vec{b},\vec{b}}\quad\text{by bilinearity of the inner product}.
+		\end{align*} Thus \[
+		\lambda=\frac{\inner{\vec{x},\vec{b}}}{\inner{\vec{b},\vec{b}}}=\frac{\inner{\vec{b},\vec{x}}}{\norms{\vec{b}}^2}=\frac{\vec{b}^T\vec{x}}{\vec{b}^T\vec{b}}.
+		\] If \(\norms{\vec{b}}=1\), then the coordinate $\lambda$ of the projection is given by \(\vec{b}^T\vec{x}\).
+		\item Finding the projection point \(\pi_U(\vec{x})\in U\) and the projection matrix \(\textbf{P}_\pi\).
+		Note that \[
+		\inner{\vec{b},\vec{x}}\vec{b}=\del{\vec{b}^T\vec{x}}\vec{b}=\del{\sum_jb_jx_j}\del{\sum_ib_i\vec{e}_i}=\sum_i\del{\sum_j b_ib_jx_j}\vec{e}_i=\sum_{ij} (\vec{b}\vec{b}^T)_{ij}x_i\vec{e}_i=\vec{b}\vec{b}^T\vec{x}
+		\]
+		\[
+		\pi_U(\vec{x})=\lambda\vec{b}=\underbrace{\del{\frac{\inner{\vec{x},\vec{b}}}{\norms{\vec{b}}^2}}}_{\in\R}\vec{b}=\textbf{P}_\pi\vec{x},\quad\text{where}\quad\textbf{P}_\pi=\del{\frac{\vec{b}\vec{b}^T}{\norms{\vec{b}}^2}}.
+		\]
+	\end{enumerate}
+	\vspace{4pt}
+	\begin{example}[Projection onto a Line]
+		Find the projection matrix \(\textbf{P}_\pi\) onto the line through the origin spanned by \(\vec{b}=\begin{bmatrix}
+			1&2&2
+		\end{bmatrix}^T\), where \(\vec{b}\) is a direction and a basis of the one-dimensional subspace (line through origin).
+		\begin{proof}[\sol]
+			Note that
+			\begin{align*}
+				&\vec{b}\vec{b}^T=\begin{bmatrix}
+					1\\2\\2
+				\end{bmatrix}\begin{bmatrix}
+				1&2&2
+			\end{bmatrix}=\begin{bmatrix}
+			1&2&2\\2&4&4\\2&4&4
+		\end{bmatrix},\\
+			&\norms{\vec{b}}^2=\vec{b}^T\vec{b}=\begin{bmatrix}
+				1&2&2
+			\end{bmatrix}\begin{bmatrix}
+				1\\2\\2
+			\end{bmatrix}=1+2^2+2^2=9.
+			\end{align*} Thus \[
+			\textbf{P}_{\pi}=\frac{\vec{b}\vec{b}^T}{\vec{b}^T\vec{b}}=\frac{1}{9}
+				\begin{bmatrix}
+				1&2&2\\2&4&4\\2&4&4
+			\end{bmatrix}.
+			\] For \(\textbf{x}=\begin{bmatrix}
+				1&1&1
+			\end{bmatrix}^T\in \R^3\), the projection is \[
+			\pi_U(\vec{x})=\textbf{P}_\pi\vec{x}=\frac{1}{9}\begin{bmatrix}
+				1&2&2\\2&4&4\\2&4&4
+			\end{bmatrix}\begin{bmatrix}
+			1 \\ 1 \\ 1
+		\end{bmatrix}=\frac{1}{9}\begin{bmatrix}
+		5\\10\\10
+		\end{bmatrix}\in\textnormal{span}\bigg\langle\begin{bmatrix}
+		1\\2\\2
+	\end{bmatrix}\bigg\rangle.
+			\]
+		\end{proof}
+	\end{example}
+
+	\subsection{Projection onto General Subspaces}
+	
+	Assume that \[
+	U=\Span{\vec{b}_1,\dots,\vec{b}_m}\subseteq V=R^n.
+	\] Then \(\pi_U(\vec{x})=\sum_{i=1}^m\lambda_i\vec{b}_i\).
+	
+	We find the projection \(\pi_U(\vec{x})\) and the projection matrix \(\textbf{P}_\pi\):
+	
+	\begin{enumerate}[(Step 1)]
+		\item Find the coordinates \(\lambda_1,\dots,\lambda_m\) of projection w.r.t. the basis of \(U\), such that the linear combination \begin{align*}
+			&\pi_U(\vec{x})=\sum_{i=1}^m\lambda_i\vec{b}_i=\textbf{B}\boldsymbol{\lambda}\quad\text{with}\\
+			&\textbf{B}=\begin{bmatrix}
+				\vec{b}_1,\dots,\vec{b}_m
+			\end{bmatrix}\in M_{n\by m}(\R),\quad\boldsymbol{\lambda}=\begin{bmatrix}
+			\lambda_1,\dots,\lambda_m^T
+		\end{bmatrix}\in\R^m
+		\end{align*} is closest to \(\vec{x}\in\R^n\).
+		We obtain \(m\) simulationeous conditions \begin{align*}
+			\inner{\vec{b}_1,\vec{x}-\pi_U(\vec{x})}=&\vec{b}_1^T(\vec{x}-\pi_U(\vec{x}))=0\\
+			&\vdots\\
+			\inner{\vec{b}_m,\vec{x}-\pi_U(\vec{x})}=&\vec{b}_m^T(\vec{x}-\pi_U(\vec{x}))=0
+		\end{align*} which, with \(\pi_U(\vec{x})=\textbf{B}\boldsymbol{\lambda}\), can be written as \begin{align*}
+		\vec{b}_1^T(&\vec{x}-\textbf{B}\boldsymbol{\lambda})=0\\
+		&\vdots\\
+		\vec{b}_m^T(&\vec{x}-\textbf{B}\boldsymbol{\lambda})=0\\
+	\end{align*} such that we obtain a homogeneous linear equation system \begin{align*}
+		\begin{bmatrix}
+			\vec{b}_1^T\\ \vdots\\ \vec{b}_m^T
+		\end{bmatrix}\begin{bmatrix}
+		\vec{x}-\textbf{B}\boldsymbol{\lambda}
+	\end{bmatrix}=\vec{0}&\iff\textbf{B}^T(\vec{x}-\textbf{B}\boldsymbol{\lambda})=0\\
+	&\iff\textbf{B}^T\textbf{B}\boldsymbol{\lambda}=\textbf{B}^T\vec{x}.
+		\end{align*} Thus the coordinate (coefficient) is\[
+		\boldsymbol{\lambda}=(\textbf{B}^T\textbf{B})^{-1}\textbf{B}^T\vec{x}.
+		\]
+		\item Find the projection \(\pi_U(\vec{x})\in U\). \[
+		\pi_U(\vec{x})=\textbf{B}\boldsymbol{\lambda}=\textbf{B}(\textbf{B}^T\textbf{B})^{-1}\textbf{B}^T\vec{x}.
+		\]
+		\item Find the projection \(\textbf{P}_\pi\). \[
+		\textbf{P}_\pi=\textbf{B}(\textbf{B}^T\textbf{B})^{-1}\textbf{B}^T.
+		\]
+	\end{enumerate}
+	\vspace{4pt}
+	\begin{example}[Projection onto a Two-dimensional Subspace]
+		For a subspace \[U=\textnormal{span}\bigg\langle\begin{bmatrix}
+			1\\1\\1
+		\end{bmatrix}\begin{bmatrix}
+		0\\1\\2
+	\end{bmatrix}\bigg\rangle\subseteq\R^3\quad\text{and}\quad\vec{x}=\begin{bmatrix}
+	6\\0\\0
+\end{bmatrix}\in\R^3,\] find the coordinates \(\lambda\) of \(\vec{x}\) in terms of the subspace \(U\), the projection point \(\pi_U(\vec{x})\) and the projection matrix \(\textbf{P}_\pi\).
+	\begin{proof}[\sol]
+		\[
+		\vec{x}=\begin{bmatrix}
+			6\\0\\0
+		\end{bmatrix}\implies\textbf{P}_\pi\vec{x}=5\begin{bmatrix}
+		1\\1\\1
+	\end{bmatrix}+(-3)\begin{bmatrix}
+	0\\1\\2
+\end{bmatrix}.
+		\]
+	\end{proof}
+	\end{example}
+
+	\subsection{Gram-Shmidt Orthogonalization}
+	The \textit{Gram-Schmidt orthogonalization} method iteratively constructs an orthogonal basis \((\textbf{u}_1,\dots,\textbf{u}_n)\) from any basis \((\vec{b}_1,\dots,\vec{b}_n)\) of \(V\) as follows: \begin{align*}
+		\vec{u}_1&:=\vec{b}_1\\
+		\vec{u}_2&:=\vec{b}_2-\pi_{\Span{\vec{u}_1}}(\vec{b}_2)\\
+		&\vdots\\
+		\vec{u}_k&:=\vec{b}_k-\pi_{\Span{\vec{u}_1,\dots,\vec{u}_{k-1}}}(\vec{b}_k),\quad k=2,\dots, n.
+	\end{align*}
+	If we normalize \(\vec{u}_k\) at each step, that is \[
+	\hat{\vec{u}}_k:=\frac{\vec{u}_k}{\norms{\vec{u}_k}},
+	\] we obtain an orthonormal basis.
 	
 	\newpage
+	\chapter{Matrix Decompositions}
+	\section{Determinant and Trace}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Determinant }]
+		\begin{definition}
+			The \textbf{determinant} of a square matrix \(\textbf{A}\in M_{n\by n}(\R)\) is a function \[
+			\fullfunction{\det}{M_{n\by n}}{\R}{A}{\det(A)}.
+			\]
+		\end{definition}
+	\end{tcolorbox}
+	\begin{remark}
+		 \ \begin{enumerate}[(1)]
+			\item ($n=2$) \[
+			\textbf{A}=\begin{bmatrix}
+				a&b\\c&d
+			\end{bmatrix}\implies\det\textbf{A}=ad-bc.
+			\]
+			\item ($n=3$) \begin{align*}
+				\det\textbf{A}=\begin{vmatrix}
+					a_{11}&a_{12}&a_{13}\\
+					a_{21}&a_{22}&a_{23}\\
+					a_{31}&a_{32}&a_{33}
+				\end{vmatrix}=&a_{11}\begin{vmatrix}
+				a_{22}&a_{23}\\a_{32}&a_{33}
+			\end{vmatrix}-a_{12}\begin{vmatrix}
+			a_{21}&a_{23}\\a_{31}&a_{33}
+		\end{vmatrix}+a_{13}\begin{vmatrix}
+		a_{21}&a_{22}\\a_{31}&a_{32}
+	\end{vmatrix}\\
+			=&a_{11}(a_{22}a_{33}-a_{23}a_{32})
+			-a_{12}(a_{21}a_{33}-a_{23}a_{31})\\
+			&+a_{13}(a_{21}a_{32}-a_{22}a_{31}).
+			\end{align*}
+		\end{enumerate}
+	\end{remark}
+	\vspace{4pt}
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf }]
+		\begin{theorem}
+			Let \(\textbf{A}\in M_{n\by n}(\R)\). $
+			\exists\textbf{A}^{-1}\iff\det(\textbf{A})\neq 0.
+			$	
+		\end{theorem}
+	\end{tcolorbox}
+	\vspace{4pt}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Upper and Lower Triangluar Matrix}]
+		\begin{definition}
+			\ \begin{enumerate}[(1)]
+				\item \textbf{U} is an upper triangular matrix if \(u_{ij}=0\) for \(i>j\).
+				\item \textbf{L} is an lower triangular matrix if \(l_{ij}=0\) for \(i<j\).
+			\end{enumerate}	
+		\end{definition}
+	\end{tcolorbox}
+	\begin{remark}
+		Note that \(\det\textbf{U}=\sum_{i=1}^n u_{ii}\) and \(\det\textbf{L}=\sum_{i=1}^nl_{ii}\).
+	\end{remark}
+	\newpage
+	\begin{tcolorbox}[colframe=procolor,title={\color{white}\bf }]
+		\begin{proposition}
+			\ \begin{enumerate}[(1)]
+				\item \(\det(\textbf{A}\textbf{B})=\det(\textbf{A})\det(\textbf{B})\)
+				\item \(\det(\textbf{A})=\det(\textbf{A}^T)\)
+				\item \(\det(\textbf{A}^{-1})=\sbr{\det(\textbf{A})}^{-1}\)
+				\item \(\textbf{B}=\textbf{S}^{-1}\textbf{A}\textbf{S}\implies\det(\textbf{A})=\det(\textbf{B})\)
+				\item \(\det(\lambda\textbf{A})=\lambda^n\det(\textbf{A})\) for \(\textbf{A}\in M_{n\by n}(\R)\)
+			\end{enumerate}
+		\end{proposition}
+	\end{tcolorbox}
+	\vspace{8pt}
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf }]
+		\begin{theorem}
+			Let \(\textbf{A}\in M_{n\by n}(\R)\). Then \[
+			\det(\textbf{A})\neq 0\iff\rank(\textbf{A})=n.
+			\] In other words, \(\textbf{A}\) is invertible if and only if it is full rank.
+		\end{theorem}
+	\end{tcolorbox}
+	\vspace{8pt}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Trace}]
+		\begin{definition}
+			The \textbf{trace} of a square matrix \(\textbf{A}\in M_{n\by n}(\R)\) is defined as \[
+			\tr(\textbf{A}):=\sum_{i=1}^na_{ii},
+			\] \ie, the trace is the sum of the diagonal elements of \(\textbf{A}\).
+		\end{definition}
+	\end{tcolorbox}
+	\vspace{4pt}
+	\begin{tcolorbox}[colframe=procolor,title={\color{white}\bf }]
+		\begin{proposition}
+			\ \begin{enumerate}[(1)]
+				\item \(\tr(\textbf{A}+\textbf{B})=\tr(\textbf{A})+\tr(\textbf{B})\) for \(\textbf{A},\textbf{B}\in M_{n\by n}(\R)\)
+				\item \(\tr(\alpha\textbf{A})=\alpha\tr(\textbf{A})\) for \(\alpha\in\R,\textbf{A}\in M_{n\by n}(\R)\)
+				\item \(\tr(\textbf{I}_n)=n\)
+				\item \(\tr(\textbf{A}\textbf{B})=\tr(\textbf{B}\textbf{A})\) for \(\textbf{A}\in M_{n\by k}(\R),\textbf{B}\in M_{k\by n}(\R)\)
+			\end{enumerate}
+		\end{proposition}
+	\end{tcolorbox}
+	\begin{proof}
+		(4) Let \(\textbf{A}=[a_{ij}]_{n\by k}\) and \(\textbf{B}=[b_{ij}]_{k\by n}\), and let
+		\begin{align*}
+			\textbf{AB}:=\textbf{C}=[c_{ij}]_{n\by n}\quad\text{with}\quad c_{ij}=\sum_{l=1}^na_{il}b_{lj},\\
+			\textbf{BA}:=\textbf{D}=[d_{ij}]_{k\by k}\quad\text{with}\quad d_{ij}=\sum_{l=1}^kb_{il}a_{lj}.
+		\end{align*}
+		Then \begin{align*}
+			\tr(\textbf{A}\textbf{B})=\sum_{l=1}^{m}c_{ll}
+		\end{align*}
+	\end{proof}
+	
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Charateristic Polynomial}]
+		\begin{definition}
+			Let \(\lambda\in\R\) and \(\textbf{A}\in M_{n\by n}(\R)\). Then \[
+			p_\textbf{A}(\lambda):=\det(\textbf{A}-\lambda\textbf{I}_n)=\sum_{i=0}^nc_i\lambda^n\quad\text{with}\quad c_i=\quad\begin{cases}
+				\det(\textbf{A}) &:i=0\\
+				(-1)^n\tr(\textbf{A})&:i\in(0,n)\\
+				(-1)^n &:i=n
+			\end{cases}
+			\] is the \textbf{characteristic polynomial} of \(\textbf{A}\).
+		\end{definition}
+	\end{tcolorbox}
+	
+	\newpage
+	\section{Eigenvalues and Eigenvectors}
+	\subsubsection{Eigenvalues and Eigenvectors}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Eigenvalue and Eigenvetor}]
+		\begin{definition}
+			Let \(\textbf{A}\in M_{n\by n}(\R)\). Then \(\lambda\in\R\) is an \textbf{eigenvalue} of \(\textbf{A}\) and \(\textbf{v}\in\R^n\setminus\set{\textbf{0}}\) is the corresponding eigenvector of \(\textbf{A}\) if \[
+			\textbf{Av}=\lambda\textbf{v}.
+			\]
+		\end{definition}
+	\end{tcolorbox}
+	\vspace{4pt}
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf }]
+		\begin{theorem}
+			TFAE(The following are equivalent):
+			\begin{enumerate}[(1)]
+				\item \(\lambda\) is an eigenvalue of \(\textbf{A}\in M_{n\by n}(\R)\).
+				\item \(\exists\vec{v}\in\R^n\setminus\set{\textnormal{\bf 0}}:\textbf{Av}=\lambda\vec{v}\).
+				\item \(\rank(\textbf{A}-\lambda\textbf{I}_n)<n\).
+				\item \(\det(\textbf{A}-\lambda\textbf{I}_n)=0\).
+			\end{enumerate}
+		\end{theorem}
+	\end{tcolorbox}
+	\vspace{4pt}
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf }]
+		\begin{theorem}
+			\(\lambda\in\R\) is an eigenvalue of \(\textbf{A}\) \(\iff\) \(\lambda\) is a root of the characteristic polynomial \(p_\textbf{A}(\lambda)\) of \(\textbf{A}\).
+		\end{theorem}
+	\end{tcolorbox}
+	\vspace{4pt}
+	\begin{example}[Computing Eigenvalue, Eigenvectors, and Eigenspaces]
+		Find the eigenvalues and eigenvectors of the \(2\by 2\) matrix \[
+		\textbf{A}=\begin{bmatrix}
+			4&2\\1&3
+		\end{bmatrix}.
+		\]
+		\begin{proof}[\sol]
+			\begin{enumerate}[\bf (Step 1)]
+				\item \textbf{Characteristic Polynomial and Eigenvalues.} 
+				\begin{align*}
+					p_\textbf{A}(\lambda)=\det(\textbf{A}-\lambda \textbf{I}_2)=\begin{vmatrix}
+						4-\lambda&2\\13-\lambda
+					\end{vmatrix}
+				=(4-\lambda)(3-\lambda)-2&=\lambda^2-7\lambda+10\\
+				&=(\lambda-2)(\lambda-5).
+				\end{align*} Thus, we obtain roots \(\lambda_1=2\) and \(\lambda_2=5\).
+				\item \textbf{Eigenvalues and Eigenspaces.} We solve $
+				\begin{bmatrix}
+					4-\lambda&2\\1&3-\lambda
+				\end{bmatrix}\textbf{x}=\textbf{0}.
+				$ \begin{enumerate}[(i)]
+					\item (\(\lambda_1=2\))\begin{align*}
+						\begin{bmatrix}
+							2&2\\1&1
+						\end{bmatrix}\begin{bmatrix}
+						x_1\\x_2
+					\end{bmatrix}=\begin{bmatrix}
+					0\\0
+				\end{bmatrix}\implies\begin{bmatrix}
+				x_1\\x_2
+			\end{bmatrix}=\begin{bmatrix}
+			1\\-1
+		\end{bmatrix}\implies C(\lambda_1)=\textnormal{span}\bigg\langle\begin{bmatrix}
+		1\\-1
+	\end{bmatrix}\bigg\rangle.
+					\end{align*}
+				\item (\(\lambda_1=5\))\begin{align*}
+					\begin{bmatrix}
+						-1&2\\1&-2
+					\end{bmatrix}\begin{bmatrix}
+						x_1\\x_2
+					\end{bmatrix}=\begin{bmatrix}
+						0\\0
+					\end{bmatrix}\implies\begin{bmatrix}
+						x_1\\x_2
+					\end{bmatrix}=\begin{bmatrix}
+						2\\1
+					\end{bmatrix}\implies C(\lambda_2)=\textnormal{span}\bigg\langle\begin{bmatrix}
+					2\\1
+				\end{bmatrix}\bigg\rangle.
+				\end{align*}
+				\end{enumerate}
+			\end{enumerate}
+		\end{proof}
+	\end{example}
+
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Defective}]
+		\begin{definition}
+			A square matrix \(\textbf{A}\in M_{n\by n}(\R)\) is \textbf{defective} if it possesses fewer than \(n\) linearly independent eigenvectors.
+		\end{definition}
+	\end{tcolorbox}
+	\begin{remark}
+		\ \begin{enumerate}[(1)]
+			\item \(\textbf{A}\) has \(n\) distinct eigenvalue \(\Rightarrow\) \textbf{A} is not defective.
+			\item For a defective matrix \(\textbf{A}\in M_{n\by n}(\R)\), the sum of the dimension of eigenspaces \(<n\).
+			\item A defective matrix has at lest one eigenvalue \(\lambda_i\) with an algebraic multiplicity \(m>1\) and a geometric multiplicity of less than \(m\). Note that \[
+			\text{``Algebraic Multiplicity''}\geq\text{``Geometric Multiplicity''}
+			\]
+			\item \(\textbf{A}\) is defective iff \(\sum_i\dim C(\lambda_i)\neq n\).
+		\end{enumerate}
+	\end{remark}
+	\vspace{4pt}
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf }]
+		\begin{theorem}
+			\ \begin{enumerate}[(1)]
+				\item $\textbf{A}$, $\textbf{A}^T$ have the same eigenvalues.
+				\item Similar matrices have the same eigenvalues.
+				\item \hl{Symmetric, positive definite matrices always have positive real eigenvalues}.
+			\end{enumerate}
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		\begin{enumerate}[(1)]
+			\item Since \((\textbf{A}-\lambda I)^T=\textbf{A}^T-\lambda I\) and \(\det(\textbf{A})=\det(\textbf{A}^T)\), \[
+			\det(\textbf{A}^T-\lambda \textbf{I})=\det((\textbf{A}-\lambda \textbf{I})^T)=\det(\textbf{A}-\lambda\textbf{I}).
+			\]
+			\item Let \(\hat{\textbf{A}}=\textbf{S}^{-1}\textbf{A}\textbf{S}\). Since \[
+			\hat{\textbf{A}}-\lambda\textbf{I}=\textbf{S}^{-1}\textbf{A}\textbf{S}-\textbf{S}^{-1}\lambda\textbf{I}\textbf{S}=\textbf{S}^{-1}[\textbf{A}-\lambda\textbf{I}]\textbf{S},
+			\] we have \[
+			\det(\hat{\textbf{A}}-\lambda\textbf{I})=\det(\textbf{S}^{-1}[\textbf{A}-\lambda\textbf{I}]\textbf{S})=\det(\textbf{S}^{-1})\det(\textbf{A}-\lambda\textbf{I})\det(\textbf{S})=\det(\textbf{A}-\lambda\textbf{I}).
+			\]
+			\item Let \(\textbf{A}\) is symmetric, positive definite matrix. Let \(\textbf{A}\textbf{x}=\lambda\vec{x}\). Then \[
+			\textbf{x}^TA\textbf{x}=\textbf{x}^T\lambda\vec{x}=\lambda\norms{\vec{x}}\geq 0.
+			\] Since \(\vec{x}\neq 0\implies\norms{\vec{x}}>0\land\vec{x}^T\textbf{A}\vec{x}>0\), we have \(\lambda>0\).
+		\end{enumerate}
+	\end{proof}
+	\vspace{4pt}
+	\begin{example}[Defective Matrix]
+		Let \[
+		\textbf{A}=\begin{bmatrix}
+			2&1&0\\0&2&0\\0&0&3
+		\end{bmatrix}.
+		\] Then \[
+		\det(\textbf{A}-\lambda\textbf{I})=\begin{vmatrix}
+			2-\lambda&1&0\\0&2-\lambda&0\\0&0&3-\lambda
+		\end{vmatrix}=(3-\lambda)(2-\lambda)^2=0\implies\begin{cases}
+		\lambda_1=3\\
+		\lambda_2=2.
+	\end{cases}
+		\] And so \begin{align*}
+			&(\textbf{A}-\lambda_1\textbf{I})\textbf{x}_1=0\iff\begin{bmatrix}
+				-1&1&0\\0&-1&0\\0&0&0
+			\end{bmatrix}\textbf{x}_1=\textbf{0}&\implies\textbf{x}_1=\begin{bmatrix}
+			0\\0\\1
+		\end{bmatrix},\\
+		&(\textbf{A}-\lambda_2\textbf{I})\textbf{x}_2=0\iff\begin{bmatrix}
+			0&1&0\\0&0&0\\0&0&1
+		\end{bmatrix}\textbf{x}_1=\textbf{0}&\implies\textbf{x}_1=\begin{bmatrix}
+			1\\0\\0
+		\end{bmatrix}.
+		\end{align*}
+	\end{example}
+	\vspace{4pt}
+	\begin{example}
+		Let \[
+		\textbf{A}=\begin{bmatrix}
+			0&1&\\-1&0
+		\end{bmatrix}\in M_{2\by 2}(\R).
+		\] Then \[
+		\det(\textbf{A}-\lambda\textbf{I})=\begin{vmatrix}
+			-\lambda&1\\-1&-\lambda
+		\end{vmatrix}=\lambda^2+1=0.
+		\] And so \begin{align*}
+			(\textbf{A}-\lambda_1\textbf{I})\textbf{x}_1=\textbf{0}&\iff\begin{bmatrix}
+				-i&1\\-1&-i
+			\end{bmatrix}\textbf{x}_1=\textbf{0}&\implies\textbf{x}_1=\begin{bmatrix}
+			1\\i
+		\end{bmatrix},\\
+		(\textbf{A}-\lambda_2\textbf{I})\textbf{x}_2=\textbf{0}&\iff\begin{bmatrix}
+		i&1\\-1&i
+	\end{bmatrix}\textbf{x}_1=\textbf{0}&\implies\textbf{x}_1=\begin{bmatrix}
+	1\\-i
+\end{bmatrix}.
+		\end{align*}
+	\end{example}
+	\vspace{4pt}
+	\begin{example}
+		Let \[
+		\textbf{A}=\begin{bmatrix}
+			2&3-3i&\\3+3i&5
+		\end{bmatrix}\in M_{2\by 2}(\C).
+		\] Then \[
+		\det(\textbf{A}-\lambda\textbf{I})=\begin{vmatrix}
+			2-\lambda&3-3i\\3+3i&5-\lambda
+		\end{vmatrix}=\lambda^2-7\lambda-8=(\lambda+1)(\lambda-8)=0\implies\begin{cases}
+		\lambda_1=8\\ \lambda_2=-1.
+	\end{cases}
+		\] And so \begin{align*}
+			(\textbf{A}-\lambda_1\textbf{I})\textbf{x}_1=\textbf{0}&\iff\begin{bmatrix}
+				-6&3-3i\\3+3i&-3
+			\end{bmatrix}\textbf{x}_1=\textbf{0}&\implies\textbf{x}_1=\begin{bmatrix}
+				1\\1+i
+			\end{bmatrix},\\
+			(\textbf{A}-\lambda_2\textbf{I})\textbf{x}_2=\textbf{0}&\iff\begin{bmatrix}
+				3&3-3i\\3+3i&6
+			\end{bmatrix}\textbf{x}_1=\textbf{0}&\implies\textbf{x}_1=\begin{bmatrix}
+				1-i\\-i
+			\end{bmatrix}.
+		\end{align*}
+	\end{example}
+
+	\subsubsection{Complex Matrices}
+	Consider complex vector \[
+	\vec{w}=(w_1,\dots,w_n)\in\C^n\quad\text{with}\quad w_j=x_j+iy_j,
+	\] where \(x_j,y_j\in\R\). Then \begin{enumerate}[(1)]
+		\item Norm: \[
+		\norms{\vec{w}}^2=\sum_{j=1}^n\abs{w_j}^2\quad\text{with}\quad \abs{w_j}=\sqrt{x_j^2+y_j^2}.
+		\]
+		\item Inner Product: For \(\vec{w},\vec{z}\in\C^n\), \[		
+		\inner{\vec{w},\vec{z}}:=\conjugate{\vec{w}^T}\vec{z}=\sum_{j=1}^n\conjugate{w}_jz_j.
+		\] Note that \(\inner{\vec{z},\vec{z}}=\sum_{j=1}^n\conjugate{z}_jz_j=\sum_{j=1}^n\abs{z_j}^2=\norms{\vec{z}}^2\).
+	\end{enumerate} 
+	\vspace{8pt}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Hermition}]
+		\begin{definition}
+			Let \(\textbf{A}\in M_{n\by n}(\C)\). Then \[
+			\textbf{A}^H:\conjugate{\textbf{A}}^T.
+			\] is called \textbf{Hermition} of \(\textbf{A}\).
+		\end{definition}
+	\end{tcolorbox}
+	\begin{example}
+		\[
+		\textbf{A}=\begin{bmatrix}
+			1&1+i\\1-i&i
+		\end{bmatrix}\implies\conjugate{\textbf{A}}=\begin{bmatrix}
+		1&1-i\\1+i&-i
+	\end{bmatrix}\implies\textbf{A}^H=\conjugate{\textbf{A}}^T=\begin{bmatrix}
+	1&1+i\\1-i&-i
+\end{bmatrix}.
+		\]
+	\end{example}
+	\vspace{4pt}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Hermitian Matrix}]
+		\begin{definition}
+			\(\textbf{A}\) is a \textbf{Hermitian matrix} if \(\textbf{A}=\textbf{A}^H\).
+		\end{definition}
+	\end{tcolorbox}
+	\begin{remark}
+		\ \begin{enumerate}[(1)]
+			\item A real symmetric matrix \(\textbf{A}\) is a Hermitian matrix.
+			\item A Hermitian matrix has real eigenvalues.
+		\end{enumerate}
+	\end{remark}
+	\newpage
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf H1}]
+		\begin{theorem}
+			\(\textbf{A}=\textbf{A}^H\implies (\forall\vec{x}\in\C^n)\  \vec{x}^H\textbf{A}\vec{x}\in\R\).
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		Suppose that \(\textbf{A}=\textbf{A}^H\). Let \(\textbf{y}:=\textbf{x}^H\textbf{A}\textbf{x}\). We must show that \[
+		\textbf{y}=\textbf{y}^H,\quad\ie,\quad \textbf{y}=\conjugate{\textbf{y}}\ (\Rightarrow\textbf{y}\in\R).
+		\] \[
+		\textbf{y}^H=\del{\vec{x}^H\textbf{A}\vec{x}}^H=\vec{x}^H\textbf{A}^H(\vec{x}^H)^H=\textbf{x}^H\textbf{A}\vec{x}=\vec{y}.
+		\]
+	\end{proof}
+	\vspace{4pt}
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf H2}]
+		\begin{theorem}
+			If \textbf{A} is Hermitian, then every eigenvalue is real.
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		Let \(\textbf{A}\vec{v}=\lambda\vec{v}\) with $\vec{v}\neq\textbf{0}$. By Theorem H1, \[
+		\vec{v}^H\textbf{A}\vec{v}=\vec{v}^H(\lambda\vec{v})=\lambda\vec{v}^H\vec{v}=\lambda\norms{\vec{v}}^2\implies\lambda=\frac{\vec{v}^H\textbf{A}\vec{v}}{\norms{\vec{v}}^2}\in\R.
+		\]
+	\end{proof}
+	\vspace{4pt}
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf H3}]
+		\begin{theorem}
+			If \(\textbf{A}\in M_{n\by n}(\C)\) is Hermitian, then two eigenvectors corresponding to different eigenvalues are orthogonal.
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		For a Hermitian matrix \(\textbf{A}\), let \[
+		\textbf{A}\vec{v}_1=\lambda_1\vec{v}_1,\quad\textbf{A}\vec{v}_2=\lambda_2\vec{v}_2
+		\] with \(\lambda_1\neq\lambda_2\). Then 
+		\begin{align*}
+			&\vec{v}_1\textbf{A}\vec{v}_2=\vec{v}_1^H\lambda_2\vec{v}_2=\lambda_2\vec{v}_1^H\vec{v}_2,\\
+			&\vec{v}_1\textbf{A}\vec{v}_2=\vec{v}_1^H\textbf{A}^H\vec{v}_2=(\textbf{A}\vec{v}_1)^H\vec{v}_2=(\lambda_1\vec{v}_1)^H\vec{v}_2=\lambda_1\vec{v}_1^H\vec{v}_2.
+		\end{align*} Thus, 
+		\begin{align*}
+			&\lambda_1\vec{v}_1^H\vec{v}_2=\lambda_2\vec{v}_1^H\vec{v}_2\\
+			\iff&\lambda_1\inner{\vec{v}_1,\vec{v}_2}-\lambda_2\inner{\vec{v}_1,\vec{v}_2}=0\\
+			\iff&(\lambda_1-\lambda_2)\inner{\vec{v}_1,\vec{v}_2}=0\\
+			\iff&\inner{\vec{v}_1,\vec{v}_2}=0\quad\because\lambda_1\neq\lambda_2\\
+			\iff&\vec{v}_1\perp\vec{v}_2.
+		\end{align*}
+	\end{proof}
+	\newpage
+	\subsubsection{Spectral Theorem}
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf Spectral Theorem}]
+		\begin{theorem}
+			Let \(\textbf{A}\in M_{n\by n}(\R)\) is symmetric. Then \[
+			\exists\text{orthonormal basis of the corresponding vector space $V$ consisting of}
+			\] eigenvalues of \(\textbf{A}\), and each eigenvalue is real.
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+	By Theorem H1, every eigenvalue is real. We remain to show that eigenvalues generate orthonormal basis.
+	\begin{enumerate}[(i)]
+		\item All eigenvalues are distinct, say, \(\lambda_1\neq\lambda_2\neq\cdots\neq\lambda_n\). By Theorem H3, \[
+		\vec{v}_i\neq\vec{v}_j\quad\text{if}\quad i\neq j.
+		\] Then \(\set{\vec{v}_1,\dots,\vec{v}_n}\) is orthogonal basis of \(\R^n\).
+		\item \(\lambda_1,\lambda_2,\dots,\lambda_k\) are distinct \(k\) eigenvalues with \(k<n\). Consider \begin{align*}
+			C(\lambda_1)&:=\Span{\vec{v}_{1,1},\vec{v}_{1,2},\dots,\vec{v}_{1,n_1}},\\
+			C(\lambda_2)&:=\Span{\vec{v}_{2,1},\vec{v}_{2,2},\dots,\vec{v}_{1,n_2}},\\
+			&\vdots\\
+			C(\lambda_k)&:=\Span{\vec{v}_{k,1},\vec{v}_{k,2},\dots,\vec{v}_{1,n_k}}.
+		\end{align*} By Gram-Schmidt orthogonalization process, we have orthogonal basis of \(C(\lambda_i)\) as follows:
+		\[
+		\set{\textbf{w}_{1,1},\cdots,\vec{w}_{1,n},\cdots,\textbf{w}_{k,1},\cdots,\vec{w}_{k,n_k}}.
+		\] Note that \[
+		\sum_{i=1}^k\dim C(\lambda_i)=n_1+\cdots+n_k=n
+		\] if \textbf{A} is Hermitian.
+	\end{enumerate}
+	\end{proof}
+	\vspace{4pt}
+	\newpage
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf Spectral Decomposition}]
+		\begin{theorem}
+			Let \(\textbf{A}\) be a real symmetric. Then \[
+			\textbf{A}=\textbf{P}\textbf{D}\textbf{P}^T,
+			\] where $\textbf{D}=\begin{bmatrix}
+				\lambda_1 &&0\\ &\ddots&\\0&&\lambda_n
+			\end{bmatrix}$ is diagonal and \(\textbf{P}\) orthogonal matrix.
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		Let \(\lambda_1,\dots,\lambda_n\) are solutions, counting multiplicity, of \(\det(\textbf{A}-\lambda\textbf{I}_n)=0\), and let \(\vec{v}_1,\cdots,\vec{v}_n\) are eigenvectors corresponding to \(\lambda_1,\dots,\lambda_n\), respectively. Since \(\set{\vec{v}_1,\dots,\vec{v}_n}\) is orthogonal basis of \(\R^n\), \[
+		\textbf{P}:=\begin{bmatrix}
+			\vec{v}_1&\cdots&\vec{v}_n
+		\end{bmatrix}
+		\] be a orthogonal matrix, and so \(\textbf{P}=\textbf{P}^T\). Then 
+		\begin{align*}\textbf{A}\textbf{P}=\textbf{A}\begin{bmatrix}
+				\vec{v}_1&\cdots&\vec{v}_n
+			\end{bmatrix}&=\begin{bmatrix}
+				\textbf{A}\vec{v}_1&\cdots&\textbf{A}\vec{v}_n
+			\end{bmatrix}=\begin{bmatrix}
+			\lambda_1\vec{v}_1&\cdots&\lambda_n\vec{v}_n
+		\end{bmatrix}\\
+		&=\begin{bmatrix}
+			\vec{v}_1&\cdots&\vec{v}_n
+		\end{bmatrix}\begin{bmatrix}
+			\lambda_1 &&0\\ &\ddots&\\0&&\lambda_n
+		\end{bmatrix}\\
+		&=\textbf{P}\textbf{D}.
+		\end{align*} Hence \[
+		\textbf{AP}=\textbf{PD}\implies\textbf{A}=\textbf{PD}\textbf{P}^{-1}=\textbf{PD}\textbf{P}^T.
+		\]
+	\end{proof}
+	\begin{remark}
+		Let \(\textbf{A}\) be a real symmetric matrix. Then
+		\begin{align*}
+			\textbf{A}=\textbf{PD}\textbf{P}^T&=\begin{bmatrix}
+				\vec{v}_1&\cdots&\vec{v}_n
+			\end{bmatrix}\begin{bmatrix}
+				\lambda_1 &&0\\ &\ddots&\\0&&\lambda_n
+			\end{bmatrix}\begin{bmatrix}
+			\vec{v}_1^T\\ \vdots\\\vec{v}_n^T
+		\end{bmatrix}\\
+		&=\begin{bmatrix}
+			\vec{v}_1\lambda_1&\dots&\lambda_n\vec{v}_n
+		\end{bmatrix}\begin{bmatrix}
+			\vec{v}_1^T\\ \vdots\\\vec{v}_n^T
+		\end{bmatrix}\\
+		&=\sum_{i=1}^n\lambda_i\vec{v}_i\vec{v}_i^T.
+		\end{align*}
+		\begin{itemize}
+			\item We call \(\lambda_i[\vec{v}_i\vec{v}_i^T]\) the principal component as an approximation of \(\textbf{A}\).
+		\end{itemize}
+	\end{remark}
+	\newpage
+	\chapter{Probability and Distributions}
+	
 	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf }]
 		\begin{definition}
 			
@@ -731,27 +1387,6 @@
 			
 		\end{theorem}
 	\end{tcolorbox}
-	
-	\chapter{Matrix Decompositions}
-	\section{Eigenvalues and Eigenvectors}
-	\section{Complex Matrix, Hermitian}
-	\section{Decomposition of Matrices: Spectral Decomposition, SVD}
-	
-	\chapter{Vector Calculus}
-	\section{Vector Calculus}
-	
-	\chapter{Probability and Distributions}
-	\section{Backpropagation, Probability Theory Basic}
-	\section{Gaussian Distribution and its Applications}
-	\section{Continuous Optimization}
-	\section{Probabilistic Modeling and Inference}
-	\section{Linear Regression}
-	\section{Supervised Learning}
-	\section{Bayesian Linear Regression}
-	\section{Maximum Likelihood Estimation(MLE)}
-	\section{Generalized Linear Regression}
-	\section{Maximum A Posteriori Estimation(MAP)}
-	\section{Principal Component Analysis(PCA)}
 	
 	\chapter{Continuous Optimization}
 	
