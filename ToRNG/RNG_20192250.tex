@@ -1,7 +1,7 @@
 \documentclass[12pt,openany]{book}
 
 \usepackage{amsmath,amsthm,amsfonts,amscd} % Packages for mathematics
-
+\usepackage{commath} %absolute value
 % Colors
 \usepackage[dvipsnames]{xcolor}
 \definecolor{titleblue}{RGB}{0,53,128}
@@ -48,6 +48,9 @@
 \renewcommand{\cftsubsecfont}{\sffamily\color{sectiongray}}
 \renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
 
+\usepackage{cancel}
+\newcommand\crossout[3][black]{\renewcommand\CancelColor{\color{#1}}\cancelto{#2}{#3}}
+\newcommand\ncrossout[2][black]{\renewcommand\CancelColor{\color{#1}}\cancel{#2}}
 % Hyperlinks
 \usepackage{hyperref}
 \hypersetup{
@@ -147,13 +150,25 @@
 \newtheorem*{note}{Note}
 
 %New Command
-\newcommand{\set}[1]{\left\{#1\right\}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\Q}{\mathbb{Q}}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\C}{\mathbb{C}}
 \newcommand{\F}{\mathbb{F}}
+
+\newcommand{\dispsty}{\displaystyle}
+\newcommand{\sol}{\textcolor{magenta}{\bf \textit{Sol.}}\quad}
+\newcommand{\eg}{\textnormal{e.g.}}
+\newcommand{\ie}{\textnormal{i.e.}}
+
+\newcommand{\Var}{\text{Var}}
+\newcommand{\sd}{\text{sd}}
+\newcommand{\mean}[1]{\bar{#1}}
+\newcommand{\Cov}{\textit{Cov}}
+\newcommand{\Corr}{\textit{Corr}}
+\newcommand{\SE}{\text{S.E.}}
+\newcommand{\df}{\text{d.f.}}
 
 % Begin document
 \begin{document}
@@ -165,7 +180,7 @@
 			\vspace{0.5in}
 			{\Large Ji Yong-Hyeon\par}
 			\vspace{1in}
-			\includegraphics[width=2.5in]{rng.jpg}\par
+			%\includegraphics[width=2.5in]{rng.jpg}\par
 			\vspace{1in}
 			{\bf Department of Information Security, Cryptology, and Mathematics\par}
 			{College of Science and Technology\par}
@@ -219,6 +234,399 @@
 	Generation of various parameters in public-key cryptography: prime number generation, probabilistic public-key cryptography, etc.
 	Generation of various parameters used in cryptographic protocols: nonce, salt, etc.
 	
+	\newpage
+	\chapter{Probability Theory}
 	
+	\section{Random Variables}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Random Variable}]
+		\begin{definition}
+			A \textbf{random variable} $X$ is real-valued function on $\Omega$ the space of outcomes: \[
+			X:\Omega\to\mathbb{R}.
+			\] In other words, a random variable is a number whose value depends upon the outcome of a random experiment.
+		\end{definition}
+	\end{tcolorbox}
+	\begin{remark}
+		Sometimes, when convenient, we also allow $X$ to have the value $\infty$ or, more rarely, $-\infty$.
+	\end{remark}
+	
+	\section{Discrete Random Variable}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Discrete Random Variable}]
+		\begin{definition}
+			A \textbf{discrete random variable} $X$ has finitely or countably many values $x_i$, $i=1,2,\cdots$, and $p(x_i)=P(X=x_i)$ with $i=1,2,\cdots,$ is called the \textbf{probability mass function of $X$}. Sometimes $X$ is added as the subscript of its p. m. f. $p=p_X$.
+		\end{definition}
+	\end{tcolorbox}
+	\begin{remark}
+		A probability mass function $p$ has the following properties:\begin{enumerate}
+			\item For all $i$, $p(x_i)>0$; that is, we do not list values of $X$ which occur with probability $0$.
+			\item For any interval $B$, $P(X\in B)=\sum_{x_i\in B}p(x_i)$.
+			\item As $X$ must have some value, $\sum_ip(x_i)=1$.
+		\end{enumerate}
+	\end{remark}
+	\subsection{Probability Distribution of a Discrete Random Variable}
+	
+	\begin{tcolorbox}[colback=white]
+		The \textbf{probability distribution}, or simply the \textbf{distribution}, of a discrete random variable $X$ is a list of the distinct numerical values of $X$ along with their associated probabilities. (Often, a formula can be used in place of a detailed list.)
+	\end{tcolorbox}\
+	\\
+	Consider the distinct values of a random variable $X$. The probability that a particular value $x_i$ occurs will be denoted by $f(x_i)$. If $X$ can take $k$ possible values $x_1,\cdots,x_k$ with the corresponding probabilities $f(x_1), \cdots, f(x_k)$, the probability distribution of $X$ can be displayed in the format of below table. \begin{center}\begin{tabular}{c|c}
+			\toprule[1.2pt]
+			Value of $x$ & Probability $f(x)$ \\
+			\hline
+			$x_1$ & $f(x_1)$ \\
+			$x_2$ & $f(x_2)$ \\
+			\vdots & \vdots \\
+			$x_k$ & $f(x_k)$ \\
+			\hline
+			Total & 1 \\
+			\bottomrule[1.2pt]
+		\end{tabular}
+	\end{center}
+	
+	\begin{tcolorbox}[colback=white]
+		The \textbf{probability distribution} of a discrete of a random variable $X$ is described as the function \[
+		f(x_i) = P(X=x_i)
+		\] which gives the probability for each value and satisfies: \begin{enumerate}
+			\item $0\leq f(x_i)\leq 1$ for each value $x_i$ of $X$
+			\item \(\dispsty\sum_{i=1}^kf(x_i)=1 \)
+		\end{enumerate}
+	\end{tcolorbox}
+	
+	\subsection{Expectation(Mean) and Standard Deviation of a Probability Distribution}
+	The sample mean is calculated as \[
+	\bar{x}=\frac{\text{Sum of the observations}}{\text{Sample size}}.
+	\] The another calculation of sample mean illustrates the formula \[
+	\text{Sample mean}\ \bar{x} = \sum(\text{Value}\ \times\ \text{Relative frequency}).
+	\] If we imagine a huge number of trials, the relative frequencies will approach the probability. The mean of the (infinite) collection of trials should be calculated as \[
+	\sum(\text{Value}\times\text{Probability}).
+	\]
+	\\
+	Define the mean of a random variable $X$ or its probability distribution as \[
+	\sum(\text{Value}\times\text{Probability})\quad\text{or}\quad \sum x_if(x_i).
+	\] where $x_i$'s denote the distinct values of $X$. The mean of a probability distribution is also called the population mean for the variable $X$. \par
+	The mean of a random values $X$ is called its \textbf{expected value}. \begin{tcolorbox}[colback=white]
+		The \textbf{mean} of $X$ or \textbf{population mean} \begin{align*}
+		E[X] &= \mu \\
+		&= \sum(\text{Value}\ \times\ \text{Probability})=\sum x_if(x_i)
+		\end{align*} Here the sum extends over all the distinct values $x_i$ of $X$.
+	\end{tcolorbox}
+	Since the mean $\mu$ is the center of the distribution of $X$, we express variation of $X$ in term of the deviation $X-\mu$. We define the variance of $X$ as the expected value of the squared deviation $(X-\mu)^2$
+	\begin{tcolorbox}[colback=white]\begin{center}
+			\textbf{Variance and Standard Deviation of $\boldsymbol{X}$}
+		\end{center}\begin{align*}
+		\sigma^2 &=\Var[X]=\sum(x_i-\mu)^2f(x_i) \\
+		\sigma &=\sd[X]= +\sqrt{\Var[X]}
+		\end{align*}
+	\end{tcolorbox}
+	\begin{tcolorbox}[colback=white]
+		\centering
+		\textbf{Alternative Formula for Hand calculation} \[
+		\sigma^2=\sum x_i^2f(x_i) - \mu^2
+		\]
+	\end{tcolorbox}\ \\
+	\eg\textcolor{blue}{\bf Calculating a Population Variance and Standard Deviation}\quad Calculate the variance and the standard deviation of the distribution of $X$ that appears in the left two columns of below table.
+	\begin{center}\begin{tabular}{c|c||cccc||c}
+			\toprule[1.2pt]
+			$x$ & $f(x)$ & $xf(x)$ & $(x-\mu)$ & $(x-\mu)^2$ & $(x-\mu)^2f(x)$ & $x^2f(x)$\\
+			\hline
+			0&.1& 0 & -2&4&.4&0\\
+			1&.2& .2& -1&1&.2&0.2\\
+			2&.4& .8& 0&0&.0&1.6\\
+			3&.2& .6& 1&1&.2&1.8\\
+			4&.1& .4& 2&4&.4&1.6\\
+			\hline
+			Total&1.0&2.0 = $\mu$&&&$1.2=\sigma^2$&$5.2=\sum x^2f(x)$\\
+		\end{tabular}
+	\end{center}\begin{align*}
+	\Var(X)&=\sigma^2=1.2\quad& \sigma^2=5.2-(2.0)^2=1.2 \\
+	\sd(X)&=\sigma=\sqrt{1.2}=1.095\quad& \sigma=\sqrt{1.2}=1.095
+	\end{align*}
+	
+	\subsection{Successes and Failures - Bernoulli Trails}
+	
+	\subsubsection{Bernoulli Trials}
+	\begin{itemize}
+		\item The sample space $S = \set{\ \text{S},\ \text{F}\ }$.
+		\item The probability of success $p=$P(S), the probability of failure $q=$P(F).
+		\item $0\leq p\leq 1$, $q=1-p$.
+	\end{itemize}
+	\begin{tcolorbox}[colback=white]
+		\centering
+		\textbf{Bernoulli Trials} \begin{enumerate}
+			\item Each trial yields one of two outcomes, technically called success (S) and failure (F).
+			\item For each trial, the probability of success $P$(S) is the same and is denoted by $p = P$(S). The probability of failure is then $P$(F) $= 1-p$ for each trial and is denoted by $q$, so that $p+q=1$.
+			\item Trials are independent. The probability of success in a trial remains unchanged given the outcomes of all the other trials.	
+		\end{enumerate}
+	\end{tcolorbox}
+	
+	\subsubsection{Bernoulli Random Variable}
+	\begin{itemize}
+		\item The random variable, $X$(S) = 1 and $X$(F)=0, in $S=\set{\ \text{S},\ \text{F}\ }$.
+		\item \textbf{Bernoulli Distribution}: The probability distribution of Bernoulli random variable.\ \begin{center}
+			\begin{tabular}{ccc|ccc|ccc}
+				\toprule[1.2pt]
+				& $x$ &&& 0 &&& 1 & \\
+				\hline
+				&$p(x)$ &&& $1-p$ &&& $p$ & \\
+				\bottomrule[1.2pt]
+			\end{tabular}
+		\end{center}
+	\end{itemize}
+	
+	\subsection{The Binomial Distribution}
+	
+	\begin{tcolorbox}[colback=white]
+		A \textbf{probability model} is an assumed form of the probability distribution that describes the chance behavior for a random variable $X$. \par
+		Probabilities are expressed in terms of relevant population quantities, called the \textbf{parameters}.
+	\end{tcolorbox}
+	\begin{tcolorbox}[colback=white]
+		\begin{center}	
+			\textbf{The Binomial Distribution}\end{center}
+		Denote \begin{align*}
+		n &= \text{a fixed number of Bernolli trials} \\
+		p &= \text{the probability of success in each trial} \\
+		X &= \text{the (random) number of successes in $n$ trials}
+		\end{align*} The random variable $X$ called a \textbf{binomial random variable}. Its distribution is called a \textbf{binomial distribution}.
+	\end{tcolorbox}\ \\
+	\eg\textcolor{blue}{\bf An Example of the Binomial Distribution}\quad The elementary outcomes of 4 samples, the associated probabilities, and the value of $X$ are listed as follows. \begin{center}
+		\begin{tabular}{ccc ccc ccc ccc ccc}
+			& FFFF &&& SFFF &&& SSFF &&& SSSF &&& SSSS & \\
+			& 	   &&& FSFF &&& SFSF &&& SSFS &&& & \\
+			& 	   &&& FFSF &&& SFFS &&& SFSS &&& & \\
+			& 	   &&& FFFS &&& FSSF &&& FSSS &&& & \\
+			& 	   &&&      &&& FSFS &&& &&& & \\
+			& 	   &&&      &&& FFSS &&& &&& & \\
+	\end{tabular}\end{center}
+	\begin{center}\begin{tabular}{c||ccccc}
+			\toprule[1.2pt]
+			Value of $X$ & 0 & 1 & 2 & 3 & 4 \\
+			\hline
+			Probability of each outcome & $q^4$ & $pq^3$ & $p^2q^2$ & $p^3q$ & $p^4$ \\
+			\hline
+			Number of outcomes & $1=\binom{4}{0}$ & $4=\binom{4}{1}$ & $6=\binom{4}{2}$ & $4=\binom{4}{1}$ & $1=\binom{4}{4}$ \\
+			\bottomrule[1.2pt] 
+	\end{tabular}\end{center}
+	\begin{center}\begin{tabular}{c||ccccc}
+			\toprule[1.2pt]
+			Value $x$ & 0 & 1 & 2 & 3 & 4 \\
+			\hline
+			Probability $f(x)$ & $\binom{4}{0}p^0q^4$ & $\binom{4}{1}p^1q^3$ & $\binom{4}{2}p^2q^2$ & $\binom{4}{1}p^3q^1$ & $\binom{4}{4}p^4q^0$ \\
+			\bottomrule[1.2pt]
+		\end{tabular}
+	\end{center}
+	
+	\begin{tcolorbox}[colback=white]
+		The \textbf{binomial distribution} with $n$ trails and success probability $p$ is described by the function \[
+		f(x) = P[X=x] = \binom{n}{x}p^x(1-p)^{n-x}
+		\] for the possible values $x = 0, 1, \cdots, n$.
+	\end{tcolorbox}
+	
+	\subsubsection{The Mean and Standard Deviation of the Binomial Distribution}
+	\[
+	X=X_1+X_2+\cdots+x_n\sim B(n,p)
+	\] \begin{itemize}
+		\item \(E[X]=E[X_1] + \cdots + E[X_n] = np \)
+		\item \(\Var[X]=\Var[X_1] + \cdots + \Var[X_n] = npq \)
+	\end{itemize}
+	
+	\begin{tcolorbox}[colback=white]
+		The binomial distribution with $n$ trials and success probability $p$ has \begin{align*}
+		\text{Mean} &= np \\
+		\text{Variance} &= npq = np(1-p) \\
+		\text{sd} &= \sqrt{npq} \\
+		\end{align*}
+	\end{tcolorbox}
+	
+	\subsection{Covariance and Correlation Coefficient of Two Random Variables $X, Y$}
+	
+	\begin{tcolorbox}[colback=white]
+		Let $X, Y$ be a random variables. Then \begin{enumerate}
+			\item The covariance of them: \[\Cov(X,Y)=E[(X-\mu_1)(Y-\mu_2)]\]
+			\item The correlation coefficient of them: \[\dispsty\Corr(X,Y)=E\left[\left(\frac{X-\mu_1}{\sigma_1}\right)\left(\frac{Y-\mu_2}{\sigma_2}\right)\right]=\frac{\Cov(X,Y)}{\sd(X)\sd(Y)} \]
+		\end{enumerate}
+	\end{tcolorbox}\ \\
+	Note that $-1\leq\Corr(X,Y)\leq 1$ and \begin{align*}
+	\Cov(X,Y) &= E[(X-\mu_1)(Y-\mu_2) ] \\
+	&= E[XY-\mu_2X-\mu_1Y+\mu_1\mu_2] \\
+	&= E[XY] - \mu_2E[X] -\mu_1E[Y] +\mu_1\mu_2 \\
+	&= E[XY] - \mu_1\mu_2.
+	\end{align*} That is, $\Cov(X,Y)=E[XY]-\mu_1\mu_2$.
+	
+	\begin{tcolorbox}[colback=white]\begin{center}\bf
+			Properties of Covariance and Correlation Coefficient
+		\end{center} \begin{enumerate}
+			\item \(\Cov(aX+b,cY+d) = ac\cdot\Cov(X,Y) \)
+			\item \(\Corr(aX+b,cY+d)=\begin{cases}
+			\Corr(X,Y) &\text{if}\ ac>0 \\
+			-\Corr(X,Y) &\text{if}\ ac<0 \\
+			\end{cases} \)
+		\end{enumerate}\ \begin{proof}
+			(1) \begin{align*}
+			\Cov(aX+b,cY+d) &= E[(aX+b)-(a\mu_x+b)\cdot(cY+d-(c\mu_y+d))] \\
+			&= E[a(X-\mu_x)\cdot c(Y-\mu_y)] \\
+			&= acE[(X-\mu_x)(Y-\mu_y)] \\
+			&= ac\cdot\Cov(X,Y).
+			\end{align*}
+			(2) Note that $\sigma_{aX+b}=\sqrt{\Var(aX+b)}=\sqrt{a^2\Var(X)}=\abs{a}\sigma_X$. Similarly $\sigma_{cY+d}=\abs{c}\sigma_Y$.\begin{align*}
+			\Corr(aX+b,cY+d) &= \frac{\Cov(aX+b,cY+d)}{\sigma_{aX+b}\sigma_{cY+d}} \\
+			&= \frac{ac\cdot\Cov(X,Y)}{\abs{a}\sigma_X\abs{c}\sigma_Y} \\
+			&= \frac{ac}{\abs{ac}}\Corr(X,Y).
+			\end{align*} Hence, $\Corr(aX+b,cY+d)=\begin{cases}
+			\Corr(X,Y) &\text{if}\ ac>0 \\
+			-\Corr(X,Y) &\text{if}\ ac<0
+			\end{cases}$
+		\end{proof}
+	\end{tcolorbox}
+	
+	\begin{tcolorbox}[colback=white]\begin{center}
+			\textbf{Distribution of Sum of Two Probability Variables}
+		\end{center} \begin{enumerate}
+			\item \(\Var(X+Y)=\Var(X)+\Var(Y)+2\Cov(X,Y) \)
+			\item \(\Var(X-Y)=\Var(X)+\Var(Y)-2\Cov(X,Y) \)
+		\end{enumerate}	
+	\end{tcolorbox}
+	
+	\begin{tcolorbox}[colback=white]\begin{center}
+			\textbf{Two Probability Variables are Independent}
+		\end{center}\begin{enumerate}
+			\item \(E[XY]=E[X]\cdot E[Y] \)
+			\item \(\Cov(X,Y)=0, \Corr(X,Y)=0 \)
+			\item \(\Var(X\pm Y)=\Var(X)+\Var(Y) \)
+		\end{enumerate}\begin{proof}
+			(1) \begin{align*}
+			E[XY] &= \sum_{i=1}^\infty\sum_{j=1}^\infty x_iy_jp(x_i,y_j) \\
+			&= \sum_{i=1}^\infty\sum_{j=1}^\infty x_iy_jp_1(x_i)p_2(y_j) \\
+			&= \sum_{i=1}^\infty x_ip_1(x_i)\sum_{j=1}^\infty y_jp_2(y_j)  \\
+			&=E[X]\cdot E[Y].
+			\end{align*} 
+			(2) $\Cov(X,Y) = E[XY]-E[X]\cdot E[Y]=0$.
+		\end{proof}
+		
+	\end{tcolorbox}
+	
+	\section{The Normal Distribution}
+	
+	\subsection{Probability Model for a Continuous Random Variable}
+	Recall that a relative frequency histogram has the following properties: \begin{enumerate}
+		\item The total area under the histogram is 1.
+		\item  For two points $a$ and $b$ such that each is a boundary point of some class, the relative frequency of measurements in the interval $a$ to $b$ is the \textbf{area} under the histogram above this interval.
+	\end{enumerate}
+	Because probability is interpreted as long-run relative requency, the curve obtained as the limiting form of the relative frequency histograms represents the manner in which the total probability 1 is distributed over the interval of possible values of the random variable $X$. This curve is called the \textbf{probability density curve} of the continuous random variable $X$. The mathematical function $f(x)$ whose graph produces this curve is called the \textbf{probability density function} of the continuous random variable X.
+	\\ 
+	\begin{tcolorbox}[colback=white]
+		The \textbf{probability density function} $f(x)$ describes the distribution of probability for a continuous random variable. It has the properties: \begin{enumerate}
+			\item The total area under the probability density curve is $1$.
+			\item $P[a\leq X\leq b]$ = area under the probability density curve between $a$ and $b$.
+			\item $f(x)\geq 0$ for all $x$.
+		\end{enumerate}
+	\end{tcolorbox}
+	\begin{tcolorbox}[colback=white]
+		With a continuous random variable, the probability that $X=x$ is \textbf{always} 0. It is only meaningful to speak about the probability that $X$ lies in an interval.
+	\end{tcolorbox}\ \\
+	For a continuous random variable $X$, $p(x)$ is called \textbf{probability density function of} $X$ if $p(x)$ satisfies: \begin{enumerate}
+		\item $p(x)\geq 0$, $\dispsty\int_{-\infty}^{\infty}p(x)\ dx=1$,
+		\item $P(a\leq X\leq b)=\dispsty\int_{a}^bp(x)\ dx$.
+	\end{enumerate}
+	Note that
+	\begin{itemize}
+		\item For any constant $c$, $\dispsty\int_{c}^cp(x)\ dx=0$.
+		\item $P(a\leq X\leq b)=P(a< X\leq b)=P(a\leq X< b)=P(a< X< b)$.
+	\end{itemize}
+	
+	\begin{tcolorbox}[colback=white]
+		\begin{center}
+			\textbf{Expectation of a Continuous Random Variable}
+		\end{center}\begin{itemize}
+			\item Expectation(or Mean) of a Random Variable $X$\begin{itemize}
+				\item a Discrete Random variable: $E[X]=\sum_{i=1}^\infty x_ip(x_i)$
+				\item a Continuous Random variable: $E[X]=\int_{-\infty}^\infty xp(x)\ dx$
+			\end{itemize}
+			\item Expectation and Median of a Continuous Random Variable $X$\begin{itemize}
+				\item Expectation($\mu=E[X]$): the balance point of the probability mass.
+				\item Median: the value of $X$ that divides the area under the curve into halves.
+			\end{itemize}
+		\end{itemize}
+	\end{tcolorbox}
+	\begin{tcolorbox}[colback=white]
+		The population \textbf{100$p$-th percentile} is an $x$ value that support area $p$ to its left and $1-p$ to its right. \begin{align*}
+		\textbf{Lower (first) quartile} &= 25\text{th percentile} \\
+		\textbf{Second quartile (or median)} &= 50\text{th percentile} \\
+		\textbf{Upper (third) quartile} &= 75\text{th percentile}
+		\end{align*}
+	\end{tcolorbox}
+	
+	\begin{tcolorbox}[colback=white]
+		The \textbf{standardized variable} \[
+		Z = \frac{X-\mu}{\sigma}=\frac{\text{Variable - Mean}}{\text{Standard deviation}}
+		\] has mean $0$ and sd 1.
+	\end{tcolorbox}
+	
+	\subsection{Normal Random Variable}
+	\begin{tcolorbox}[colback=white]
+		\begin{definition}
+			A random variable is \textbf{Normal with parameter $\mu\in\mathbb{R}$ and $\sigma^2>0$} or, in short, \textbf{$X$ is $N(\mu,\sigma^2)$}, if its density is the function given below. \[
+			\text{Density}:\ f(x)=f_X(x)=\frac{1}{\sigma\sqrt{2\pi}}\exp\left[-\frac{(x-\mu)^2}{2\sigma^2}\right],
+			\] where $x\in(-\infty,\infty)$.
+		\end{definition}
+	\end{tcolorbox} 
+	\
+	\begin{tcolorbox}[colback=white]
+		\textbf{Properties of Normal Random Variable:}\begin{enumerate}
+			\item For$f(x)=\dispsty\frac{1}{\sigma\sqrt{2\pi}}\exp\left[-\frac{(x-\mu)^2}{2\sigma^2}\right]$,\quad $
+			\dispsty\int_{-\infty}^{\infty} f(x)\ dx=1.
+			$
+			\item $EX=\mu$.
+			\item $\Var(X)=\sigma^2$.
+		\end{enumerate}
+	\end{tcolorbox}
+	\
+	\begin{proof}
+		\ \begin{enumerate}
+			\item Let $\dispsty\frac{x-\mu}{\sigma}=t$, \ie, $\dispsty\frac{1}{\sigma}\ dx=dt$. Then \begin{align*}
+			\int_{-\infty}^\infty\frac{1}{\sigma\sqrt{2\pi}}\exp\left[-\frac{(x-\mu)^2}{2\sigma^2}\right]\ dx=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^\infty \exp\left(-\frac{t^2}{2}\right)\ dt.
+			\end{align*} Let $\dispsty S=\int_{-\infty}^\infty e^{-ax^2}\ dx=\int_{-\infty}^\infty e^{-ay^2}\ dy$. Then \begin{align*}
+			S^2=\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}e^{-a(x^2+y^2)}\ dx\ dy&=\int_0^{2\pi}\int_{0}^{\infty}e^{-ar^2} r\ dr\ d\theta\\
+			&=\int_0^{2\pi}-\frac{1}{2a}\left[e^{-r^2}\right]_0^\infty\ d\theta\\
+			&=\left[\frac{1}{2a}\theta\right]_0^{2\pi}=\frac{\pi}{a}.
+			\end{align*} Thus, $S=\dispsty\sqrt{\frac{\pi}{a}}$. Hence \[
+			\frac{1}{\sqrt{2\pi}}\int_{-\infty}^\infty \exp\left(-\frac{t^2}{2}\right)\ dt=\frac{1}{\sqrt{2\pi}}\sqrt{2\pi}=1.
+			\]
+			\item \begin{align*}
+			E(X)&=\int_{-\infty}^\infty xf(x)\ dx\\&=\int_{-\infty}^\infty x\frac{1}{\sigma\sqrt{2\pi}}\exp\left[-\frac{(x-\mu)^2}{2\sigma^2}\right]\ dx\\
+			&=\int_{-\infty}^\infty \left[(x-\mu)+\mu\right]\frac{1}{\sigma\sqrt{2\pi}}\exp\left[-\frac{(x-\mu)^2}{2\sigma^2}\right]\ dx\\
+			&=\int_{-\infty}^\infty (x-\mu)\frac{1}{\sigma\sqrt{2\pi}}\exp\left[-\frac{(x-\mu)^2}{2\sigma^2}\right]\ dx+\int_{-\infty}^\infty \mu\frac{1}{\sigma\sqrt{2\pi}}\exp\left[-\frac{(x-\mu)^2}{2\sigma^2}\right]\ dx\\
+			&=\frac{1}{\sigma\sqrt{2\pi}}(-\sigma^2)\int_{-\infty}^\infty\frac{-x+\mu}{\sigma^2}\exp\left[-\frac{(x-\mu)^2}{2\sigma^2}\right]\ dx +\mu\int_{-\infty}^\infty\frac{1}{\sigma\sqrt{2\pi}}\exp\left[-\frac{(x-\mu)^2}{2\sigma^2}\right]\ dx\\
+			&=\frac{1}{\sigma\sqrt{2\pi}}(-\sigma^2)\left[\exp\left[-\frac{(x-\mu)^2}{2\sigma^2}\right]\right]_{-\infty}^\infty+\mu\\
+			&=\mu.
+			\end{align*}
+			\item \[
+			\Var(X)=E[(X-E[X]^2)]=\int_{-\infty}^\infty(x-\mu)^2\cdot f(x)\ dx=\int_{-\infty}^\infty(x-\mu)^2\frac{1}{\sigma\sqrt{2\pi}}\exp\left[-\frac{(x-\mu)^2}{2\sigma^2}\right]\ dx.
+			\] Let $\omega=\dispsty\frac{x-\mu}{\sigma\sqrt{2}}$  $\left(\text{here},\ d\omega=\dispsty\frac{1}{\sigma\sqrt{2}}dx\right)$, then \[
+			\Var(X)=\int_{-\infty}^\infty\sigma^22\omega^2\frac{1}{\sigma\sqrt{2\pi}}e^{-\omega^2}\sigma\sqrt{2}\ d\omega=\frac{2\sigma^2}{\sqrt{\pi}}\int_{-\infty}^\infty\omega\cdot\omega e^{-\omega^2}\ d\omega.
+			\] Using integration by parts: \begin{table}[h!]
+				\centering\begin{tabular}{c|c}
+					Differentiation & Integration\\
+					\midrule
+					$\omega$ & $\dispsty\omega e^{-\omega^2}$\\
+					\hline
+					$1$ & $\displaystyle -1/2e^{-\omega^2}$
+				\end{tabular}
+			\end{table}\ \\ we have \begin{align*}
+			\Var(X)&=\frac{2\sigma^2}{\sqrt{\pi}}\left(\crossout[red]{\text{$0$ by L'H$\hat{\text{o}}$pital's rule}}{\omega\frac{-1}{2}e^{-\omega^2}\Bigg|_{-\infty}^{\infty}}-\int_{-\infty}^\infty\frac{-1}{2}e^{-\omega^2}d\omega\right)\\
+			&=\frac{2\sigma^2}{\sqrt{\pi}}\left(\frac{1}{2}\int_{-\infty}^\infty e^{-\omega^2}\right)\\
+			&=\frac{2\sigma^2}{\sqrt{\pi}}\cdot\frac{1}{2}\cdot\sqrt{\pi}=\sigma^2.
+			\end{align*}
+		\end{enumerate}
+	\end{proof}
+	\
+	\begin{tcolorbox}[colback=white]
+		If $X\sim N(\mu_X,\sigma_X^2)$ and $Y=aX+b$ where $a,b\in\mathbb{R}$, then \[
+		Y\sim N(\mu_Y, \sigma_Y^2)\quad\text{where}\quad \mu_Y=a\mu_X+b\ \text{and}\ \sigma_Y^2=a^2\sigma_X^2.
+		\]\tcblower\begin{proof}
+			\ \begin{itemize}
+				\item $EY=E(aX+b)=aEX+b=a\mu_X+b$.
+				\item $\Var(Y)=\Var(aX+b)=a^2\Var(X)=a^2\sigma_X^2$.
+			\end{itemize}
+		\end{proof}
+	\end{tcolorbox}
 	% End document
 \end{document}
