@@ -14,9 +14,9 @@
 \usepackage{wallpaper}
 \usepackage{tabularx}
 \usepackage{booktabs}
-
+\usepackage{setspace}
 \usepackage{tikz}
-\usepackage{pgf-pie}
+%\usepackage{pgf-pie}
 
 % Define custom colors
 \definecolor{darkblue}{RGB}{25,25,112}  % Midnight Blue
@@ -65,7 +65,7 @@
 \title{P.A.N.D.A's PUBAO: \\Discrete Logarithm Calculator Development}
 \author{\textcolor{lightblue!50!black}{\bf 지용현, 김예찬, 문예찬, 유근오}}
 \date{\today}
-
+\setstretch{1.5}
 \begin{document}
 	
 	\maketitle
@@ -76,14 +76,6 @@
 	\end{figure}
 	\newpage  % Ensures that content starts on the second page
 	
-	\section*{Abstract}
-	Abstract: Development of a Large Integer Arithmetic Library and Discrete Logarithm Calculator Using Shanks' Algorithm
-	
-	Problem: In the realm of cryptography and number theory, computing the discrete logarithm is a fundamental challenge. For large integers, traditional computational methods are either inefficient or infeasible. The vast applications of discrete logarithm in cryptographic systems demand an effective solution for calculating it efficiently, especially for big numbers.
-	
-	Solution: This project introduces a comprehensive large integer arithmetic library, designed to efficiently handle and compute vast numbers. Leveraging this library, we have developed a specialized calculator to solve discrete logarithm problems, using the renowned Shanks' (or baby-step giant-step) algorithm. Shanks' method divides the problem into more tractable smaller parts, providing a considerable speedup over naive techniques, especially when our large integer arithmetic library optimizes computations.
-	
-	Impact: The developed large integer arithmetic library offers versatility, not just limited to our calculator but expandable to other computational problems requiring big number arithmetic. The discrete logarithm calculator, by capitalizing on Shanks' algorithm, provides an invaluable tool for researchers, cryptanalysts, and educators. By simplifying and expediting the calculation of discrete logarithms, this project aids in enhancing cryptographic practices, facilitates research in number theory, and serves as an educational platform for advanced mathematical concepts.
 	\tableofcontents
 	\newpage
 	\section{Team Overview}
@@ -98,19 +90,19 @@
 				\item[-] \textbf{Strategic Planning:} 프로젝트의 전반적인 방향을 설정하고 목표과 목적이 프로젝트 비전을 이끌어 나간다.
 				\item[-] \textbf{Algorithm Implementation:} 계산 알고리즘의 실제 구현과 더불어 라이브러리와의 원활한 통합을 진행한다.
 			\end{itemize}
-			\vspace{5pt}
+		\vspace{8pt}
 		\item[$\blacktriangleright$] \textcolor{darkblue}{\bf 김예찬 (Validator) }
 		\begin{itemize}
 			\item[-] \textbf{Quality Assurance:} 개발된 모듈이 버그가 없는지 확인한다.
 			\item[-] \textbf{Feedback Loop:} 사용자 피드백을 수집하고 지속적인 개선을 촉진한다.
 		\end{itemize}
-		\vspace{5pt}
+	\vspace{8pt}
 			\item[$\blacktriangleright$] \textcolor{darkblue}{\bf 문예찬 (Builder)}
 		\begin{itemize}
 			\item[-] \textbf{Core Development:} 필수 모듈 개발을 주도하고, 성능이 프로젝트 요구 사항에 부합하는지 확인한다.
 			\item[-] \textbf{Integration:} 큰 정수 연산 라이브러리를 계산기와 통합하여 원활하고 오류 없는 작동을 보장한다.
 		\end{itemize}
-		\vspace{5pt}
+	\vspace{8pt}
 			\item[$\blacktriangleright$] \textcolor{darkblue}{\bf 유근오 (Intern)}
 		\begin{itemize}
 			\item[-] \textbf{User Interface Design:} 계산기의 사용자 인터페이스를 디자인하고 개발하여 사용자 친화적이고 직관적인 디자인을 설계한다.
@@ -119,10 +111,15 @@
 		\end{itemize}
 	\end{itemize}
 	
+	\newpage
 	\section{Develop Environment}
 	\begin{itemize}
 		\item Language: C17
-		\item Compiler: gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+		\item Compiler: \begin{itemize}
+			\item gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+			\item Apple clang version 15.0.0 (clang-1500.0.40.1)
+			\item Apple clang version 14.0.0 (clang-1400.0.29.202)
+		\end{itemize}
 		\item Development Tools
 		\begin{itemize}
 			\item SageMath version 9.5
@@ -136,6 +133,8 @@
 	
 	\newpage
 	\section{Project Background}
+	이산대수 문제(DLP: Discrete Logarithm Problem)는 많은 공개 키 시스템의 보안을 뒷받침한다.  DLP를 보다 강력하게 구현하기 위해서는 256-bit 이상의 큰 숫자를 보안 파라미터로 사용해야 한다. 그러나 C언어의 기본 데이터 타입은 이런 요구를 만족시키기에는 부족하며, 대부분의 표준 정수 데이터 타입은 64-bit로 제한된다. 따라서 C에서 기본적으로 지원하는 것보다 4배 이상 큰 숫자를 처리하는데 큰 어려움이 있다.
+	\\
 	\begin{table}[h!]
 		\centering
 		\begin{tabularx}{\textwidth}{lXr}
@@ -155,40 +154,25 @@
 		\caption{Basic C language data types and their size constraints.}
 		\label{tab:c_data_types}
 	\end{table}
-	
-	What problem is the project trying to solve?
-	One of the primary hurdles in ensuring cryptographic security is the Discrete Logarithm Problem (DLP). To provide robust cryptographic measures, DLP mandates the use of large numbers, often exceeding 256 bits (or 32 bytes) as security parameters. The C language's native data types, however, fall short in this regard, with the largest standard integer data type (long long int) typically capping at 64 bits (or 8 bytes). Thus, there exists a substantial gap in handling numbers four times larger than what is inherently supported by C.
-	
-	What is already known about this issue?
-	It is a recognized tenet in cryptographic circles that as computational power increases, the bit-length needed for security also grows. While 128 bits might have been sufficient decades ago, in the current landscape, 256 bits or even more are often recommended to thwart advanced computational attacks. Given C's native limitation of handling only up to 64-bit integers directly, this presents a palpable challenge.
-	
-	Has anyone dealt with this issue before? What investigation was done?
-	Yes, there have been numerous endeavors to overcome C's 64-bit limitation. Custom data types, specialized libraries like GMP (GNU Multiple Precision arithmetic library), or memory management tricks have been deployed to handle large integers. Such adaptations, though efficient in specific scenarios, often cater to general large number arithmetic rather than being optimized for cryptographic tasks like DLP.
-	
-	Why were past investigations insufficient to solve this problem?
-	
-	Bit-Length Specificity: Many solutions cater to generic large number arithmetic, without optimization for specific bit lengths like 256 bits or 512 bits, crucial for DLP in cryptographic contexts.
-	Performance: Generalized solutions might not exploit the efficiencies possible when dealing specifically with cryptographic number sizes.
-	Compatibility: Some libraries or custom data types might introduce dependencies that could cause integration challenges in broader cryptographic applications.
-	Operational Overhead: Adapting memory models or other generalized workarounds can introduce computational overhead, potentially slowing down cryptographic operations.
-	In light of these challenges, our project is set on developing a large integer arithmetic library, optimized specifically for cryptographic bit-lengths, such as 256 bits and beyond. By doing so, we aim to provide a precise, efficient, and robust solution for DLP, aligning both computational efficiency and cryptographic robustness.
-	
-	\newpage
+
+	이러한 배경을 바탕으로, 우리는 C언어에서 큰 정수 연산을 효율적으로 수행할 수 있는 라이브러리의 개발을 목표로 하였습니다. 이는 256-bit 이상의 숫자를 손쉽게 처리할 수 있도록 설계할 것이며, 큰 수의 연산에 최적화되도록 할 것입니다. 또한 이 라이브러리는 공개 키 알고리즘의 개발에 있어서 중요한 역할을 할 것입니다. 따라서 이산대수 문제의 해결을 위한 baby-step/giant-step 및 pollard's rho method를 활용한 DLP 계산기를 개발하고자 합니다.
+	\vspace{20pt}
 	\section{Objective}
 	이 프로젝트의 주요 목표는 두 가지 입니다.
 	
 	\begin{enumerate}
 		\item 임의의 큰 크기의 정수에 대한 산술 연산을 처리할 수 있는 큰 정수 연산 라이브러리를 개발
-		\item 큰 정수 연산 라이브러리를 활용하여 Shanks' baby-step/giant-steps algorithm을 통한 discrete logarithm calculator 를 구현
+		\item 큰 정수 연산 라이브러리를 활용하여 rho alg and Shanks' baby-step/giant-steps algorithm을 통한 discrete logarithm calculator 를 구현
 	\end{enumerate}
 	
+	\newpage
 	\section{Methodology}
 	
 	\subsection{Developing BIG Integer Operation Library}
 	\begin{enumerate}
 		\item \textbf{요구사항 분석:} 지원될 작업 및 기능을 고려하여 라이브러리의 요구사항 및 사양을 정의합니다.
 		\item \textbf{설계 및 구현:} 다양한 정수 연산을 수행하기 위한 아키텍처를 설계하고 알고리즘을 구현합니다.
-		\item \textbf{테스트 및 검증:} 정의된 테스트 사례 및 벤치마크에 대한 엄격한 테스트 및 검증을 통해 라이브러리의 신뢰성과 정확성을 보장합니다.
+		\item \textbf{테스트 및 검증:} 정의된 테스트 사례 및 벤치마크에 대한 테스트 및 검증을 통해 라이브러리의 신뢰성과 정확성을 보장합니다.
 	\end{enumerate}
 	
 	\subsection{Implementing Discrete Logarithm Calculator}
@@ -228,20 +212,19 @@
 	\begin{center}
 		\begin{tabularx}{\textwidth}{X r}
 			\toprule
-			\textbf{Item} & \textbf{Amount (USD)} \\
+			\textbf{Item} & \textbf{Amount (KRW)} \\
 			\midrule
-			Personnel (Developers, Testers, Researchers) & \$300,000 \\
-			Equipment (Servers, Workstations) & \$50,000 \\
-			Software Licenses & \$10,000 \\
-			Cloud Storage \& Computing Costs & \$20,000 \\
-			Miscellaneous (Training, Conferences, Workshops) & \$20,000 \\
-			Contingency (10\% of total budget) & \$40,000 \\
+			GPT-4 x 4 & \$30,000 x 4 \\
+			Notion Plus & \$10,000 \\
+			Dining Cost & \$100,000 \\
+			Study Room Usage Fee & \$40,000 \\
+			Not Expected Cost & \$30,000 \\
 			\midrule
-			\textbf{Total Budget} & \$440,000 \\
+			\textbf{Total Budget} & \$ 300,000 \\
 			\bottomrule
 		\end{tabularx}
 	\end{center}
-
+	\iffalse
 	\begin{center}
 		\begin{tikzpicture}
 			\pie[rotate=90, explode=0.1, text=legend, 
@@ -256,29 +239,14 @@
 			}
 		\end{tikzpicture}
 	\end{center}
-	
+	\fi
 	\newpage
 	\section{Conclusion}
-	The development of this Large Integer Arithmetic Library, tailored specifically for cryptographic applications, is poised to make a substantial contribution to the field of cryptography. By addressing the inherent limitations of the C language and optimizing for cryptographic needs, this project embodies both innovation and necessity. With a clear timeline, defined milestones, robust data management practices, and a well-structured budget, we are optimistic about the project's success and its subsequent impact on cryptographic research and applications.
+	우리의 큰 정수 라이브러리의 개발은 C언어의 제한성을 극복하고 암호학적 요구에 맞게 최적화된 성능을 목표로 합니다. 최종적으로 큰 정수 연산 라이브러리가 암호학 알고리즘에 부합되도록 하며, pollard rho와 baby/giant 와 결합할 것입니다.
 	
-	1. Final Product or End Goal:
+	사용자 가이드, 개발자 노트를 포함한 문서를 작성할 것이며, 실제로 라이브러리 기능을 보여주는 시현을 진행하고자 합니다.
 	
-	A state-of-the-art Large Integer Arithmetic Library tailored for cryptographic applications, fully integrated with Shanks' Algorithm.
-	Comprehensive documentation including user guides, developer notes, and integration guidelines.
-	An example application demonstrating the library's capabilities in a real-world cryptographic scenario.
-	
-	
-	SMART Goals:
-	
-	Specific: Develop a Large Integer Arithmetic Library that can efficiently handle numbers of 256 bits and beyond, specifically optimized for cryptographic tasks, and integrated with Shanks' Algorithm.
-	
-	Measurable: By the end of Q2 2024, achieve a performance benchmark where the library can perform arithmetic operations on large integers at least 30\% faster than existing generic solutions. Moreover, by the end of the project, gather feedback from at least 50 beta testers, aiming for an approval rating of 85% or higher regarding the library's efficiency and applicability.
-	
-	Achievable: Assemble a team of experienced developers and cryptography experts, and equip them with the necessary tools and resources, ensuring the project's goals align with their expertise and capabilities.
-	
-	Relevant: With the growing demand for robust cryptographic solutions in the digital age, developing a specialized library that addresses the inherent limitations of the C language meets a significant market and research need.
-	
-	Time-bound: Complete the library's development, testing, and documentation within a one-year timeframe, targeting an official launch at the beginning of Q1 2025.
-	
+	이 프로젝트는 큰 정수를 효율적으로 처리하고 계산하도록 설계된 연산 라이브러리를 소개합니다. 이 라이브러리를 활용한 Rho, B/G  알고리즘을 사용해 이산대수문제를 해결하는 특화된 계산기를 개발하고자 합니다. 
+	개발된 큰 정수 연산 라이브러리는 계산기에만 국한되지 않고, 큰 숫자 연산이 필요한 다른 계산 문제로 확장될 수 있는 다양성을 제공합니다. rho and B/S을 활용한 이산 로그 계산기는 연구자, 암호 분석가 및 교육자에게 좋은  도구를 제공합니다.
 	
 \end{document}
