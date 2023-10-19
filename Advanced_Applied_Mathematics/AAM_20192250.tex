@@ -339,6 +339,7 @@
 	
 	\section{Basis and Rank}
 	\section{Linear Mappings}
+	\newpage
 	\subsection{Basis Change}
 	
 	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf Basis Change}]
@@ -608,6 +609,9 @@
 			\]
 		\end{definition}
 	\end{tcolorbox}
+	\begin{remark}
+		\(\textbf{A}\) is positive \textbf{semi-definite} if \(\textbf{x}^T\textbf{A}\textbf{x}\geq 0 \) only.
+	\end{remark}
 	\vspace{8pt}
 	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf }]
 		\begin{theorem}
@@ -1005,7 +1009,7 @@
 	
 	\newpage
 	\section{Eigenvalues and Eigenvectors}
-	\subsubsection{Eigenvalues and Eigenvectors}
+	\subsection{Eigenvalues and Eigenvectors}
 	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Eigenvalue and Eigenvetor}]
 		\begin{definition}
 			Let \(\textbf{A}\in M_{n\by n}(\R)\). Then \(\lambda\in\R\) is an \textbf{eigenvalue} of \(\textbf{A}\) and \(\textbf{v}\in\R^n\setminus\set{\textbf{0}}\) is the corresponding eigenvector of \(\textbf{A}\) if \[
@@ -1203,7 +1207,7 @@
 		\end{align*}
 	\end{example}
 
-	\subsubsection{Complex Matrices}
+	\subsection{Complex Matrices}
 	Consider complex vector \[
 	\vec{w}=(w_1,\dots,w_n)\in\C^n\quad\text{with}\quad w_j=x_j+iy_j,
 	\] where \(x_j,y_j\in\R\). Then \begin{enumerate}[(1)]
@@ -1375,6 +1379,335 @@
 		\end{itemize}
 	\end{remark}
 	\newpage
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf Cholesky Decomposition}]
+		\begin{theorem}
+			Let \(\textbf{A}\) be a symmetric, positive definite matrix. Then \[
+			\textbf{A}=\textbf{L}\textbf{L}^T,
+			\] where $\textbf{L}$ is a lower triangular matrix with positive diagonal elements.
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		Let $\textbf{A}v_i=\lambda_iv_i$ with $v_i\neq 0$ for $i=1,\dots,n$. By spectral decomposition, we have \[
+		\textbf{A}=\textbf{P}\textbf{D}\textbf{P}^T=\begin{bmatrix}
+			v_1&\cdots& v_n
+		\end{bmatrix}\begin{bmatrix}
+		\lambda_1&\cdots&0\\&\ddots&\\0&\cdots&\lambda_n
+	\end{bmatrix}\begin{bmatrix}
+	v_1\\ \vdots\\ v_n 
+\end{bmatrix}.
+		\] Note that \begin{align*}
+			\textbf{A}=\textbf{PDP}^T&=\textbf{P}\sqrt{\textbf{D}}\sqrt{\textbf{D}}\textbf{P}^T\\
+			&=\textbf{P}\sqrt{\textbf{D}}\sqrt{\textbf{D}}^T\textbf{P}^T\\
+			&=(\textbf{P}\sqrt{\textbf{D}})(\textbf{P}\sqrt{\textbf{D}})^T\\
+			&=\textbf{L}\textbf{L}^T.
+		\end{align*}
+	\end{proof}
+
+	\section{Eigendecomposition and Diagonalization}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Diagonalizable}]
+		\begin{definition}
+			A matrix \(\textbf{A}\in M_{n\by n}(\R)\) is \textbf{diagonalizable} if \[
+			\exists\textbf{P}\in M_{n\by n}(\R):\textbf{D}=\textbf{P}^{-1}\textbf{A}\textbf{P},
+			\] \ie, if it is similar to a diagonal matrix.
+		\end{definition}
+	\end{tcolorbox}
+	\vspace{8pt}
+	
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf Eigendecomposition}]
+		\begin{theorem}
+			A square matrix $\textbf{A}\in M_{n\by n}(\R)$ can be factorized into \[
+			\textbf{A}=\textbf{PDP}^{-1}
+			\] where $\textbf{P}\in M_{n\by n}(\R)$ and \textbf{D} is a diagonal matrix whose diagonal entries are the eigenvalues of \textbf{A}, if and only if the eigenvectors of \(\textbf{A}\) form a basis of \(\R^n\).
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		Let \(\lambda_1,\dots,\lambda_n\) are the eigenvalues of \(\textbf{A}\) and \(\vec{v}_1,\dots,\vec{v}_n\) are corresponding eigenvectors of \(\textbf{A}\). Let \(\textbf{P}=\begin{bmatrix}
+			\vec{v}_1&\dots&\vec{v}_n
+		\end{bmatrix}\) and \(\textbf{D}=\begin{bmatrix}
+		\lambda_1 &&\\&\ddots&\\ &&\lambda_n
+	\end{bmatrix}\). Then \begin{align*}
+		&\textbf{AP}=\begin{bmatrix}
+			\textbf{A}\vec{v}_1 &\cdots& \textbf{A}\vec{v}_n
+		\end{bmatrix},\\
+		&\textbf{PD}=\begin{bmatrix}
+			\vec{v}_1&\dots&\vec{v}_n
+		\end{bmatrix}\begin{bmatrix}
+			\lambda_1 &&\\&\ddots&\\ &&\lambda_n
+		\end{bmatrix}=\begin{bmatrix}
+		\lambda_1\vec{v}_1&\cdots&\lambda_n\vec{v}_n
+	\end{bmatrix}.
+	\end{align*} Since \(\textbf{A}\vec{v}_i=\lambda_i\vec{v}_i\) for all \(i=1,\dots, n\), we have \[
+	\textbf{AP}=\textbf{PD}\implies \textbf{A}=\textbf{A}\textbf{P}\textbf{P}^{-1}.
+	\]
+	\end{proof}
+
+	\newpage
+	\section{Singular Value Decomposition}
+	
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf SVD Theorem}]
+		\begin{theorem}
+			Let \(\textbf{A}\in M_{m\by n}(\R)\) be a rectangular matrix of rank \(r\in\intcc{0,\min(m,n)}\). The SVD of \(\textbf{A}\) is a decomposition of the form \[
+			\textbf{A}=\textbf{U}\boldsymbol{\Sigma}\textbf{V}^T
+			\] with \begin{enumerate}[(i)]
+				\item an orthogonal matrix \(\textbf{U}\in M_{m\by m}\) with column vectors \(\textbf{u}_i\) for $i=1,\dots, m$,
+				\item and an orthogonal matrix \(\textbf{V}\in M_{n\by n}\) with column vectors \(\textbf{v}_j\) for $j=1,\dots, n$.
+				\item Moreover, \(\boldsymbol{\Sigma}\in M_{m\by n}(\R)\) with \(\Sigma_{ii}=\begin{cases}
+					\sigma_i\geq0 &:i=j,\\
+					0 &:i\neq j.
+				\end{cases}\)
+			\end{enumerate}
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{remark}
+		\[
+		\R^n\xrightarrow[\text{basis change}]{\textbf{V}^T}\R^n\xrightarrow[\text{scaling}
+			(\text{embedding}
+			/\text{projection})]{\boldsymbol{\Sigma}}\R^m\xrightarrow[\text{basis change}]{\textbf{U}}\R^m
+		\]
+	\end{remark}
+	\begin{remark}
+		\ \begin{enumerate}[(1)]
+			\item Since \(\textbf{U}\) is orthogonal, \(\textbf{UU}^T=\textbf{I}_m\)
+			\item Since \(\textbf{V}\) is orthogonal, \(\textbf{VV}^T=\textbf{I}_n\)
+			\item \[
+			\boldsymbol{\Sigma}=\begin{cases}
+				\begin{bmatrix}
+					\sigma_1 & 0 & 0 & 0 & \cdots & 0\\
+					0 & \ddots & 0 & \vdots & & \vdots\\
+					0 & 0 & \sigma_m & 0 & \cdots & 0
+				\end{bmatrix}&:m<n\\
+				\\
+				\begin{bmatrix}
+					\sigma_1 & 0 & 0\\
+					0 & \ddots & 0\\
+					0 & 0 & \sigma_n\\
+					0 & \cdots & 0\\
+					\vdots &  & \vdots\\
+					0 & \cdots & 0
+				\end{bmatrix}&:m>n
+			\end{cases}
+			\]
+		\end{enumerate}
+	\end{remark}
+	
+	\newpage
+	\subsection{Construction of SVD}
+	
+	Let \(\textbf{A}\in M_{m\by n}(\R)\).
+	
+	\begin{enumerate}[(Step 1)]
+		\item \textbf{Find a symmetric, positive semi-definite matrix.} Let \(\textbf{S}:=\textbf{A}^T\textbf{A}\in M_{n\by n}(\R)\). Then
+		\begin{enumerate}[(i)]
+			\item \(\textbf{S}\) is symmetric: \(\textbf{S}^T=(\textbf{A}^T\textbf{A})^T=\textbf{A}^T(\textbf{A}^T)^T=\textbf{A}^T\textbf{A}=\textbf{S}\).
+			\item \(\textbf{S}\) is positive semi-definite: for \(\vec{v}\in\R\),\[
+			\vec{v}^T\textbf{S}\vec{v}=\vec{v}^T\textbf{A}^T\textbf{A}\vec{v}=(\textbf{A}\vec{v})^T(\textbf{A}\vec{v})=\norms{\textbf{A}\vec{v}}^2\geq 0.
+			\]
+		\end{enumerate}
+		\vspace{4pt}
+		\item \textbf{Spectral Decomposition.} \[
+		\textbf{S}=\textbf{A}^T\textbf{A}=\textbf{P}\textbf{D}\textbf{P}^T=
+		\textbf{P}\begin{bmatrix}
+			\lambda_1&&0\\&\ddots&\\0&&\lambda_n
+		\end{bmatrix}\textbf{P}^T\quad\text{with}\quad\textbf{PP}^T=\textbf{I}_n.
+		\]
+		\vspace{4pt}
+		\item \textbf{Assume the SVD of A$\in M_{m\by n}(\R)$ exists}, \ie, \(\textbf{A}=\textbf{U}\boldsymbol{\Sigma}\textbf{V}^T\). Then
+		\begin{align*}
+			\textbf{S}=\textbf{A}^T\textbf{A}&=(\textbf{U}\boldsymbol{\Sigma}\textbf{V}^T)^T(\textbf{U}\boldsymbol{\Sigma}\textbf{V}^T)\\
+			&=\textbf{V}\boldsymbol{\Sigma}^T(\textbf{U}^T\textbf{U})\boldsymbol{\Sigma}\textbf{V}^T\\
+			&=\textbf{V}\boldsymbol{\Sigma}^T\boldsymbol{\Sigma}\textbf{V}\quad\text{by orthogonality of \textbf{U}}\\
+			&=\textbf{V}\begin{bmatrix}
+				\sigma_1^2 &  & 0\\
+				 & \sigma_2^2 & \\
+				0 &  & \ddots
+			\end{bmatrix}\textbf{V}^T
+		\end{align*} Thus \[
+		\textbf{P}=\textbf{V}\quad\text{and}\quad\lambda_i=\sigma_i^2.
+		\]
+		\item Find \(\textbf{U}\) s.t. \begin{align*}
+			\textbf{S}=\textbf{A}\textbf{A}^T&=(\textbf{U}\boldsymbol{\Sigma}\textbf{V}^T)(\textbf{U}\boldsymbol{\Sigma}\textbf{V}^T)^T\\
+			&=\textbf{U}\boldsymbol{\Sigma}(\textbf{V}^T\textbf{V})\boldsymbol{\Sigma}^T\textbf{U}^T\\
+			&=\textbf{U}\boldsymbol{\Sigma}\boldsymbol{\Sigma}^T\textbf{U}^T\quad\text{by orthogonality of \textbf{V}}\\
+			&=\textbf{U}\begin{bmatrix}
+				\sigma_1^2 &  & 0\\
+				& \sigma_2^2 & \\
+				0 &  & \ddots
+			\end{bmatrix}\textbf{U}^T.
+		\end{align*} Note that \(\textbf{A}\) and \(\textbf{A}^T\) have the same eigenvalues. Let \[
+		\textbf{V}:=\begin{bmatrix}
+			\vec{v}_1&\cdots&\vec{v}_n
+		\end{bmatrix},
+		\] where $\vec{v}_i$ is eigenvector of \(\textbf{A}^T\textbf{A}\) for $i=1,\dots,n$. Then \[
+		i\neq j\implies\inner{\textbf{A}\vec{v}_i,\textbf{A}\vec{v}_j}=\vec{v}_i^T\textbf{A}^T\textbf{A}\vec{v}_j=\vec{v}_i^T\lambda_j\vec{v}_j=\lambda_j\vec{v}_i^T\vec{v}_j=0,
+		\] and so \(\set{\textbf{A}\vec{v}_1,\dots,\textbf{A}\vec{v}_r}\) forms a orthogonal basis of \(\textnormal{Im}(\textbf{A})\in\R^m\).
+		Since \[
+		\norms{\textbf{A}\vec{v}_i}^2=\inner{\textbf{A}\vec{v}_i,\textbf{A}\vec{v}_i}=\lambda_i\vec{v}_i\vec{v}_i^T\vec{v}_i=\lambda_i\norms{\vec{v}_i}^2=\lambda_i,
+		\] we have \[
+		\textbf{u}_i:=\frac{\textbf{A}\vec{v}_i}{\norms{\textbf{A}\vec{u}_i}}=\frac{1}{\sqrt{\lambda_i}}\textbf{A}\vec{v}_i
+		\] for \(i=1,\dots, r\).
+		Therefore \begin{align*}
+			\textbf{A}\textbf{V}=\textbf{A}\begin{bmatrix}
+				\vec{v}_1&\cdots&\vec{v}_r
+			\end{bmatrix}=\begin{bmatrix}
+			\sigma_1\vec{u}_1&\cdots&\sigma_r\vec{u}_r
+		\end{bmatrix}
+		=\begin{bmatrix}
+			\vec{u}_1 &\cdots&\vec{u}_2
+		\end{bmatrix}\begin{bmatrix}
+		\sigma_1 &&0\\&\ddots&\\0&&\sigma_r
+	\end{bmatrix}=\textbf{U}\boldsymbol{\Sigma}.
+		\end{align*}
+	\end{enumerate}
+	
+	Hence \[
+	\textbf{AV}=\textbf{U}\boldsymbol{\Sigma}\implies\textbf{A}=\textbf{U}\boldsymbol{\Sigma}\textbf{V}^T.
+	\]
+	\newpage
+	\begin{example}[Computing the SVD]
+		Find the singular value decomposition of \[
+		\textbf{A}=\begin{bmatrix}
+			-1 & 1 & 0\\
+			0 & -1 & 1
+		\end{bmatrix}\in M_{2\by 3}(\R).
+		\]
+		\begin{proof}[\sol]
+			The SVD requires us to compute the right-singular vectors $v_j$ , the singular
+			values $\sigma_k$, and the left-singular vectors $u_i$.
+			\begin{enumerate}[(Step 1)]
+				\item \textbf{Right-singular vectors as the eigenbasis of $\textbf{A}^T\textbf{A}$.} 
+				\begin{enumerate}[(i)]
+					\item Create real symmetric matrix. \[
+					\textbf{A}^T\textbf{A}=\begin{bmatrix}
+						-1 & 0\\
+						1 & -1\\
+						0 & 1
+					\end{bmatrix}\begin{bmatrix}
+						-1 & 1 & 0\\
+						0 & -1 & 1
+					\end{bmatrix}=\begin{bmatrix}
+						1 & -1 & 0\\
+						-1 & 2 & -1\\
+						0 & -1 & 1
+					\end{bmatrix}.
+					\]
+					\item Spectral Decomposition. 
+					\begin{align*}
+						\det\del{\textbf{A}^T\textbf{A}-\lambda\textbf{I}_3}&=\begin{vmatrix}
+							1-\lambda & -1 & 0\\
+							-1 & 2-\lambda & -1\\
+							0 & -1 & 1-\lambda
+						\end{vmatrix}\\
+					&=(1-\lambda)\sbr{(2-\lambda)(1-\lambda)-1}-(-1)\sbr{\lambda-1}\\
+					&=(1-\lambda)(2-3\lambda+\lambda^2-1-1)\\
+					&=(1-\lambda)(-3\lambda+\lambda^2)\\
+					&=\lambda(1-\lambda)(\lambda-3)=0.
+					\end{align*} Let \(\lambda_1=3,\lambda_2=1\) and \(\lambda_3=0\).
+					\begin{enumerate}[(a)]
+						\item ($\lambda_1=3$) \[
+						\begin{bmatrix}
+							-2& -1 &0\\
+							-1& -1 &-1\\
+							0& -1 &-2\\
+						\end{bmatrix}\vec{v}_1=\vec{0}\implies\vec{v}_1=\begin{bmatrix}
+						1\\-2\\1
+					\end{bmatrix}\implies\hat{\vec{v}}_1=\frac{1}{\sqrt{6}}\begin{bmatrix}
+					1\\-2\\1
+				\end{bmatrix}.
+						\]
+						\item ($\lambda_2=1$) \[
+						\begin{bmatrix}
+							0& -1 &0\\
+							-1& 1 &-1\\
+							0& -1 &0\\
+						\end{bmatrix}\vec{v}_2=\vec{0}\implies\vec{v}_2=\begin{bmatrix}
+							1\\0\\-1
+						\end{bmatrix}\implies\hat{\vec{v}}_2=\frac{1}{\sqrt{2}}\begin{bmatrix}
+							1\\0\\-1
+						\end{bmatrix}.
+						\]
+						\item ($\lambda_3=0$) \[
+						\begin{bmatrix}
+							1& -1 &0\\
+							-1& 2 &-1\\
+							0& -1 &1\\
+						\end{bmatrix}\vec{v}_3=\vec{0}\implies\vec{v}_3=\begin{bmatrix}
+							1\\1\\1
+						\end{bmatrix}\implies\hat{\vec{v}}_3=\frac{1}{\sqrt{3}}\begin{bmatrix}
+							1\\1\\1
+						\end{bmatrix}.
+						\]
+					\end{enumerate}
+					Thus, \[
+					\textbf{A}\textbf{A}^T=\textbf{PDP}^T=\begin{bmatrix}
+						1/\sqrt{6} & 1/\sqrt{2} & 1/\sqrt{3}\\
+						-2/\sqrt{6} & 0 & 1/\sqrt{3}\\
+						1/\sqrt{6} & -1/\sqrt{2} & 1/\sqrt{3}
+					\end{bmatrix}\begin{bmatrix}
+					3&0&0\\0&1&0\\0&0&0
+				\end{bmatrix}\begin{bmatrix}
+				1/\sqrt{6} & -2/\sqrt{6} & 1/\sqrt{6}\\
+				1/\sqrt{2} & 0 & -1/\sqrt{2}\\
+				1/\sqrt{3} & 1/\sqrt{3} & 1/\sqrt{3}
+			\end{bmatrix}.
+					\] Here, let \(\textbf{V}:=\begin{bmatrix}
+						\vec{v}_1&\vec{v}_2&\vec{v}_3
+					\end{bmatrix}=\textbf{P}\).
+				\end{enumerate}
+				\item \textbf{Singular-value matrix.} Let \[
+				\sigma_1:=\sqrt{\lambda_1}=\sqrt{3},\quad\sigma_2:=\sqrt{\lambda_2}=1,\quad\sigma_3:=\sqrt{\lambda_3}=\sqrt{0}=0.
+				\] Then \[
+				\boldsymbol{\Sigma}:=\begin{bmatrix}
+					\sigma_1 & 0 & 0\\
+					0 & \sigma_2 & 0
+				\end{bmatrix}=\begin{bmatrix}
+				\sqrt{3} & 0 & 0\\
+				0 & 1 & 0
+			\end{bmatrix}.
+				\]
+				\item \textbf{Left-singular vectors as the normalized image of the right-
+				singular vectors.} \begin{align*}
+				\vec{u}_1&:=\frac{1}{\sigma_1}\textbf{A}\vec{v}_1=\frac{1}{\sqrt{3}}\begin{bmatrix}
+					-1 & 1 & 0\\
+					0 & -1 & 1
+				\end{bmatrix}\frac{1}{\sqrt{6}}\begin{bmatrix}
+				1\\-2\\1
+			\end{bmatrix}=\frac{1}{3\sqrt{2}}\begin{bmatrix}
+			-3\\3
+		\end{bmatrix}=\frac{1}{\sqrt{2}}\begin{bmatrix}
+		-1\\1
+	\end{bmatrix},\\
+			\vec{u}_2&:=\frac{1}{\sigma_2}\textbf{A}\vec{v}_2=\begin{bmatrix}
+				-1 & 1 & 0\\
+				0 & -1 & 1
+			\end{bmatrix}\frac{1}{\sqrt{2}}\begin{bmatrix}
+				1\\0\\-1
+			\end{bmatrix}=\frac{1}{\sqrt{2}}\begin{bmatrix}
+				-1\\-1
+			\end{bmatrix}.
+			\end{align*} Thus, \[
+			\textbf{U}=\begin{bmatrix}
+				\vec{u}_1&\vec{u}_2
+			\end{bmatrix}=\frac{1}{\sqrt{2}}\begin{bmatrix}
+			-1&-1\\1&-1
+		\end{bmatrix}.
+			\]
+			\end{enumerate}
+			By Step 1-3, we have \[
+			\textbf{A}=\textbf{U}\boldsymbol{\Sigma}\textbf{V}^T=\frac{1}{\sqrt{2}}\begin{bmatrix}
+				-1&-1\\1&-1
+			\end{bmatrix}\begin{bmatrix}
+			\sqrt{3} & 0 & 0\\
+			0 & 1 & 0
+		\end{bmatrix}\begin{bmatrix}
+		1/\sqrt{6} & -2/\sqrt{6} & 1/\sqrt{6}\\
+		1/\sqrt{2} & 0 & -1/\sqrt{2}\\
+		1/\sqrt{3} & 1/\sqrt{3} & 1/\sqrt{3}
+	\end{bmatrix}.
+			\]
+		\end{proof}
+	\end{example}
+	
+	\newpage
 	\chapter{Probability and Distributions}
 	
 	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf }]
@@ -1388,12 +1721,5 @@
 		\end{theorem}
 	\end{tcolorbox}
 	
-	\chapter{Continuous Optimization}
-	
-	\chapter{When Models Meet Data}
-	
-	\chapter{Linear Regression}
-	
-	\chapter{Dimensionality Reduction with PCA}
 	% End document
 \end{document}
