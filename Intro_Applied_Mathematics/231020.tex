@@ -1,0 +1,381 @@
+\begin{tcolorbox}[colframe=thmcolor, title={\color{white}\bf }]
+		\begin{theorem}
+			Let $f,g:[a,b]\to\R$ be Riemann integrable function.
+			\begin{enumerate}[(1)]
+				\item \[
+				\del{\forall x\in[a,b]:f(x)\geq 0}\implies\int_a^bf(x)\ dx\geq 0.
+				\]
+				\item \[
+				\del{\forall x\in[a,b]:f(x)\leq g(x)}\implies\int_a^bf(x)\ dx\leq \int_a^bg(x)\ dx.
+				\]
+			\end{enumerate}
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		Let $P=\set{x_0,x_1,\dots,x_n}$ be a partition of $\intcc{a,b}$.
+		\begin{enumerate}[(1)]
+			\item Since $f(x)\geq0$ for all $x\in\intcc{a,b}$ and $m_i[f]\geq 0$ for $i=1,\dots,n$, we have \[
+			\int_a^bf(x)\ dx=L(f)\geq L(f,P)=\sum_{i=1}^nm_i[f]\Delta x_i\geq 0.
+			\]
+			\item Since $g(x)-f(x)\geq 0$, by (1), \[
+			0\leq\int_a^b(g-f)(x)\ dx=\int_a^bg(x)\ dx - \int_a^bf(x)\ dx\implies\int_a^bf(x)\ dx\leq\int_a^bg(x)\ dx.
+			\]
+		\end{enumerate}
+	\end{proof}
+	
+	\begin{example}
+		\ \begin{enumerate}[(1)]
+			\item 
+			Let $f(x)=0$ and $g(x)=x$ for $x\in\intcc{-1,3}$. Then \[
+			\int_{-1}^3f(x)\ dx = 0 < 4=\int_{-1}^3g(x)\ dx
+			\] but $f(x)>g(x)$ for $x\in\intco{-1,0}$.
+			\begin{figure}[h!]\centering
+				\begin{tikzpicture}[scale=1.5, domain=-1:3]
+				
+				% Axes
+				\draw[->] (-1.5,0) -- (3.5,0) node[right] {$x$};
+				\draw[->] (0,-1.5) -- (0,3.5) node[above] {$y$};
+				
+				% Plots
+				\draw[line width = .5mm, red] (-1,0) -- (3,0) node[above right] {$f(x) = 0$};
+				\draw[line width = .5mm, magenta] (-1,-1) -- (3,3) node[right] {$g(x) = x$};
+				\end{tikzpicture}
+			\end{figure}
+			\item Let $f(x)=0$ and $g(x)=\sin x$ for $x\in\intcc{0,2\pi}$. Then \[
+			\int_{0}^{2\pi}f(x)\ dx = 0 = \int_{0}^{2\pi}g(x)\ dx
+			\] but $f(x)\neq g(x)$ for $x\in\intoo{0,2\pi}\setminus\set{\pi}$.
+			\begin{figure}[h!]\centering
+				\begin{tikzpicture}[scale=1.5, domain=0:2*pi]
+				
+				% Axes
+				\draw[->] (-0.5,0) -- (7,0) node[right] {$x$};
+				\draw[->] (0,-1.5) -- (0,1.5) node[above] {$y$};
+				\foreach \x/\label in {pi/$\pi$,2*pi/$2\pi$} {
+					\draw (\x,-0.1) -- (\x,0.1) node[below=2mm] {\label};
+				}
+				
+				% Plots
+				\draw[line width=.5mm, blue] (0,0) -- (2*pi,0) node[above] {$f(x) = 0$};
+				\draw[line width=.5mm, color=cyan] plot (\x,{sin(\x r)}) node[midway, below right] {$g(x) = \sin x$};
+				
+				% Shading under the curve of g(x)
+				\fill[pattern=north east lines, pattern color=blue] plot [domain=0:pi] (\x,{sin(\x r)}) -- (pi,0) -- cycle;
+				\fill[pattern=north west lines, pattern color=blue] plot [domain=pi:2*pi] (\x,{sin(\x r)}) -- (2*pi,0) -- cycle;
+				\end{tikzpicture}
+			\end{figure}
+		\end{enumerate}
+	\end{example}
+	
+	\newpage
+	\begin{tcolorbox}[colframe=thmcolor, title={\color{white}\bf }]
+		\begin{theorem}
+			Let $f:\intcc{a,b}\to\R$ be a function and $c\in\intoo{a,b}$. If $f$ is Riemann integrable for closed sub-intervals \(\intcc{a,c}\) and $\intcc{c,b}$ of $\intcc{a,b}$ then $f$ is Riemann integrable on $\intcc{a,b}$. Moreover, \[
+			\int_a^bf(x)\ dx=\int_a^cf(x)\ dx+\int_c^bf(x)\ dx.
+			\]
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		Let $\varepsilon>0$. Since $f$ is Riemann integrable on $\intcc{a,c}$, \[
+		\exists P_1,\ \text{partition of $[a,c]$},\ \text{such that}\ U(f,P_1)-L(f,P_1)<\frac{\varepsilon}{2}.
+		\] Since $f$ is Riemann integrable on $\intcc{c,b}$, \[
+		\exists P_2,\ \text{partition of $[c,b]$},\ \text{such that}\ U(f,P_2)-L(f,P_2)<\frac{\varepsilon}{2}.
+		\] Let $P:=P_1\cup P_2$ be a partition of $[a,b]$. Then \begin{align*}
+		U(f,P)-L(f,P)&=U(f,P_1)+U(f,P_2)-\sbr{L(f,P_1)+L(f,P_2)}\\
+		&=U(f,P_1)-L(f,P_1)+U(f,P_2)-L(f,P_2)\\
+		&<\frac{\varepsilon}{2}+\frac{\varepsilon}{2}=\varepsilon.
+		\end{align*} Thus, $f$ is Riemann integrable on $[a,b]$.
+		By Riemann's condition,
+		\begin{align*}
+		\int_a^bf(x)\ dx\leq U(f,P)&=U(f,P_1)+U(f,P_2)\\
+		&<L(f,P_1)+\frac{\epsilon}{2}+L(f,P_2)+\frac{\epsilon}{2}\\
+		&\leq \int_a^cf(x)\ dx + \int_c^bf(x)\ dx +\varepsilon,
+		\end{align*} and so
+		\begin{equation*}\tag{*}
+		\int_a^bf(x)\ dx-\del{\int_a^cf(x)\ dx + \int_c^bf(x)\ dx}<\varepsilon
+		\end{equation*}
+		Since \begin{align*}
+		\int_a^bf(x)\ dx = L(f)\geq L(f,P)&=L(f,P_1)+L(f,P_2)\\
+		&>U(f,P_1)-\frac{\epsilon}{2}+U(f,P_2)-\frac{\varepsilon}{2}\\
+		&\geq \int_a^cf(x)\ dx+\int_c^bf(x)\ dx -\varepsilon,
+		\end{align*} we have \begin{equation*}\tag{**}
+		-\varepsilon<\int_a^bf(x)\ dx-\del{\int_a^cf(x)\ dx + \int_c^bf(x)\ dx}.
+		\end{equation*}
+		Hence, by (*) and (**) \[
+		\abs{\int_a^bf(x)\ dx-\del{\int_a^cf(x)\ dx + \int_c^bf(x)\ dx}}<\varepsilon\implies\int_a^bf(x)\ dx=\int_a^cf(x)\ dx + \int_c^bf(x)\ dx.
+		\]
+	\end{proof}
+	
+	\newpage
+	\begin{tcolorbox}[colframe=thmcolor, title={\color{white}\bf }]
+		\begin{theorem}
+			Let $f:[a,b]\to\R$ be Riemann integrable function on $[a,b]$ and $g:[c,d]\to\R$ be a continuous function on $[c,d]$. If $f[I]\subseteq[c,d]$, then $g\circ f$ is Riemann integrable function.
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		PASS.
+	\end{proof}
+	\vspace{10pt}
+	\begin{tcolorbox}[colframe=corcolor, title={\color{white}\bf }]
+		\begin{corollary}
+			If $f:[a,b]\to\R$ be Riemann integrable function on $[a,b]$, then $f^n$ is Riemann integrable.
+		\end{corollary}
+	\end{tcolorbox}
+	\vspace{10pt}
+	\begin{tcolorbox}[colframe=corcolor, title={\color{white}\bf }]
+		\begin{corollary}
+			If $f:[a,b]\to\R$ be Riemann integrable function on $[a,b]$, then $\abs{f}$ is Riemann integrable and \[
+			\abs{\int_a^bf(x)\ dx}\leq\int_a^b\abs{f(x)}\ dx.
+			\]
+		\end{corollary}
+	\end{tcolorbox}
+	\begin{proof}
+		Let $x\in[a,b]$ then \begin{align*}
+		-\abs{f(x)}\leq f(x)\leq\abs{f(x)}&\implies-\int_a^b\abs{f(x)}\ dx\leq\int_a^bf(x)\ dx\leq\int_a^b\abs{f(x)}\ dx\\
+		&\implies\abs{\int_a^bf(x)\ dx}\leq\int_a^b\abs{f(x)}\ dx.
+		\end{align*}
+	\end{proof}
+	\vspace{20pt}
+	\begin{tcolorbox}[colframe=thmcolor, title={\color{white}\bf Intermediate Value Theorem for Integrals}]
+		\begin{theorem}
+			Let $f$ be a continuous function on $[a,b]$, then for at least one $x\in[a,b]$ we have \[
+			f(x)=\frac{1}{b-a}\int_a^bf(t)\ dt.
+			\]
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		Since \(f\) is continuous on \([a,b]\), \[
+		\exists M=\max\set{f(x):x\in[a,b]},m=\min\set{f(x):x\in[a,b]}\in\R:\forall t\in[a,b]:m\leq f(t)\leq M.
+		\] Then \[
+		m(b-a)=\int_a^bm\ dx\leq \int_a^b f(t)\ dt\leq\int_a^bM\ dt = M(b-a),
+		\] and so \[
+		m\leq\frac{1}{b-a}\int_a^b f(t)\ dt\leq M.
+		\] Then Bolzano's IVT, \[
+		\exists x\in[a,b]: f(x)=\frac{1}{b-a}\int_a^bf(t)\ dt.
+		\]
+	\end{proof}
+
+	\newpage
+	\section{The Fundamental Theorem of Calculus}
+	\begin{tcolorbox}[colframe=thmcolor, title={\color{white}\bf $\star$ Fundamental Theorem of Calculus: 1st form $\star$}]
+		\begin{theorem}
+			Let $f:[a,b]\to\R$ is differentiable on \([a,b]\) and \(f'\) is Riemann integrable on \([a,b]\). Then \[
+			\int_a^bf'(x)\ dx = f(b)- f(a).
+			\]
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		We want to show that \[
+		(\forall\varepsilon>0)\quad\abs{\int_a^b f'(x)\ dx - \del{f(b)-f(a)}}<\varepsilon.
+		\]Let \(\varepsilon>0\). Since \(f'\) is Riemann integrable on \([a,b]\), \[
+		\exists P=\set{x_0,\dots,x_n}:\begin{cases}
+		U(f',P)<U(f')+\varepsilon &\because U(f',P)>U(f')\\
+		L(f',P)<L(f')-\varepsilon &\because L(f',P)<L(f').
+		\end{cases}
+		\] Since \(f\) is differentiable on \([x_{i-1},x_i]\), by Mean-Value Theorem, $\exists t_i\in[x_{i-1},x_i]$ s.t. \[
+		f(x_i)-f(x_{i-1})=f'(t_i)(x_{i}-x_{i-1})\quad\text{for}\quad i=1,2,\dots, n.
+		\] Then \[
+		\sum_{i=1}^nf'(t_i)\Delta x_i=\sum_{i=1}^n\sbr{f(x_i)-f(x_{i-1})}=f(x_n)-f(x_0)=f(b)-f(a).
+		\] Since \(m_i[f']\leq f'(t_i)\leq M_i[f']\), we have \begin{align*}
+		&L(f',P)=\sum_{i=1}^nm_i[f']\Delta x_i\leq\sum_{i=1}^nf'(t_i)\Delta x_i\leq \sum_{i=1}^nM_i[f']\Delta x_i=U(f',P)\\
+		\implies& L(f')-\varepsilon<L(f',P)\leq f(b)-f(a)\leq U(f',P)<U(f')+\varepsilon\\
+		\implies&-\varepsilon<f(b)-f(a)-\int_a^bf'(x)\ dx<\varepsilon\quad\because U(f',P)=\int_a^bf'(x)\ dx=L(f',P)\\
+		\implies&\abs{f(b)-f(a)-\int_a^bf'(x)\ dx}<\varepsilon.
+		\end{align*}
+	\end{proof}
+	\begin{example}
+		If $g(x)=\tan^{-1}x$ for all $x\in[a,b]$ then $g'(x)=(x^2+1)^{-1}$ for all $x\in[a,b]$. Further, $g'$ is continuous so it is Riemann integrable on $[a,b]$. Therefore, the fundamental theorem implies that \[
+		\int_a^b\frac{1}{x^2+1}\ dx = g(b)-g(a)=\tan^{-1}(b)-\tan^{-1}(a).
+		\]
+	\end{example}
+
+	\begin{example}
+		If $h(x)=2\sqrt{x}$ for all $x\in[0,b]$ then $h$ is continuous on $[0,b]$ and $h(x)=(\sqrt{x})^{-1}$ for all $x\in\intoc{0,b}$. Since $h'$ is not bounded on $\intoc{0,b}$, it is not Riemann integrable on $\intcc{0,b}$ no matter how we define $h(0)$. Therefore, the fundamental theorem cannot be applied. Note that \[
+		\int_0^b\frac{1}{\sqrt{x}}\ dx = \lim\limits_{a\to 0+}\int_a^b\frac{1}{\sqrt{x}}\ dx.
+		\]
+	\end{example}
+	
+	\newpage
+	\begin{tcolorbox}[colframe=defcolor, title={\color{white}\bf Indefinite Integral}]
+		\begin{definition}
+			Let \(f:[a,b]\to\R\) is Riemann integrable on \(\sbr{a,b}\).
+			The function defined by \[
+			F(x):=\int_a^xf(t)\ dt\quad\text{for}\quad x\in[a,b]
+			\] is called \textbf{indefinite integral} of \(f\) with base-point \(a\).
+		\end{definition}
+	\end{tcolorbox}
+	\vspace{10pt}
+	\begin{tcolorbox}[colframe=defcolor!50!white, title={\color{white}\bf Lipschitz Function}]
+		\begin{definition}
+			A function \(f:D\to\R\) is said to be a \textbf{Lipschitz function} or to satisfy a \textbf{Lipschitz condition} on \(D\) if \[
+			\exists K>0:\abs{f(x)-f(y)}\leq K\abs{x-y}.
+			\]
+		\end{definition}
+	\end{tcolorbox}
+	\begin{tcolorbox}[colframe=thmcolor!50!white, title={\color{white}\bf }]
+		\begin{theorem}
+		If $f:D\to\R$ is a Lipschitz function, then $f$ is uniformly continuous on $D$.
+		\end{theorem}
+	\end{tcolorbox}
+	\vspace{20pt}
+	\begin{tcolorbox}[colframe=thmcolor, title={\color{white}\bf }]
+		\begin{theorem}
+			If $f:[a,b]\to\R$ is Riemann integrable on $[a,b]$, then, indefinite integral $F$ of is uniformly continuous on $[a,b]$.
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		Let $x,y\in [a,b]$ with $y<x$:
+		\begin{figure}[h!]\centering
+			\begin{tikzpicture}
+				\draw (0,0) -- (6,0);
+				\foreach \i/\label in {0/{$a$},2/{$y$},4/{$x$},6/{$b$}}
+					\draw (\i,-.1) -- (\i,.1) node[below,anchor=north,yshift=-2.5mm] {\label};
+			\end{tikzpicture}
+		\end{figure}\\
+		Then \[
+		F(x):=\int_a^xf(t)\ dt = \int_a^yf(t)\ dt+\int_y^xf(t)\ dt\implies F(x)-F(y)=\int_y^xf(t)\ dt.
+		\] Since $f$ is Riemann integrable on $[a,b]$ and is bounded on $[a,b]$, we have \[
+		\exists K>0:\forall t\in[a,b]: \abs{f(t)}\leq K,
+		\] and so \begin{align*}
+			&-K\leq f(t)\leq K\\
+			\implies&\int_y^x(-K)\ dt\leq\int_y^xf(t)\ dt\leq\int_y^xK\ dt\\
+			\implies&-K(x-y)\leq F(x)-F(y)\leq K(x-y)\\
+			\implies&\abs{F(x)-F(y)}\leq K\abs{x-y},
+		\end{align*} Thus $F$ is a Lipschitz function on $[a,b]$, and so $F$ is uniformly continuous on $[a,b]$.
+	\end{proof}
+	
+	\newpage
+	\begin{tcolorbox}[colframe=thmcolor, title={\color{white}\bf $\star$ Fundamental Theorem of Calculus: 2nd form $\star$}]
+		\begin{theorem}
+			Let $f:[a,b]\to\R$ is differentiable on \([a,b]\) and continuous at a point $c\in[a,b]$. Then the indefinite integral $F$ is differentiable at $c$ and \[
+			F'(c)=f(c).
+			\]
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		We will show that $\lim\limits_{h\to 0+}\frac{F(c+h)-F(c)}{h}=f(c)$, \ie, \[
+		(\forall\varepsilon>0)(\exists\delta>0): h\in\intoo{0,\delta}\implies\abs{\frac{F(c+h)-F(c)}{h}-f(c)}<\varepsilon.
+		\] Let $\varepsilon>0$ and $c\in\intco{a,b}$. Consider the right-hand derivative. Since $f$ is right-continuous at $c$, \[
+		\exists\delta>0:x\in\intco{c,c+\delta}\implies\abs{f(x)-f(c)}<\varepsilon.
+		\] Let $h\in\R$ satisfies $0<h<\delta$, say, $h=x-c$. Then $f$ is Riemann integrable on $[a,c+h], [a,c]$ and $[c,c+h]$. Then \begin{align*}
+		F(c+h)-F(c)&=\int_a^{c+h}f(t)\ dt -\int_a^cf(t)\ dt\\
+		&=\int_c^{c+h}f(t)\ dt.
+		\end{align*} Since $c\leq t\leq c+h< c+\delta$, we know \[
+		\abs{f(t)-f(c)}<\varepsilon,\quad\ie,\quad f(c)-\varepsilon<f(t)<f(c)+\varepsilon.
+		\] Thus, \begin{align*}
+		&\int_c^{c+h}\del{f(t)-\varepsilon}\ dt<
+		\int_c^{c+h}f(t)\ dt<
+		\int_c^{c+h}\del{f(t)+\varepsilon}\ dt\\
+		\implies&\del{f(c)-\varepsilon}h<F(c+h)-F(c)<\del{f(c)+\varepsilon}h\\
+		\implies&-\varepsilon<\frac{F(c+h)-F(c)}{h}-f(c)<\varepsilon\\
+		\implies&\abs{\frac{F(c+h)-F(c)}{h}-f(c)}<\varepsilon.
+		\end{align*}
+	\end{proof}
+	\vspace{15pt}
+	\begin{tcolorbox}[colframe=thmcolor, title={\color{white}\bf }]
+		\begin{theorem}
+			If $f$ is continuous on $[a,b]$, then the indefinite integral \[
+			F(x):=\int_a^xf(t)\ dt\quad\text{for}\quad x\in[a,b]
+			\] is differentiable on $[a,b]$ and \[
+			F'(x)=f(x)
+			\] for all $x\in[a,b]$.
+		\end{theorem}
+	\end{tcolorbox}
+	
+	\begin{example}
+		If $f(x):=\mathsf{sgn}(x)$ on $[-1,1]$, then $f$ is Riemann integrable and has the indefinite integral \[
+		F(x):=\abs{x}-1
+		\] with the basepoint $-1$. However, since $F'(0)$ does not exist, $F$ is not an anti-derivative of $f$ on $[-1,1]$.
+		\begin{figure}[h!]\centering
+			\begin{tikzpicture}[scale=2.5, domain=-1:1]
+			
+			% Axes
+			\draw[->] (-1.5,0) -- (1.5,0) node[right] {$x$};
+			\draw[->] (0,-1.5) -- (0,1.5) node[above] {$y$};
+			
+			% Plots
+			\draw[line width=.5mm, color=blue] (0,1) -- (1,1) node[right] {$f(x) = \mathsf{sgn}(x)$};
+			\draw[line width=.5mm, color=blue] (-1,-1) -- (0,-1);
+			\draw[line width=.5mm,blue] (0,1) circle (1pt);
+			\fill[white] (0,1) circle (1pt);
+			\fill[blue] (0,0) circle (1pt);
+			\draw[line width=.5mm,blue] (0,-1) circle (1pt);
+			\fill[white] (0,-1) circle (1pt);
+			\draw[line width=.5mm, color=red] plot (\x, {abs(\x) - 1}) node[below right] {$F(x) = |x| - 1$};
+			\foreach \i in {-1,1} {
+				\draw (\i,-.05) -- (\i,.05) node[above] {\i};
+				\draw (-.05,\i) -- (.05,\i) node[above] {\i};
+			}
+			\end{tikzpicture}
+		\end{figure}
+		
+	\end{example}
+	\vspace{10pt}
+	\begin{example}
+		For $x\in[0,3]$, if we define \[
+		F(x):=\int_0^x\floor*{t}\ dt
+		\] then although $f(x)=\floor*{x}$ is discontinuous on $[0,3]$, $F$ is continuous on $[0,3]$.
+	\end{example}
+	
+	\newpage
+	\begin{tcolorbox}[colframe=thmcolor, title={\color{white}\bf Substitution Theorem}]
+		\begin{theorem}
+			Let $J:=[a,b]$ and let $g:J\to\R$ have a continuous derivative on $J$. If $f:I\to\R$ is continuous on an interval $I$ containing $g(J)$ then \[
+			\int_a^bf(g(t))\cdot g'(t)\ dt=\int_{g(a)}^{g(b)}f(x)\ dx.
+			\]
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		Since $g'(t)$ and $f(g(t))$ are both continuous on $J$, $f(g(t))\cdot g'(t)$ is continuous on $J$. Thus $ \int_a^bf(g(t))\cdot g'(t)\ dt$ exists.
+		\begin{enumerate}[(1)]
+			\item Assume that $g$ is constant. Since $g'(t)=0$ and $g(a)=g(b)$, \[
+			\int_a^bf(g(t))\cdot g'(t)\ dt=0=\int_{g(a)}^{g(b)}f(x)\ dx.
+			\]
+			\item Let $g$ is not a constant. Then for $x\in g[J]\subseteq I$, define \[
+			F(x):=\int_{g(a)}^x f(s)\ ds.
+			\] By the Fundamental Theorem of Calculus: 2nd form, \[
+			\frac{d}{dx}F(x)=f(x).
+			\] and then \[
+			\frac{d}{dt}(F\circ g)(t)=\frac{d}{dt}F(g(t))\frac{d}{dt}g(t)=f(g(t))g'(t).
+			\] Thus \begin{align*}
+			\int_a^bf(g(t))\cdot g'(t)\ dt &= \int_a^b(F\circ g)'(t)\ dt\\
+			&=(F\circ g)(b)-(F\circ g)(a)\\
+			&=F(g(b))-F(g(a))\\
+			&=\int_{g(a)}^{g(b)}f(x)\ dx-\int_{g(a)}^{g(a)}f(x)\ dx\\
+			&=\int_{g(a)}^{g(b)}f(x)\ dx.
+			\end{align*}
+		\end{enumerate}
+	\end{proof}
+	
+	\newpage
+	\begin{example}
+		Consider the integral \[
+		\int_1^4\frac{\sin\sqrt{t}}{\sqrt{t}}\ dt.
+		\] Let us substitution $g(t):=\sqrt{t}$ for $t\in[1,4]$ so that $g'(t)$ is continuous on $[1,4]$. If we let $f(x):=2\sin x$ then the integrand has the form $f(g(t))g'(t)$. Then the integral equals \[
+		\int_1^4\frac{\sin\sqrt{t}}{\sqrt{t}}\ dt=\int_1^22\sin x\ dx=2(\cos 1-\cos 2).
+		\] However, if one consider the integral \[
+		\int_0^4\frac{\sin\sqrt{t}}{\sqrt{t}}\ dt,
+		\] the substitution theorem cannot be applicable since $g(t):=\sqrt{t}$ does not have a continuous derivative on $[0,4]$. Note that \[
+		\int_0^4\frac{\sin\sqrt{t}}{\sqrt{t}}\ dt=\lim\limits_{a\to 0+}\int_a^4\frac{a}{4}f(t)\ dt.
+		\]
+	\end{example}
+	\vspace{20pt}
+	\begin{tcolorbox}[colframe=thmcolor, title={\color{white}\bf Integration by Parts}]
+		\begin{theorem}
+			Let $f,g$ be differentiable on $[a,b]$ and $f',g'$ are Riemann integrable on $[a,b]$. Then \[
+			\int_a^bf(x)g'(x)\ dx=\sbr{f(x)g(x)}_a^b-\int_a^bf'(x)g(x)\ dx.
+			\]
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{remark}
+		$\int fg'=\int(fg)'-\int f'g$.
+	\end{remark}
+	\vspace{20pt}
+	\begin{tcolorbox}[colframe=thmcolor, title={\color{white}\bf Taylor's Theorem with the Remainder}]
+		\begin{theorem}
+			Suppose that $f',f'',\dots,f^{(n)},f^{(n+1)}$ exist on $[a,b]$ and that $f^{(n+1)}$ is Riemann integrable on $[a,b]$. Then we have \[
+			f(b)=\sum_{i=0}^n\frac{f^{(n)}(a)}{n!}(b-a)^n+R_n
+			\] where the remainder $R_n$ is given by \[
+			R_n=\frac{1}{n!}\int_a^bf^{(n+1)}(t)\cdot(b-t)^n\ dt.
+			\]
+		\end{theorem}
+	\end{tcolorbox}
