@@ -1305,7 +1305,40 @@
 			\end{itemize}
 		\end{proof}
 	\end{tcolorbox}
-
+	\newpage
+	\begin{exercise}[Uniform Distribution]
+		Consider an algorithm 
+		\[
+		A
+		\]
+		Prove that \[
+		\Pr[\mathsf{ouput}=n]=\frac{1}{10}
+		\] for $n=0,1,2,\dots, 9$.
+		\begin{proof}[\sol]
+			Let \begin{itemize}
+				\item $n\leq 2^k=m$ with $n=10, k=4$ and $m = 16$
+				\item Output digit $=r\in[0,9]$.
+			\end{itemize} Then \begin{table}[h!]\centering
+			\begin{tabularx}{\textwidth}{c||c|c|c|c}
+				\toprule[1.2pt]
+				$\mathsf{output}$ & \textbf{1st iteration} & \textbf{2nd iteration} & $\cdots$ &\textbf{step iteration}\\
+				\midrule
+				$0$ & $\Pr[0]=\frac{1}{m}$ & $\Pr[0]=\frac{1}{m}\cdot\frac{m-n}{m}$ & $\cdots$ & $\Pr[0]=\frac{1}{m}\cdot\del{\frac{m-n}{m}}^{\textbf{step}-1}$\\
+				$1$ & $\Pr[1]=\frac{1}{m}$ & $\Pr[1]=\frac{1}{m}\cdot\frac{m-n}{m}$ & $\cdots$ & $\Pr[1]=\frac{1}{m}\cdot\del{\frac{m-n}{m}}^{\textbf{step}-1}$\\
+				$2$ & $\Pr[2]=\frac{1}{m}$ & $\Pr[2]=\frac{1}{m}\cdot\frac{m-n}{m}$ & $\cdots$ & $\Pr[2]=\frac{1}{m}\cdot\del{\frac{m-n}{m}}^{\textbf{step}-1}$\\
+				$\vdots$&$\vdots$&$\vdots$&$\cdots$&$\vdots$\\
+				$n-1$ & $\Pr[n-1]=\frac{1}{m}$ & $\Pr[n-1]=\frac{1}{m}\cdot\frac{m-n}{m}$ & $\cdots$ & $\Pr[n-1]=\frac{1}{m}\cdot\del{\frac{m-n}{m}}^{\textbf{step}-1}$\\
+				\bottomrule[1.2pt]
+			\end{tabularx}
+		\end{table}\\ Thus, \begin{align*}
+		\Pr[\mathsf{output}=r]&=\frac{1}{m}+\frac{1}{m}\cdot\frac{m-n}{m}+\cdots+\frac{1}{m}\cdot\del{\frac{m-n}{m}}^s+\cdots\\
+		&=\frac{1}{m}\sum_{s=0}^\infty\del{\frac{m-n}{m}}^s=\frac{1}{m}\sum_{s=0}^\infty\del{1-\frac{n}{m}}^s\\
+		&=\frac{1}{m}\cdot\frac{1}{1-\del{1-\frac{n}{m}}}=\frac{1}{m}\cdot\frac{m}{n}\\
+		&=\frac{1}{n}.
+\end{align*}
+		\end{proof}
+	\end{exercise}
+	
 	\newpage
 	\chapter{Markov Chains}
 	
