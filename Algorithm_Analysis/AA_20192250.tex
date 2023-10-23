@@ -1,0 +1,1539 @@
+\documentclass[12pt,openany]{book}
+
+\usepackage{amsmath,amsthm,amsfonts,amscd} % Packages for mathematics
+\usepackage{commath}
+
+% Colors
+\usepackage{xcolor}
+\definecolor{titleblue}{RGB}{0,53,128}
+\definecolor{chaptergray}{RGB}{140,140,140}
+\definecolor{sectiongray}{RGB}{180,180,180}
+
+\definecolor{thmcolor}{RGB}{231, 76, 60}
+\definecolor{defcolor}{RGB}{52, 152, 219}
+\definecolor{lemcolor}{RGB}{155, 89, 182}
+\definecolor{corcolor}{RGB}{46, 204, 113}
+\definecolor{procolor}{RGB}{241, 196, 15}
+
+% Fonts
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{newpxtext,newpxmath}
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\color{titleblue}\mdseries}
+
+% Page layout
+\usepackage{geometry}
+\geometry{a4paper,left=1.325in,right=1in,top=1in,bottom=1in,heightrounded}
+\usepackage{fancyhdr}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[LO]{\nouppercase{\rightmark}}
+\fancyhead[RE]{\nouppercase{\leftmark}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Chapter formatting
+\usepackage{titlesec}
+\titleformat{\part}[display]
+{\normalfont\sffamily\Huge\bfseries\color{titleblue!80!black}\filcenter}
+{\partname\ \thepart}{20pt}{\Huge}
+\titleformat{\chapter}[display]
+{\normalfont\sffamily\Huge\bfseries\color{titleblue}}{\chaptertitlename\ \thechapter}{20pt}{\huge}
+\titleformat{\section}
+{\normalfont\sffamily\Large\bfseries\color{titleblue!100!gray}}{\thesection}{1em}{}
+\titleformat{\subsection}
+{\normalfont\sffamily\large\bfseries\color{titleblue!75!gray}}{\thesubsection}{1em}{}
+
+% Table of contents formatting
+\usepackage{tocloft}
+\renewcommand{\cftchapfont}{\sffamily\color{titleblue}\bfseries}
+\renewcommand{\cftsecfont}{\sffamily\color{chaptergray}}
+\renewcommand{\cftsubsecfont}{\sffamily\color{sectiongray}}
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+
+% Hyperlinks
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=titleblue,
+	filecolor=black,      
+	urlcolor=titleblue,
+}
+
+%Listing
+\usepackage{listings} %Code
+\renewcommand{\lstlistingname}{Code}%
+
+\definecolor{sagegreen}{rgb}{0.0,0.6,0.4}
+\definecolor{sagepurple}{rgb}{0.6,0.0,0.4}
+\definecolor{sageblue}{rgb}{0.0,0.4,0.6}
+\definecolor{sageorange}{rgb}{1.0,0.4,0.0}
+\definecolor{sagegray}{rgb}{0.4,0.4,0.4}
+
+\lstdefinestyle{sage}{
+	language=Python,
+	backgroundcolor=\color{white},
+	basicstyle=\small\ttfamily\color{black}, 
+	basicstyle=\footnotesize\ttfamily\color{black},
+	keywordstyle=\color{blue!60!black},
+	commentstyle=\color{green!60!black},
+	stringstyle=\color{purple!60!black},
+	showstringspaces=false,
+	breaklines=true,
+	tabsize=4,
+	morekeywords={True, False, None},
+	frame=leftline, % Remove the border
+	framesep=3pt,
+	frameround=tttt,
+	framexleftmargin=3pt,
+	numbers=left,
+	numberstyle=\small\color{gray},
+	xleftmargin=15pt, % Increase the left margin
+	xrightmargin=5pt,
+	captionpos=b,
+	belowskip=0pt,
+	aboveskip=4pt
+}
+
+\lstdefinestyle{C}{
+	language=C,
+	basicstyle=\ttfamily\footnotesize,
+	backgroundcolor=\color{white},
+	keywordstyle=\color{purple}\bfseries,
+	stringstyle=\color{orange},
+	commentstyle=\color{green!70!black}\itshape,
+	directivestyle=\color{blue},
+	numberstyle=\tiny\color{gray},
+	numbers=left,
+	numbersep=8pt, % Increase separation between line numbers and code
+	breaklines=true,
+	breakatwhitespace=true,
+	postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+	tabsize=4,
+	frame=single,
+	framerule=0.5pt, % Thin frame to mimic typical PDF borders
+	rulecolor=\color{gray!60},
+	title=\lstname, 
+	keywordstyle=[2]{\color{magenta}},
+	keywords=[2]{printf},
+	emph={int,char,double,float,unsigned},
+	emphstyle={\color{blue}},
+	escapeinside={(*@}{@*)},
+	morekeywords={*,...},
+	deletekeywords={...}, % if you want to delete keywords from the default language
+	showspaces=false, % Show spaces as visible characters
+	showstringspaces=false, % But not within strings to mimic common PDF copy artifacts
+	columns=flexible, % Mimic irregular spacing found when copying from PDFs
+}
+
+%Ceiling and Floor Function
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+
+%Algorithm
+\usepackage[ruled,linesnumbered]{algorithm2e}
+\usepackage{setspace}
+\usepackage{algpseudocode}
+\SetKwComment{Comment}{/* }{ */}
+\SetKw{Break}{break}
+\SetKw{End}{end}
+\SetKw{Downto}{downto}
+\SetKwProg{Fn}{Function}{:}{end}
+\SetKwProg{Procedure}{procedure}{:}{end}
+\SetKwFunction{KeyGen}{KeyGen}
+
+%---------------------------My Preamble
+\usepackage{marvosym} %Lightning
+\usepackage{booktabs}
+\usepackage{multicol}
+\setlength{\columnsep}{2cm}
+\setlength{\columnseprule}{1.25pt}
+\usepackage{enumerate}
+\usepackage{soul}
+\newcommand{\mathcolorbox}[2]{\colorbox{#1}{$\displaystyle #2$}}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usepackage{circuitikz}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows, arrows.meta, positioning, shapes.multipart}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usepackage{caption}
+
+%Tcolorbox
+\usepackage[most]{tcolorbox}
+\tcbset{colback=white, arc=5pt}
+%\tcbset{enhanced, colback=white,colframe=black,fonttitle=\bfseries,arc=4mm,boxrule=1pt,shadow={2mm}{-1mm}{0mm}{black!50}}
+%White box with black text and shadow
+%\begin{tcolorbox}[colback=white,colframe=black,fonttitle=\bfseries,title=Black Shadow Box,arc=4mm,boxrule=1pt,shadow={2mm}{-1mm}{0mm}{black!50}]
+%	This is a white box with black text and a subtle shadow. The shadow adds some depth and dimension to the box without overpowering the design.
+%\end{tcolorbox}
+
+%Theorem
+\newtheorem{axiom}{Axiom}[chapter]
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{remark}{Remark}[chapter]
+\newtheorem{exercise}{Exercise}[chapter]
+\newtheorem{example}{Example}[chapter]
+\newtheorem*{note}{Note}
+
+%New Command
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+ 
+\renewcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+\renewcommand{\norm}[1]{\left\| #1 \right\|}
+
+\newcommand{\abss}[1]{\lvert #1 \rvert}
+
+\newcommand{\ie}{\textnormal{i.e.}}
+\newcommand{\eg}{\textnormal{e.g.}}
+
+\newcommand{\of}[1]{\left( #1 \right)} 
+
+\newcommand{\nbhd}{\mathcal{N}}
+\newcommand{\Id}{\operatorname{\textnormal{id}}}
+
+%\newcommand{\norm}[1]{\left\| #1 \right\|}
+
+\newcommand{\sol}{\textcolor{magenta}{\bf Solution}}
+
+\newcommand{\inv}[1]{{#1}^{-1}}
+\newcommand{\img}{\textnormal{Im}}
+
+\newcommand{\tab}{\hspace{8pt}}
+
+% Begin document
+\begin{document}
+	
+	% Title page
+	\begin{titlepage}
+		\begin{center}
+			{\Huge\textsf{\textbf{Algorithm Analysis}}\par}
+			\vspace{0.5in}
+			{\Large Ji Yong-Hyeon\par}
+			\vspace{1in}
+			\includegraphics[scale=2]{aa2.jpg}\par
+			\vspace{1in}
+			{\bf Department of Information Security, Cryptology, and Mathematics\par}
+			{College of Science and Technology\par}
+			{Kookmin University\par}
+			%\includegraphics[width=1.5in]{school_logo.jpg}\par
+			\vspace{.25in}
+			{\large \today\par}
+		\end{center}
+	\end{titlepage}
+	
+	% Table of contents
+	\tableofcontents
+	
+	% Chapters
+	\mainmatter
+	
+	\part{Basic Algorithms}
+	
+	\chapter{Basic Algorithms}
+	\section{Rotation Algorithm}
+	\begin{tcolorbox}[colback=white,colframe=lemcolor,arc=5pt,title={\color{white}\bf Rotation}]
+		\textbf{Problem.}\ Rotate vector \(x[n]\) by $d$ positions.\\
+		\textbf{Constraints.}\ $O(n)$ time, $O(1)$ extra space.
+	\end{tcolorbox}
+	\begin{example}
+		For $n=8$ and $d=3$, change \[
+		abcdef\to defghabc.
+		\]
+	\end{example}
+
+	\newpage
+	\subsection{A Juggling Algorithm}
+	
+	\begin{lstlisting}[style=C, caption={Juggling Rotation Algorithm},captionpos=t]
+// Function to find the greatest common divisor (GCD)
+int gcd(int a, int b) {
+	return b ? gcd(b, a%b) : a;
+}
+
+// Function to rotate an array using Juggling Alg.
+void juggling(int arr[], int n, int d) {
+	int i, j, k, temp;
+	
+	// Find GCD of n and d
+	int g = gcd(d, n);
+	
+	for (i = 0; i < g; i++) {
+		// Store the first element of the current set
+		temp = arr[i];
+		
+		j = i;
+		
+		// Shift each element of the set
+		while (1) {
+			k = j + d;
+			
+			// If k exceeds the array size, bring it within bounds
+			if (k >= n) {
+				k = k - n;
+			}
+			
+			// If we are back to the initial position, break the loop
+			if (k == i) {
+				break;
+			}
+			
+			// Move the element
+			arr[j] = arr[k];
+			
+			// Update j for the next iteration
+			j = k;
+		}
+		
+		// Put the first element in its correct position within the set
+		arr[j] = temp;
+	}
+}
+	\end{lstlisting}
+	
+	
+	\subsection{The Block-Swap Algorithm}
+	
+	\subsection{The Reversal Algorithm}
+	
+	\newpage
+	\chapter{The Efficiency of Algorithms}
+	
+	\section{Real-valued Functions of a Real Variable\\ and Their Graphs}
+	
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Graph}]
+		\begin{definition}
+			Let $f$ be a real-valued function of a real variable. The graph of $f$ is the set \[
+			\Gamma_f:=\set{(x,y)\in\R^2:y=f(x)}.
+			\]
+		\end{definition}
+	\end{tcolorbox}
+	\vspace{8pt}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Power Function}]
+		\begin{definition}
+			Let $a\in\R_{\geq 0}$. Define $p_a$, the power function with exponent $a$, as follows: \[
+			p_a(x)=x^a\quad\text{for}\quad x\in\R_{\geq 0}.
+			\]
+		\end{definition}
+	\end{tcolorbox}
+	\begin{example}
+		\ \begin{center}
+			\begin{tikzpicture}
+				\begin{axis}[
+					title={Graphs of $x^a$ for Different $a$},
+					xlabel={$x$},
+					ylabel={$f(x)=x^a$},
+					domain=0:1.5,
+					ymin=0,
+					ymax=1.5,
+					samples=100,
+					legend pos=north west
+					]
+					
+					\addplot[cyan] {x^0.25};
+					\addlegendentry{$a=0.25$}
+					
+					\addplot[blue] {x^0.5};
+					\addlegendentry{$a=0.5$}
+					
+					\addplot[red] {x^1};
+					\addlegendentry{$a=1$}
+					
+					\addplot[green] {x^2};
+					\addlegendentry{$a=2$}
+					
+					\addplot[orange] {x^4};
+					\addlegendentry{$a=4$}
+				\end{axis}
+			\end{tikzpicture}
+		\end{center}
+	\end{example}
+	\vspace{8pt}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf The Floor and Ceiling Function}]
+		\begin{definition}
+			\begin{align*}
+				f(x)&:=\floor*{x}:=\sup\set{n\in\Z:n\leq x},\\
+				g(x)&:=\ceil*{x}:=\inf\set{n\in\Z:x<n}.
+			\end{align*}
+		\end{definition}
+	\end{tcolorbox}
+	\begin{example}
+		\ \begin{center}
+			\begin{minipage}{.47\textwidth}
+				\centering
+					\begin{tikzpicture}[scale=.7,>=stealth']
+						%Draw Plaid
+						\draw[very thin,color=gray!15,step=1] (-4,-4) grid (5,4);
+						% draw axes
+						\draw[->] (-4,0) -- (5,0) node[right] {};
+						\draw[->] (0,-4) -- (0,4) node[above] {};
+						%Take Coordinates
+						\foreach \i in {1,...,4} {
+							\draw[] (\i,.1)--(\i,-.1) node[below] {$\i$};%x-axis
+							\draw[] (.1,\i)--(-.1,\i) node[left] {$\i$};%y-axis
+						}
+						%f(x)
+						\foreach \i in {-4,...,4} {
+							\draw[line width=.5mm] (\i,\i) -- (\i+1,\i);
+						}
+						\foreach \i in {-4,...,4} {
+							\fill[] (\i,\i) circle (2.5pt);
+							\fill[white] (\i+1,\i) circle (2.5pt);
+						}
+						\foreach \i in {-4,...,4} {
+							\draw[] (\i+1,\i) circle (2.5pt);
+						}
+					\end{tikzpicture}
+					\captionof{figure}{Graph of \(f(x)=\floor{x}\).}
+			\end{minipage}
+			\begin{minipage}{.47\textwidth}
+			\centering
+			\begin{tikzpicture}[scale=.7,>=stealth']
+				%Draw Plaid
+				\draw[very thin,color=gray!15,step=1] (-5,-4) grid (4,4);
+				% draw axes
+				\draw[->] (-5,0) -- (4,0) node[right] {};
+				\draw[->] (0,-4) -- (0,4) node[above] {};
+				%Take Coordinates
+				\foreach \i in {1,...,4} {
+					\draw[] (\i,.1)--(\i,-.1) node[below] {$\i$};%x-axis
+					\draw[] (.1,\i)--(-.1,\i) node[left] {$\i$};%y-axis
+				}
+				%f(x)
+				\foreach \i in {-4,...,4} {
+					\draw[line width=.5mm] (\i-1,\i) -- (\i,\i);
+				}
+				\foreach \i in {-4,...,4} {
+					\fill[] (\i,\i) circle (2.5pt);
+				}
+				\foreach \i in {-5,...,3} {
+					\fill[white] (\i,\i+1) circle (2.5pt);
+					\draw[] (\i,\i+1) circle (2.5pt);
+				}
+			\end{tikzpicture}
+		\captionof{figure}{Graph of \(f(x)=\ceil{x}\).}
+		\end{minipage}
+		\end{center}
+	\end{example}
+	\vspace{20pt}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Graph of a Multiple of a Function}]
+		\begin{definition}
+			The function \(Mf\), called the \textbf{multiple of $f$ by $M$} or \textbf{\(M\) times $f$}, is the real-valued function with the as domain as \(f\) that is defined by the rule \[
+			\forall x\in\textnormal{Dom}(f):(Mf)(x)=M\cdot f(x).
+			\]
+		\end{definition}
+	\end{tcolorbox}
+	\begin{example}
+		\ \begin{center}
+			\begin{tikzpicture}
+				\begin{axis}[
+					axis lines=middle,
+					xlabel={\(x\)},
+					ylabel={\(y\)},
+					domain=-2*pi:2*pi,
+					samples=100,
+					ymin=-4, ymax=4,
+					xtick={-6.2832, -4.7124, -3.1416, -1.5708, 0, 1.5708, 3.1416, 4.7124, 6.2832},
+					xticklabels={\( -2\pi \), \( -3\pi/2 \), \( -\pi \), \( -\pi/2 \), 0, \( \pi/2 \), \( \pi \), \( 3\pi/2 \), \( 2\pi \)},
+					legend style={at={(.7,.9)},anchor=west}
+					]
+					% original function f(x) = sin(x)
+					\addplot[blue, thick]{sin(deg(x))};
+					\addlegendentry{\(f(x) = \sin(x)\)}
+					
+					% multiple of function g(x) = 3sin(x)
+					\addplot[red, thick]{3*sin(deg(x))};
+					\addlegendentry{\(g(x) = 3 \cdot \sin(x)\)}
+				\end{axis}
+			\end{tikzpicture}
+		\end{center}
+	\end{example}
+
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Absolute Function}]
+		\begin{definition}
+			\[
+			A(x):=\abs{x}:=\begin{cases}
+				x&:x\geq0\\ -x&:x<0
+			\end{cases}.
+			\]
+		\end{definition}
+	\end{tcolorbox}
+	\vspace{20pt}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Increasing and Decreasing Function}]
+		\begin{definition}
+			\ \begin{enumerate}[(1)]
+				\item A real-valued function \(f\) is \textbf{increasing} on \(S\) iff \[
+				\forall x_1,x_2\in S: x_1<x_2\implies f(x_1)<f(x_2).
+				\]
+				\item A real-valued function \(g\) is \textbf{decreasing} on \(S\) iff \[
+				\forall x_1,x_2\in S: x_1<x_2\implies g(x_1)>g(x_2).
+				\]
+			\end{enumerate}
+		\end{definition}
+	\end{tcolorbox}
+
+	\section{$O$, $\Sigma$, $\Theta$ Notation}
+	
+	\begin{note}
+		\ \begin{itemize}
+			\item \textbf{Algorithm} is methods for solving problems which are suited for computer implementation.
+			\item \textbf{Algorithm Efficiency}
+			\begin{itemize}
+				\item \textbf{Time efficiency} is a measure of amount of time for an algorithm to execute.
+				\item \textbf{Space efficiency} is a measure of amount of memory needed for algorithm to execute.
+			\end{itemize}
+			\item \textbf{$O$, $\Sigma$, $\Theta$ notation} provide approximations that make it easy to evaluate large-scale differences in algorithm efficiency, while ignoring differences of a constant factor and differences that occur only for small sets of input data.
+		\end{itemize}
+	\end{note}
+	\vspace{20pt}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf $\Omega$, \(O\) and $\Theta$}]
+		\begin{definition}
+			Let \(f\) and \(g\) be real-valued functions defined on the \(\R_{\geq 0}\).
+			\begin{enumerate}[(1)]
+				\item \textbf{$f$ is of order at least $g$}, written \(\Omega(g(x))\), if and only if, \[
+				(\exists A\in\R_{> 0})(\exists a\in\R_{\geq 0})\quad x>a\implies A\abs{g(x)}\leq\abs{f(x)}.
+				\]
+				\item \textbf{$f$ is of order at most $g$}, written \(O(g(x))\), if and only if, \[
+				(\exists B\in\R_{> 0})(\exists b\in\R_{\geq 0})\quad x>b\implies \abs{f(x)}\leq B\abs{g(x)}.
+				\]
+				\item \textbf{$f$ is of order $g$}, written \(\Theta(g(x))\), if and only if, \[
+				(\exists A,B\in\R_{> 0})(\exists k\in\R_{\geq 0})\quad x>k\implies A\abs{g(x)}\leq\abs{f(x)}\leq B\abs{g(x)}.
+				\]
+			\end{enumerate}
+		\end{definition}
+	\end{tcolorbox}
+	\vspace{20pt}
+	\begin{example}[Translating to \(\Theta\)-Notation]
+		Use \(\Theta\)-notation to express the statement \[
+		10|x^6|\leq|17x^6-45x^3+2x+8|\leq 30|x^6|\quad\text{for all real numbers $x>2$}.
+		\]
+		\begin{proof}[\sol]
+			Let $A=10>0$, $B=30>0$ and $k=2\geq 0$. Then \[
+			A|x^6|\leq|17x^6-45x^3+2x+8|\leq B|x^6|\quad\text{for all real numbers $x>k$}.	
+			\] By definition of \(\Theta\)-notation, \[
+			17x^6-45x^3+2x+8\quad\text{is}\quad\Theta(x^6).
+			\]
+		\end{proof}
+	\end{example}
+	\vspace{10pt}
+	\begin{example}[Translating to \(O\)- and \(\Theta\)-Notation]
+		\ \begin{enumerate}[(i)]
+			\item Use $\Omega$ and $O$ notations to express the statements
+			\begin{enumerate}[a.]
+				\item $\displaystyle 15|\sqrt{x}|\leq\abs{\frac{15\sqrt{x}(2x+9)}{x+1}}$ for all real numbers \(x>0\).
+				\item $\displaystyle \abs{\frac{15\sqrt{x}(2x+9)}{x+1}}\leq45|\sqrt{x}|$ for all real numbers \(x>7\).
+			\end{enumerate}
+			\item Justify the statement: $\displaystyle \frac{15\sqrt{x}(2x+9)}{x+1}$ is \(\Theta(\sqrt{x})\).
+		\end{enumerate}
+		\newpage
+		\begin{proof}[\sol]
+			\ \begin{enumerate}[(i)]
+				\item \begin{enumerate}[a.]
+					\item Let $A=15$ and $a=0$. Then \[
+					A|\sqrt{x}|\leq\abs{\frac{15\sqrt{x}(2x+9)}{x+1}}\quad\text{for all real numbers $x>a$}.	
+					\] By definition of \(\Omega\)-notation, \[
+					\frac{15\sqrt{x}(2x+9)}{x+1}\quad\text{is}\quad\Omega(\sqrt{x}).
+					\]
+					\item Let $B=45$ and $b=7$. Then \[
+					\abs{\frac{15\sqrt{x}(2x+9)}{x+1}}\leq B|\sqrt{x}|\quad\text{for all real numbers $x>b$}.	
+					\] By definition of \(O\)-notation, \[
+					\frac{15\sqrt{x}(2x+9)}{x+1}\quad\text{is}\quad O(\sqrt{x}).
+					\]
+				\end{enumerate}
+				\item Let $A=15,B=45$, and let $k=\max(0,7)=7$. Then \[
+				A|\sqrt{x}|\leq\abs{\frac{15\sqrt{x}(2x+9)}{x+1}}\leq B|\sqrt{x}|\quad\text{for all real numbers $x>k$}.	
+				\] Hence, by definition of \(O\)-notation, \[
+				\frac{15\sqrt{x}(2x+9)}{x+1}\quad\text{is}\quad \Theta(\sqrt{x}).
+				\]
+			\end{enumerate}
+		\end{proof}
+	\end{example}
+	
+	\newpage
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf }]
+		\begin{theorem}
+			Let \(f\) and \(g\) be real-valued functions defined on \(\R_{\geq 0}\).
+			\begin{enumerate}[(1)]
+				\item \(f(x)\) is \(\Omega(g(x))\) and \(f(x)\) is \(O(g(x))\) $\iff$ \(f(x)\) is \(\Theta(g(x))\).
+				\item $f(x)$ is \(\Omega(g(x))\) $\iff$ $g(x)$ is $O(f(x))$.
+				\item $f(x)$ is $O(g(x))$ and $g(x)$ is $O(h(x))$ $\implies$ $f(x)$ is $O(h(x))$.
+			\end{enumerate}
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		\begin{enumerate}[(1)]
+			\item Clearly, it holds.
+			\item \begin{itemize}
+				\item[$(\Rightarrow)$] Suppose \(f(x)\) is \(\Omega(g(x))\) then \[
+				(\exists A>0)(\exists a\geq0)(\forall x>a)\quad A\abss{g(x)}\leq\abss{f(x)}.
+				\] Divide both sides by \(A\) to obtain \[
+				(\forall x>a)\quad \abss{g(x)}\leq\frac{1}{A}\abss{f(x)}.
+				\] Let $B:=1/A$ and $b:=a$. Then \[
+				(\forall x>b)\quad\abss{g(x)}\leq B\abss{f(x)},
+				\] and so \(g(x)\) is \(O(f(x))\) by definition of $O$-notation.
+				\vspace{4pt}
+				\item[$(\Leftarrow)$] Suppose \(f(x)\) is \(O(g(x))\) then \[
+				(\exists B>0)(\exists b\geq0)(\forall x>b)\quad \abss{f(x)}\leq B\abss{g(x)}.
+				\] Divide both sides by \(B\) to obtain \[
+				(\forall x>b)\quad \frac{1}{B}\abss{f(x)}\leq\abss{g(x)}.
+				\] Let $A:=1/B$ and $a:=b$. Then \[
+				(\forall x>a)\quad A\abss{f(x)}\leq \abss{g(x)},
+				\] and so \(g(x)\) is \(\Omega(f(x))\) by definition of $\Omega$-notation.
+			\end{itemize}
+			\item Suppose that $f(x)$ is $O(g(x))$ and $g(x)$ is $O(h(x))$. Then 
+			\begin{align*}
+				(\exists B_1,B_2\in\R_{>0})(\exists b_1,b_2\in\R_{\geq 0})\quad &x>b_1\Rightarrow\abss{f(x)}\leq B_1\abss{g(x)}\quad\text{and}\\ &x>b_2\Rightarrow\abss{g(x)}\leq B_2\abss{h(x)}.
+			\end{align*}
+			Let $B=B_1B_2$ and \(b=\max(b_1,b_2)\). Then \[
+			x>b\implies\abss{f(x)}\leq B_1\abss{g(x)}\leq B_1(B_2|h(x)|)\leq B|h(x)|.
+			\] Then, by definition of $O$-notation, $f(x)$ is $O(h(x))$.
+		\end{enumerate}
+	\end{proof}
+	
+	\newpage
+	\begin{example}
+		Show that \(2x^4+3x^3+5\) is $\Theta(x^4)$.
+		\begin{proof}[\sol]
+			Define functions $f$ and $g$ as follows: \begin{align*}
+				f(x)&:=2x^4+3x^3+5,\ \text{and}\\
+				g(x)&:=x^4
+			\end{align*} for all $x\in\R_{\geq 0}$.
+			\begin{enumerate}[(i)]
+				\item For $x>0$, \begin{align*}
+					2x^4&\leq 2x^4+3x^3+5\\
+					2|x^4|&\leq |2x^4+3x^3+5|.
+				\end{align*} Let $A=2$ and $a=0$. Then \[
+				A|x^4|\leq |2x^4+3x^3+5|\quad\text{for all $x>a$},
+				\] and so $2x^4+3x^3+5$ is \(\Omega(x^4)\).
+				\item For $x>1$, \begin{align*}
+					2x^4+3x^3+5&\leq 2x^4+3x^4+5x^4,\\
+					2x^4+3x^3+5&\leq 10x^4,\\
+					|2x^4+3x^3+5|&\leq 10|x^4|.
+				\end{align*} Let $B=10$ and $b=1$. Then \[
+			|2x^4+3x^3+5|\leq B|x^4|\quad\text{for all $x>b$},
+		\] and so $2x^4+3x^3+5$ is \(O(x^4)\).
+			\end{enumerate}
+			By (i) and (ii), we know that $2x^4+3x^3+5$ is $\Theta(x^4)$.
+		\end{proof}
+	\end{example}
+	\vspace{8pt}
+	\begin{example}
+		\ \begin{enumerate}[a.]
+			\item Show that \(3x^3-1000x-200\) is $O(x^3)$.
+			\item Show that \(3x^3-1000x-200\) is $O(x^s)$ for all integer $s>3$.
+		\end{enumerate}
+		\begin{proof}[\sol]
+			\begin{enumerate}[a.]
+				\item For $x>1$, \begin{align*}
+					|3x^3-1000x-200|&\leq|3x^3|+|1000x|+|200|\\
+					&\leq 3x^3+1000x^3+200x^3\\
+					&\leq 1203x^3
+				\end{align*}
+			\(\therefore 3x^3-1000x-200\) is $O(x^3)$.
+			\item Suppose $s$ is an integer with $s>3$. For $x>1$, we know $x^3<x^s$. Then \[
+			B|x^3|< B|x^s|
+			\] for $x>b$ ($\because b=1$). Thus, \[
+			|3x^3-1000x-200|\leq B|x^s|\quad\text{for all $x>1$}.
+			\] Hence, $3x^3-1000x-200$ is $O(x^s)$ for all integer $s>3$.
+			\end{enumerate}
+		\end{proof}
+	\end{example}
+	\newpage
+	\begin{example}
+		\ \begin{enumerate}[a.]
+			\item Show that \(3x^3-1000x-200\) is $\Omega(x^3)$.
+			\item Show that \(3x^3-1000x-200\) is $\Omega(x^r)$ for all integer $r<3$.
+		\end{enumerate}
+		\begin{proof}[\sol]
+			\ \begin{enumerate}[a.]
+				\item Let $\displaystyle a:=2\times \frac{(1000+200)}{3}=800$. Then \begin{align*}
+					x&>a,\\
+					x&>800,\\
+					x&>\frac{2\cdot 1000}{3}+\frac{2\cdot 200}{3},\\
+					x&>\frac{2\cdot 1000}{3}\cdot\frac{1}{x}+\frac{2\cdot 200}{3}\frac{1}{x^2},\\
+					\frac{3}{2}x^3&>1000x+200,\\
+					3x^3-\frac{3}{2}x^3&>1000x+200,\\
+					3x^3-1000x-200&>\frac{3}{2}x^3,\\
+					|3x^3-1000x-200|&>\frac{3}{2}|x^3|.
+				\end{align*}
+				Let $A=3/2$ and let $a=800$. Then \[
+				A|x^3|\leq|3x^3-1000x-200|\quad\text{for all $x>a$}.
+				\] $\therefore 3x^3-1000x-200$ is $\Omega(x^3)$.
+				\item Suppose that $r<3$. Since $x^r<x^3$, we have $A|x^r|<A|x^3|$ for $x>1$. Thus \[
+				A|x^r|\leq|3x^3-1000x-200|\quad\text{for all $x>a=800>1$}
+				\] Hence, $3x^3-1000x-200$ is $\Omega(x^r)$ for all integer $r<3$.
+			\end{enumerate}
+		\end{proof}
+	\end{example}
+	\vspace{20pt}
+	\newpage
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf On Polynomial Orders}]
+		\begin{theorem}
+			Let $a_i\in\R$ for $i=0,\dots,n$ with $a_n\neq 0$.
+			\begin{enumerate}[(1)]
+				\item $\sum_{i=0}^{n}a_ix^i$ is $O(x^s)$ for all integers $s\geq n$.
+				\item $\sum_{i=0}^{n}a_ix^i$ is $\Omega(x^r)$ for all integers $r\leq n$.
+				\item $\sum_{i=0}^{n}a_ix^i$ is $\Theta(x^n)$.
+			\end{enumerate}
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		Let $A=\sum_{i=0}^n|a_i|$ and $a=1$. Then$\abs{\sum_{i=0}^na_ix^i}\leq A|x^n|$ for all $x>1$.
+	\end{proof}
+	\vspace{10pt}
+	\begin{example}
+		Show that $x^2$ is not $O(x)$, and deduce that $x^2$ is not $\Theta(x)$.
+		\begin{proof}[\sol]
+			Suppose that $x^2$ is $O(x)$. Then \begin{equation}\tag{*}
+				(\exists B>0)(\exists b\geq 0)(\forall x>b)\quad|x^2|\leq B|x|.
+			\end{equation} Since \[
+			x\cdot x> B\cdot x\implies |x^2|> B|x|\implies\exists x>b:|x^2|> B|x|.
+			\] This contradicts (*). Hence, $x^2$ is not $O(x)$.
+		\end{proof}
+	\end{example}
+	\vspace{10pt}
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf Limitation on Orders of Polynomial Functions}]
+		\begin{theorem}
+			Let $n\in\Z^+$, and let $a_i\in\R$ for $i=0,\dots,n$ with $a_n\neq 0$. If $m<n$, then \begin{enumerate}[(1)]
+				\item $\sum_{i=0}^na_ix^i$ is not $O(x^m)$ and
+				\item $\sum_{i=0}^na_ix^i$ is not $\Omega(x^m)$.
+			\end{enumerate}
+		\end{theorem}
+	\end{tcolorbox}
+
+	\newpage
+	\section{Application: Efficiency of Algorithm I}
+	\begin{note}
+		Time efficiency of algorithm counting the number of elementary operations. 
+	\end{note}
+	\vspace{20pt}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf }]
+		\begin{definition}
+			Let $A$ be an algorithm.
+			\begin{itemize}
+				\item $b(n)=$ Minimum number of elementary operation.
+				\begin{itemize}
+					\item If $b(n)=\Theta(g(n))$, we say in the bast case $A$ is $\Theta(g(n))$.
+					\item $A$ has a best case order of $g(n)$.
+				\end{itemize}
+				\item $w(n)=$ Maximum number of elementary operation.
+				\begin{itemize}
+					\item If $w(n)=\Theta(g(n))$, we say in the worst case $A$ is $\Theta(g(n))$.
+					\item $A$ has a worst case order of $g(n)$.
+				\end{itemize}
+			\end{itemize}
+		\end{definition}
+	\end{tcolorbox}
+	\vspace{10pt}
+	\begin{example}
+		Assume $n$ is a positive integer and consider the following algorithm segment:
+		\begin{figure}[h!]
+			\centering
+			\begin{tabular}{l}
+				$p:=0$, $x:=2$\\
+				\textbf{for $i:=2$ to $n$}\\
+				\tab$p:=(p+i)\cdot x$\\
+				\textbf{next $i$}
+			\end{tabular}
+		\end{figure}
+		\begin{enumerate}[a.]
+			\item Compute the actual number of additions and multiplications that must be performed when this algorithm segment is executed.
+			\item Use the theorem on polynomial orders to find an order for this algorithm segment.
+		\end{enumerate}
+		\begin{proof}[\sol]
+			\ \begin{enumerate}[a.]
+				\item There are two operations ($+,\times$) for each iterations of the loop. The number of iterations of the \textbf{for-next} loop equals \[
+				\text{the top index}\ -\ \text{the bottom index}\ + 1=n-2+1=n-1.
+				\] Hence there are $2(n-1)=2n-2$ multiplications and additions.
+				\item By the theorem on polynomial orders, \[
+				2n-2\quad\text{is}\quad\Theta(n),
+				\] and so this algorithm segment is  $\Theta(n)$.
+			\end{enumerate}
+		\end{proof}
+	\end{example}
+	
+	\newpage
+	\begin{example}
+		Assume $n$ is a positive integer and consider the following algorithm segment:
+		\begin{figure}[h!]
+			\centering
+			\begin{tabular}{l}
+				$s:=0$\\
+				\textbf{for $i:=1$ to $n$}\\
+				\tab\textbf{for $j:=1$ to $i$}\\
+				\tab\tab$s:=s+j\cdot(i-j+1)$\\
+				\tab\textbf{next $j$}\\
+				\textbf{next $i$}
+			\end{tabular}
+		\end{figure}
+		\begin{enumerate}[a.]
+			\item Compute the actual number of additions and multiplications that must be performed when this algorithm segment is executed.
+			\item Use the theorem on polynomial orders to find an order for this algorithm segment.
+		\end{enumerate}
+		\begin{proof}[\sol]
+			\ \begin{enumerate}[a.]
+				\item There are four operations ($+,\cdot,-,+$) for each iterations of the loop. Note that \begin{figure}[h!]
+					\centering
+					\begin{tabular}{c||c|cc|ccc|c|cccc}
+						\toprule[1.2pt]
+						$i$ & 1 & 2 &   & 3 &   &   &$\cdots$ & $n$ &&&\\
+						\hline
+						\hline
+						$j$ & 1 & 1 & 2 & 1 & 2 & 3 &$\cdots$ & 1 & 2 &$\cdots$&$n$\\
+						\bottomrule[1.2pt]
+					\end{tabular}
+				\end{figure} Hence the total number of iterations of the inner loop is \[
+				1+2+\cdots+n=\frac{n(n+1)}{2},
+				\] and so the number of operations is $
+				4\cdot\frac{n(n+1)}{2}=2n(n+1).$
+				\item By the theorem on polynomial orders, $
+				2n(n+1)$ is $\Theta(n^2),
+				$ and so this algorithm segment is  $\Theta(n^2)$.
+			\end{enumerate}
+		\end{proof}
+	\end{example}
+	
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Asymptotic Upper Bound}]
+		\begin{definition}
+			\[
+			O(g(n)):=\set{f(n):(\exists c,n_0>0)(\forall n\geq n_0)\ 0\leq f(n)\leq cg(n)}.
+			\]
+		\end{definition}
+	\end{tcolorbox}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Asymptotic Lower Bound}]
+		\begin{definition}
+			\[
+			\Omega(g(n)):=\set{f(n):(\exists c,n_0>0)(\forall n\geq n_0)\ 0\leq cg(n)\leq f(n)}.
+			\]
+		\end{definition}
+	\end{tcolorbox}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Asymptotic Tight Bound}]
+		\begin{definition}
+			\[
+			\Theta(g(n)):=\set{f(n):(\exists c_1,c_2,n_0>0)(\forall n\geq n_0)\ 0\leq c_g(n)\leq f(n)\leq c_2g(n)}.
+			\]
+		\end{definition}
+	\end{tcolorbox}
+	
+	\newpage
+	\chapter{Sorting of Numbers}
+	\begin{itemize}
+		\item \textbf{Input:} A sequence of $n$ numbers $[a_1,a_2,\dots,a_n]$.
+		\item \textbf{Output:} A sorted permutation $
+		[a_1',a_2',\dots,a_n']$ \text{s.t.} $a_1'\leq a_2'\leq\cdots\leq a_n'.$
+	\end{itemize}
+	
+	\section{The Insertion Sort Algorithm}
+	
+	\begin{algorithm}[H]
+		\caption{Insertion-Sort $(A)$}
+		\BlankLine
+		\KwIn{$A=[a_1,a_2,\dots,a_n]$}
+		\KwOut{$A'=[a_1',a_2',\dots,a_n']$ s.t. $a_1'\leq a_2'\leq\cdots\leq a_n'$}
+		\BlankLine
+		\For{$j\gets 2$ \KwTo $n$}{
+			key$\gets A[j]$\;
+			\Comment{Insert $A[j]$ into the sorted sequence $A[1,\dots,j-1]$}
+			$i\gets j-1$\;
+			\While{$i>0$ and $A[i]>\text{key}$}{
+				$A[i+1]\gets A[i]$\;
+				$i\gets i-1$\;
+			}
+			$A[i+1]\gets\text{key}$\;
+		}
+	\end{algorithm}
+	\begin{lstlisting}[style=C]
+void insertion(int* arr, int num) {
+	int key;
+	
+	for(int i=1; i<num; i++) {
+		key = *(arr+i);
+		int j = i-1;
+		while (j>=0 && *(arr+j) > key) {
+			*(arr+j+1) = *(arr+j);
+			j -= 1;
+		}
+		*(arr+j+1) = key;
+	}
+}
+
+/************************************************
+* Input: 126 062 214 103 004 098 150 055 136 077 
+* 
+* [i=1] 062 126 214 103 004 098 150 055 136 077 
+* [i=2] 062 126 214 103 004 098 150 055 136 077 
+* [i=3] 062 103 126 214 004 098 150 055 136 077 
+* [i=4] 004 062 103 126 214 098 150 055 136 077 
+* [i=5] 004 062 098 103 126 214 150 055 136 077 
+* [i=6] 004 062 098 103 126 150 214 055 136 077 
+* [i=7] 004 055 062 098 103 126 150 214 136 077 
+* [i=8] 004 055 062 098 103 126 136 150 214 077 
+* [i=9] 004 055 062 077 098 103 126 136 150 214 
+* 
+* Output: 004 055 062 077 098 103 126 136 150 214 
+************************************************/
+	\end{lstlisting}
+	
+	\subsection{Time Analysis 1}
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[scale=.45]{insert.png}
+	\end{figure}
+	
+	\begin{itemize}
+		\item The running time of Insertion-Sort on an input of $n$ values, $T(n)$, is the sum of the products of the \textit{cost} and \textit{times} columns:
+		\begin{align*}
+			T(n)=&c_1n+c_2(n-1)+c_4(n-1)\\
+			&+c_5\sum_{j=2}^{n}t_j+c_6\sum_{j=2}^{n}(t_j-1)+c_7\sum_{j=2}^{n}(t_j-1)\\
+			&+c_8(n-1).
+		\end{align*}
+		\item Best-case running time: \begin{align*}
+			T(n)&=c_1n+c_2(n-1)+c_4(n-1)+c_5(n-1)+c_8(n-1)\\
+			&=(c_1+c_2+c_4+c_5+c_8)n-(c_2+c_4+c_5+c_8).
+		\end{align*}
+		\item $T(n)=\Omega(n)$.
+		\item Worst-case running time:
+		\begin{align*}
+			T(n)=&c_1n+c_2(n-1)+c_4(n-1)\\
+			&+c_5\del{\frac{n(n+1)}{2}-1}+c_6\del{\frac{n(n-1)}{2}}+c_7\del{\frac{n(n-1)}{2}}\\
+			&+c_8(n-1)\\
+			=&\del{\frac{c_5}{2}+\frac{c_6}{2}+\frac{c_7}{2}}n^2+\del{c_1+c_2+c_4+\frac{c_5}{2}-\frac{c_6}{2}-\frac{c_7}{2}+c_8}n\\
+			&-(c_2+c_4+c_5+c_8).
+		\end{align*}
+		\item $T(n)=O(n^2)$.
+	\end{itemize}
+	
+	\subsection{Complexity Analysis}
+	\begin{itemize}
+		\item The best-case running time of insertion
+		sort is $\Omega(n)$. The running time of insertion
+		sort therefore falls between $\Omega(n)$ and
+		$O(n^2)$. The worst-case running time of
+		insertion sort is $\Omega(n^2)$, since there exists
+		an input that causes the algorithm to
+		take $\Omega(n^2)$ time.
+		\item When we say that the running time of an
+		algorithm is $\Omega(g(n))$, we mean that no
+		matter what particular input size is chosen
+		for each value of $n$, the running time on
+		that input is at least a constant times $g(n)$,
+		for sufficiently large $n$.
+	\end{itemize}
+
+	\newpage
+	\section{The Bubble Sort Algorithm}
+	\begin{algorithm}[H]
+		\caption{Bubble-Sort $(A)$}
+		\BlankLine
+		\KwIn{$A=[a_1,a_2,\dots,a_n]$}
+		\KwOut{$A'=[a_1',a_2',\dots,a_n']$ s.t. $a_1'\leq a_2'\leq\cdots\leq a_n'$}
+		\BlankLine
+		\For{$i\gets 1$ \KwTo $n$}{
+			\For{$j\gets n$ \Downto $i+1$}{
+				\If{$A[j]<A[j-1]$}{
+					exchange $A[j]\leftrightarrow A[j-1]$\;	
+				}
+			}
+		}
+	\end{algorithm}
+	
+	\begin{lstlisting}[style=C]
+void bubble(int* arr, int num) {
+	for(int i=0; i<num; i++) {
+		for(int j=num; j>i+1; j--) {
+			if(*(arr+j) < *(arr+j-1)) {
+				int tmp = *(arr+j);
+				*(arr+j) = *(arr+j-1);
+				*(arr+j-1) = tmp;
+			}
+		}
+	}
+}
+/*******************************************
+* Input: 92 54 99 02 47 66 66 05 20 72 
+* 
+* [i j = 00 09] 92 54 99 02 47 66 66 05 20 72 
+* [i j = 00 08] 92 54 99 02 47 66 66 05 20 72 
+* [i j = 00 07] 92 54 99 02 47 66 05 66 20 72 
+* [i j = 00 06] 92 54 99 02 47 05 66 66 20 72 
+* [i j = 00 05] 92 54 99 02 05 47 66 66 20 72 
+* [i j = 00 04] 92 54 99 02 05 47 66 66 20 72 
+* [i j = 00 03] 92 54 02 99 05 47 66 66 20 72 
+* [i j = 00 02] 92 02 54 99 05 47 66 66 20 72 
+* [i j = 00 01] 02 92 54 99 05 47 66 66 20 72 
+* [i j = 01 09] 02 92 54 99 05 47 66 66 20 72 
+* [i j = 01 08] 02 92 54 99 05 47 66 20 66 72 
+* [i j = 01 07] 02 92 54 99 05 47 20 66 66 72 
+* [i j = 01 06] 02 92 54 99 05 20 47 66 66 72 
+* [i j = 01 05] 02 92 54 99 05 20 47 66 66 72 
+* [i j = 01 04] 02 92 54 05 99 20 47 66 66 72 
+* [i j = 01 03] 02 92 05 54 99 20 47 66 66 72 
+* [i j = 01 02] 02 05 92 54 99 20 47 66 66 72 
+* [i j = 02 09] 02 05 92 54 99 20 47 66 66 72 
+* [i j = 02 08] 02 05 92 54 99 20 47 66 66 72 
+* [i j = 02 07] 02 05 92 54 99 20 47 66 66 72 
+* [i j = 02 06] 02 05 92 54 99 20 47 66 66 72 
+* [i j = 02 05] 02 05 92 54 20 99 47 66 66 72 
+* [i j = 02 04] 02 05 92 20 54 99 47 66 66 72 
+* [i j = 02 03] 02 05 20 92 54 99 47 66 66 72 
+* [i j = 03 09] 02 05 20 92 54 99 47 66 66 72 
+* [i j = 03 08] 02 05 20 92 54 99 47 66 66 72 
+* [i j = 03 07] 02 05 20 92 54 99 47 66 66 72 
+* [i j = 03 06] 02 05 20 92 54 47 99 66 66 72 
+* [i j = 03 05] 02 05 20 92 47 54 99 66 66 72 
+* [i j = 03 04] 02 05 20 47 92 54 99 66 66 72 
+* [i j = 04 09] 02 05 20 47 92 54 99 66 66 72 
+* [i j = 04 08] 02 05 20 47 92 54 99 66 66 72 
+* [i j = 04 07] 02 05 20 47 92 54 66 99 66 72 
+* [i j = 04 06] 02 05 20 47 92 54 66 99 66 72 
+* [i j = 04 05] 02 05 20 47 54 92 66 99 66 72 
+* [i j = 05 09] 02 05 20 47 54 92 66 99 66 72 
+* [i j = 05 08] 02 05 20 47 54 92 66 66 99 72 
+* [i j = 05 07] 02 05 20 47 54 92 66 66 99 72 
+* [i j = 05 06] 02 05 20 47 54 66 92 66 99 72 
+* [i j = 06 09] 02 05 20 47 54 66 92 66 72 99 
+* [i j = 06 08] 02 05 20 47 54 66 92 66 72 99 
+* [i j = 06 07] 02 05 20 47 54 66 66 92 72 99 
+* [i j = 07 09] 02 05 20 47 54 66 66 92 72 99 
+* [i j = 07 08] 02 05 20 47 54 66 66 72 92 99 
+* [i j = 08 09] 02 05 20 47 54 66 66 72 92 99 
+* 
+* Output: 02 05 20 47 54 66 66 72 92 99 
+*******************************************/
+	\end{lstlisting}
+	
+	
+	
+	
+	
+	\newpage
+	\section{Sorting Networks}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Comparator}]
+		\begin{definition}
+			A \textbf{comparator} is a device with two inputs, \(x\) and $y$, and two outputs, \(x'\) and $y'$, that performs the following function: \begin{align*}
+				x'=\min(x,y),\\
+				y'=\max(x,y).
+			\end{align*}
+			\begin{center}
+				\begin{tikzpicture}
+				\foreach \y/\startlabel/\endlabel in {1/{$x$}/{$x'=\min(x,y)$}, 0/{$y$}/{$y'=\max(x,y)$}} {
+					\draw (4,\y) -- (0,\y) node[anchor=east] {\startlabel};
+					\draw (4,\y) -- (8,\y) node[anchor=west] {\endlabel};
+				}
+				
+				% Comparators (1st and 2nd, 3rd and 4th) with dots
+				\draw (4,0) -- (4,1);
+				\fill (4,0) circle (2pt);
+				\fill (4,1) circle (2pt);
+			\end{tikzpicture}
+			\end{center}
+		\end{definition}
+	\end{tcolorbox}
+	\begin{remark}
+		Works in \(O(1)\) time.
+	\end{remark}
+	\vspace{4pt}
+	\begin{example}
+		\ \begin{center}
+			\begin{tikzpicture}
+				\foreach \y/\l [count=\n from 1] in {3/a, 2/a, 1/a, 0/a} {
+					\fill (0,\y) node[anchor=east] {$\l_\n$};
+					\fill (10,\y) node[anchor=west] {$b_\n$};
+				}
+				\foreach \y/\labels in {
+					3/{9,5,2,,2},
+					2/{5,9,,6,5},
+					1/{2,2,5,,6},
+					0/{6,6,,9,9},
+				}{
+					\foreach \label [count=\xi from 0] in \labels {
+						\draw (2*\xi,\y) -- (2*\xi+2,\y) node[midway,above] {\label};
+					}
+				}
+				%1
+				\draw (2,3) -- (2,2);
+				\fill (2,3) circle (2pt);
+				\fill (2,2) circle (2pt);
+				\draw (2,1) -- (2,0);
+				\fill (2,1) circle (2pt);
+				\fill (2,0) circle (2pt);
+				%2
+				\draw (4,3) -- (4,1);
+				\fill (4,3) circle (2pt);
+				\fill (4,1) circle (2pt);
+				%3
+				\draw (6,2) -- (6,0);
+				\fill (6,2) circle (2pt);
+				\fill (6,0) circle (2pt);
+				%4
+				\draw (8,2) -- (8,1);
+				\fill (8,2) circle (2pt);
+				\fill (8,1) circle (2pt);
+				%depth
+				\fill (0,-1) node[] {depth};
+				\fill (2,-1) node[] {$1$};
+				\fill (4,-1) node[] {$2$};
+				\fill (6,-1) node[] {$2$};
+				\fill (8,-1) node[] {$3$};
+			\end{tikzpicture}
+		\end{center}
+		\begin{itemize}
+			\item Wires go straight, left to right.
+			\item Each comparator has inputs/outputs on some pair of wires.
+		\end{itemize}
+	\end{example}
+	\vspace{8pt}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Depth}]
+		\begin{definition}
+			We define the \textbf{depth} of a wire as follows:
+			\begin{enumerate}[(1)]
+				\item An input wire of a comparison network has depth \(0\).
+				\item If a comparator has two input wires with depths \(d_x\) and \(d_y\), then its output wires have depth \(\max(d_x,d_y)+1\).
+			\end{enumerate}
+		\end{definition}
+	\end{tcolorbox}
+
+	\newpage
+	\begin{remark}
+		\ \begin{enumerate}[(1)]
+			\item \textbf{Depth of a Comparator} := depth of its output wire.
+			\item \textbf{Depth of a Network} := maximum depth of an output of the network.
+		\end{enumerate}
+	\end{remark}
+	\vspace{8pt}
+	\begin{example}[Bouble-Sort]
+		Find the maximum of 5 values:\begin{center}
+			\begin{tikzpicture}
+				\foreach \i in {0,...,4} {
+					\draw (0,\i) -- (10,\i);
+				}
+				%1
+				\draw (2,4) -- (2,3);
+				\fill (2,4) circle (2pt);
+				\fill (2,3) circle (2pt);
+				%2
+				\draw (4,3) -- (4,2);
+				\fill (4,3) circle (2pt);
+				\fill (4,2) circle (2pt);
+				%3
+				\draw (6,2) -- (6,1);
+				\fill (6,2) circle (2pt);
+				\fill (6,1) circle (2pt);
+				%4
+				\draw (8,1) -- (8,0);
+				\fill (8,1) circle (2pt);
+				\fill (8,0) circle (2pt);
+				%depth
+			\end{tikzpicture}
+		\end{center}
+		We extend our idea:
+		\begin{center}
+			\begin{tikzpicture}
+				\foreach \i in {0,...,4} {
+					\draw (0,\i) -- (10,\i);
+				}
+				\foreach \i in {2,4,6,8} {
+					\draw (\i,4) -- (\i,3);
+					\fill (\i,4) circle (2pt);
+					\fill (\i,3) circle (2pt);
+				}
+				\foreach \i in {3,5,7} {
+					\draw (\i,3) -- (\i,2);
+					\fill (\i,3) circle (2pt);
+					\fill (\i,2) circle (2pt);
+				}
+				\foreach \i in {4,6} {
+					\draw (\i,2) -- (\i,1);
+					\fill (\i,2) circle (2pt);
+					\fill (\i,1) circle (2pt);
+				}
+				\draw (5,1) -- (5,0);
+				\fill (5,1) circle (2pt);
+				\fill (5,0) circle (2pt);
+				%\draw[thick, red] (5,5) -- (10,1);
+				%\draw[thick, red] (3,5) -- (9,0);
+				\draw[thick, red] (1,5) -- (8,-1);
+				\fill[blue] (2,3) circle (3pt);
+				\fill[blue] (3,3) circle (3pt);
+			\end{tikzpicture}
+		\end{center}
+		\textbf{Depth:} \[
+		\begin{cases}
+			D(n)=D(n-1)+\textcolor{blue}{2}\\
+			D(2)=1
+		\end{cases}.
+		\] Then \begin{align*}
+			D(2)&=1\\
+			D(3)&=D(2)+2=3\\
+			D(4)&=D(2)+2+2=5\\
+			D(5)&=D(2)+2+2+2=7\\
+			\vdots\\
+			D(k)&=D(2)+2\cdot(k-2),
+		\end{align*} and so \[
+		D(n)=D(2)+2\cdot(n-2)=1+2n-4=2n-3=\Theta(n).
+		\]
+	\end{example}
+
+	\subsection{The Zero-One Principle}
+	\begin{quote}
+		``How can we test if a comparison network sorts?''
+	\end{quote}
+	\vspace{8pt}
+	\begin{tcolorbox}[colframe=lemcolor,title={\color{white}\bf }]
+		\begin{lemma}
+			If a comparison network transforms \[
+			a=\langle a_1,\dots,a_n\rangle\quad\text{into}\quad b=\langle b_1,\dots,b_n\rangle,
+			\] then for any montonically increasing function \(f\), it transforms \[
+			f(a)=\langle f(a_1),\dots,f(a_n)\rangle\quad\text{into}\quad f(b)=\langle f(b_1),\dots,f(b_n)\rangle.
+			\]
+		\end{lemma}
+	\end{tcolorbox}
+	\begin{proof}
+		Since \(f\) is montotonically increasing function, we know \begin{center}
+			\begin{tikzpicture}
+				\foreach \y/\startlabel/\endlabel in {1/{$f(x)$}/{$\min(f(x),f(y))=f(\min(x,y))$}, 0/{$f(y)$}/{$\max(f(x),f(y))=f(\max(x,y))$}} {
+					\draw (4,\y) -- (0,\y) node[anchor=east] {\startlabel};
+					\draw (4,\y) -- (8,\y) node[anchor=west] {\endlabel};
+				}
+				
+				% Comparators (1st and 2nd, 3rd and 4th) with dots
+				\draw (4,0) -- (4,1);
+				\fill (4,0) circle (2pt);
+				\fill (4,1) circle (2pt);
+			\end{tikzpicture}
+		\end{center} We use mathematical induction on the depth of each wire in a general comparison network: \begin{enumerate}[(i)]
+		\item (Basis Step) Clearly
+		\item (Induction Step)
+	\end{enumerate}
+	\end{proof}
+	\vspace{8pt}
+	\begin{example}
+		Consider \begin{center}
+			\begin{tikzpicture}
+				\foreach \y/\startlabel/\endlabel in {0/3/6, 1/4/5, 2/2/4, 3/5/3, 4/6/2} {
+					\draw (4,\y) -- (0,\y) node[anchor=east] {\startlabel};
+					\draw (4,\y) -- (8,\y) node[anchor=west] {\endlabel};
+				}
+			\end{tikzpicture}
+		\end{center}
+		Let \[
+		f(x):=\begin{cases}
+			0 &:x\leq 3\\
+			1 &:x> 1
+		\end{cases}
+		\] Then \begin{center}
+			\begin{tikzpicture}
+				\foreach \y/\startlabel/\endlabel in {0/{$f(3)=0$}/{$1=f(6)$}, 1/{$f(4)=1$}/{$1=f(5)$}, 2/{$f(2)=0$}/{$1=f(4)$}, 3/{$f(5)=1$}/{$0=f(3)$}, 4/{$f(6)=1$}/{$0=f(2)$}} {
+					\draw (4,\y) -- (0,\y) node[anchor=east] {\startlabel};
+					\draw (4,\y) -- (8,\y) node[anchor=west] {\endlabel};
+				}
+			\end{tikzpicture}
+		\end{center}
+	\end{example}
+	\vspace{8pt}
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf Zero-One Principle}]
+		\begin{theorem}
+			If a comparison network with \(n\) inputs sorts all \(2^n\) possible sequences of \(0\)'s and \(1's\), then it sorts all sequences of arbitrary numbers correctly.
+		\end{theorem}
+	\end{tcolorbox}
+	\begin{proof}
+		Suppose that \[
+		\exists\text{sequence}\ \langle a_1,a_2,\dots,a_n\rangle\ \text{s.t.}\ a_i<a_j\ \text{but}\ \langle \cdots,a_j,\cdots,a_i,\cdots\rangle.
+		\] We define a montonically increasing function \(f\) as \[
+		f(x):=\begin{cases}
+			0&:x\leq a_i,\\
+			1&:x> a_i.
+		\end{cases}
+		\] By Lemma,
+	\end{proof}
+
+	\newpage
+	\subsection{A Bitonic Sorting Network}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Bitonic}]
+		\begin{definition}
+			A sequence is \textbf{bitonic} if it monotonically increases, then monotonically decreases, or it can be circularly shifted to become so.
+		\end{definition}
+	\end{tcolorbox}
+	\vspace{20pt}
+	
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf Half-cleaner}]
+		\begin{definition}A bitonic sorter is composed of severs stages, each of which is called a \textbf{half -cleaner}. Each half-cleaner is a comparison network of depth $1$ in which input line $i$ is compared with line $i+\frac{n}{2}$ for $i=1,2\dots,\frac{n}{2}$. (We assume that $n$ is even.)
+					
+		\end{definition}
+	\end{tcolorbox}
+	\begin{example}
+		\ \begin{figure}[h!]
+			\centering
+			\begin{minipage}{.495\textwidth}
+				\begin{tikzpicture}[scale=.6]
+					\foreach \y/\startlabel/\endlabel in {
+						0/0/1, 1/0/1, 2/0/0, 3/1/1,
+						4/1/0, 5/1/0, 6/0/0, 7/0/0
+					} {
+						\draw (2.5,\y) -- (0,\y) node[anchor=east] {\startlabel};
+						\draw (2.5,\y) -- (5,\y) node[anchor=west] {\endlabel};
+					}
+					\foreach \x/\y in {1/3, 2/2, 3/1, 4/0} {
+						\fill (\x,\y) circle (3pt);
+						\draw (\x,\y) -- (\x,\y+4);
+						\fill (\x,\y+4) circle (3pt);
+					}
+					\draw (-1, 7) -- (-1,0) node[midway, left] {bitonic};
+					\draw (-1, 0) -- (-.75,0);
+					\draw (-1, 7) -- (-.75,7);
+					\draw (5.75, 0) -- (6,0);
+					\draw (5.75, 7) -- (6,7);
+					\draw (5.75, 4) -- (6,4);
+					\draw (5.75, 3) -- (6,3);
+					\draw (6, 0) -- (6,3) node[midway, right] {bitonic};
+					\draw (6, 4) -- (6,5.5) node[right] {clean};
+					\draw (6, 5.5) -- (6,7) node[midway, right] {bitonic,};
+				\end{tikzpicture}
+				\end{minipage}
+			\begin{minipage}{.495\textwidth}
+				\begin{tikzpicture}[scale=.6]
+					\foreach \y/\startlabel/\endlabel in {
+						0/0/1, 1/1/1, 2/1/1, 3/1/1,
+						4/1/0, 5/1/1, 6/0/0, 7/0/0
+					} {
+						\draw (2.5,\y) -- (0,\y) node[anchor=east] {\startlabel};
+						\draw (2.5,\y) -- (5,\y) node[anchor=west] {\endlabel};
+					}
+					\foreach \x/\y in {1/3, 2/2, 3/1, 4/0} {
+						\fill (\x,\y) circle (3pt);
+						\draw (\x,\y) -- (\x,\y+4);
+						\fill (\x,\y+4) circle (3pt);
+					}
+					\draw (-1, 7) -- (-1,0) node[midway, left] {bitonic};
+					\draw (-1, 0) -- (-.75,0);
+					\draw (-1, 7) -- (-.75,7);
+					\draw (5.75, 0) -- (6,0);
+					\draw (5.75, 7) -- (6,7);
+					\draw (5.75, 4) -- (6,4);
+					\draw (5.75, 3) -- (6,3);
+					\draw (6, 1.5) -- (6,3) node[midway, right] {bitonic,};
+					\draw (6, 0) -- (6,1.5) node[right] {clean};
+					\draw (6, 4) -- (6,7) node[midway, right] {bitonic};
+				\end{tikzpicture}
+			\end{minipage}
+			\caption{The comparison network $\mathsf{Half}$-$\mathsf{Cleaner}[8]$.}
+		\end{figure}
+	\end{example}
+	\vspace{10pt}
+	\begin{tcolorbox}[colframe=lemcolor,title={\color{white}\bf }]
+		\begin{lemma}
+			Let the input to a half-cleaner is a bitonic sequence of 0's and 1's. Then the output satisfies the following properties:
+			\begin{enumerate}[(1)]
+				\item both the top half and the bottom half are bitonic;
+				\item every element in the top half is at least as small as every element of the bottom half, and
+				\item at least one half is \textbf{clean}(all 0's or all 1's).
+			\end{enumerate}
+		\end{lemma}
+	\end{tcolorbox}
+	\begin{proof}
+		content...
+	\end{proof}
+	
+	\begin{example}
+		\ \begin{figure}[h!]
+			\begin{tikzpicture}[scale=1]
+				\fill[yellow] (0.75,-.25) rectangle (4.25,7.25);
+				\fill[yellow] (5.75,3.75) rectangle (7.25,7.25);
+				\fill[yellow] (5.75,-.25) rectangle (7.25,3.25);
+				\foreach \i in {0,2,4,6}
+					\fill[yellow] (8.75, -.25+\i) rectangle (9.25, 1.25+\i);
+				\foreach \y/\startlabel/\endlabel in {
+					0/0, 1/0, 2/0, 3/1,
+					4/1, 5/1, 6/0, 7/0
+				}{
+					\draw (4,\y) -- (0,\y) node[anchor=east] {\startlabel};
+					%\draw (2.5,\y) -- (5,\y) node[anchor=west] {\endlabel};
+				}
+				\foreach \y/\label in {
+					0/1, 1/1, 2/0, 3/1,
+					4/0, 5/0, 6/0, 7/0
+				}{
+					\draw (4,\y) -- (6,\y) node[midway,above] {\label};
+				}
+				\foreach \x/\y in {1/3, 2/2, 3/1, 4/0} {
+					\fill (\x,\y) circle (3pt);
+					\draw (\x,\y) -- (\x,\y+4);
+					\fill (\x,\y+4) circle (3pt);
+				}
+				\foreach \i in {0,...,7}
+					\draw (6,\i) -- (8,\i);
+				\foreach \x/\y in {6/1, 7/0} {
+					\fill (\x,\y) circle (3pt);
+					\draw (\x,\y) -- (\x,\y+2);
+					\fill (\x,\y+2) circle (3pt);
+					\fill (\x,\y+4) circle (3pt);
+					\draw (\x,\y+4) -- (\x,\y+6);
+					\fill (\x,\y+6) circle (3pt);
+				}\foreach \y/\label in {
+					0/1, 1/1, 2/0, 3/1,
+					4/0, 5/0, 6/0, 7/0
+				}{
+					\draw (7,\y) -- (9,\y) node[midway,above] {\label};
+				}
+				\foreach \i in {0,2,4,6} {
+					\fill (9,\i) circle (3pt);
+					\fill (9,\i+1) circle (3pt);
+					\draw (9,\i) -- (9,\i+1);
+				}
+				\foreach \i/\j in {
+				0/1,1/1,2/1,3/0,
+				4/0,5/0,6/0,7/0
+				}{
+					\draw (9,\i) -- (10,\i) node[anchor=west] {\j};
+				}
+				\draw (-1, 7) -- (-1,0) node[midway, left] {bitonic};
+				\draw (-1, 0) -- (-.75,0);
+				\draw (-1, 7) -- (-.75,7);
+				\draw (10.75, 0) -- (10.5,0);
+				\draw (10.75, 7) -- (10.5,7);
+				\draw (10.75, 0) -- (10.75,7) node[midway, right] {sorted};
+			\end{tikzpicture}
+		\end{figure}
+	\end{example}
+
+	\newpage
+	\subsection{Merging Network}
+	
+	\begin{example}
+		\ \begin{figure}[h!]
+			\begin{tikzpicture}[scale=1]
+				\fill[yellow] (0.75,-.25) rectangle (4.25,7.25);
+				\fill[yellow] (5.75,3.75) rectangle (7.25,7.25);
+				\fill[yellow] (5.75,-.25) rectangle (7.25,3.25);
+				\foreach \i in {0,2,4,6}
+				\fill[yellow] (8.75, -.25+\i) rectangle (9.25, 1.25+\i);
+				\foreach \y/\startlabel/\endlabel in {
+					0/1, 1/1, 2/1, 3/0,
+					4/1, 5/1, 6/0, 7/0
+				}{
+					\draw (4,\y) -- (0,\y) node[anchor=east] {\startlabel};
+					%\draw (2.5,\y) -- (5,\y) node[anchor=west] {\endlabel};
+				}
+				\foreach \y/\label in {
+					0/1, 1/1, 2/1, 3/1,
+					4/0, 5/0, 6/1, 7/0
+				}{
+					\draw (4,\y) -- (6,\y) node[midway,above] {\label};
+				}
+				\foreach \x/\y/\z in {1/3/0, 2/2/1, 3/1/2, 4/0/3} {
+					\fill (\x,\z) circle (3pt);
+					\fill (\x,7-\z) circle (3pt);
+					\draw (\x,\z) -- (\x,7-\z);
+				}
+				\foreach \i in {0,...,7}
+				\draw (6,\i) -- (8,\i);
+				\foreach \x/\y in {6/1, 7/0} {
+					\fill (\x,\y) circle (3pt);
+					\draw (\x,\y) -- (\x,\y+2);
+					\fill (\x,\y+2) circle (3pt);
+					\fill (\x,\y+4) circle (3pt);
+					\draw (\x,\y+4) -- (\x,\y+6);
+					\fill (\x,\y+6) circle (3pt);
+				}\foreach \y/\label in {
+					0/1, 1/1, 2/1, 3/1,
+					4/1, 5/0, 6/0, 7/0
+				}{
+					\draw (7,\y) -- (9,\y) node[midway,above] {\label};
+				}
+				\foreach \i in {0,2,4,6} {
+					\fill (9,\i) circle (3pt);
+					\fill (9,\i+1) circle (3pt);
+					\draw (9,\i) -- (9,\i+1);
+				}
+				\foreach \i/\j in {
+					0/1,1/1,2/1,3/1,
+					4/1,5/0,6/0,7/0
+				}{
+					\draw (9,\i) -- (10,\i) node[anchor=west] {\j};
+				}
+				\draw (-1, 7) -- (-1,4.1) node[midway, left] {sorted};
+				\draw (-1, 3.9) -- (-1,0) node[midway, left] {sorted};
+				\draw (-1, 0) -- (-.75,0);
+				\draw (-1, 7) -- (-.75,7);
+				\draw (-1, 3.9) -- (-.75,3.9);
+				\draw (-1, 4.1) -- (-.75,4.1);
+				\draw (10.75, 0) -- (10.5,0);
+				\draw (10.75, 7) -- (10.5,7);
+				\draw (10.75, 0) -- (10.75,7) node[midway, right] {sorted};
+			\end{tikzpicture}
+		\end{figure}
+	\end{example}
+	
+	
+	\newpage
+	\chapter{Further Efficient Algorithms}
+	\begin{tcolorbox}[colframe=defcolor,title={\color{white}\bf }]
+		\begin{definition}
+			
+		\end{definition}
+	\end{tcolorbox}
+	\begin{tcolorbox}[colframe=thmcolor,title={\color{white}\bf }]
+		\begin{theorem}
+			
+		\end{theorem}
+	\end{tcolorbox}
+
+	
+	\begin{tikzpicture}
+		
+		% Input lines with dots and labels
+		\foreach \y/\label in {0/A,1/B,2/C,3/D} {
+			\draw (0,\y) -- (8,\y);
+			\fill (0,\y) circle (2pt) node[anchor=east] {\label};
+			\fill (8,\y) circle (2pt) node[anchor=west] {\label'};
+		}
+		%1
+		\draw (1.5,0) -- (1.5,2);
+		\fill (1.5,0) circle (2pt);
+		\fill (1.5,2) circle (2pt);
+		
+		\draw (2.5,1) -- (2.5,3);
+		\fill (2.5,1) circle (2pt);
+		\fill (2.5,3) circle (2pt);
+		
+		% Comparators (1st and 2nd, 3rd and 4th) with dots
+		\draw (4.5,0) -- (4.5,1);
+		\fill (4.5,0) circle (2pt);
+		\fill (4.5,1) circle (2pt);
+		
+		\draw (5.5,2) -- (5.5,3);
+		\fill (5.5,2) circle (2pt);
+		\fill (5.5,3) circle (2pt);
+		
+		% Comparators (2nd and 3rd) with dots
+		\draw (7,1) -- (7,2);
+		\fill (7,1) circle (2pt);
+		\fill (7,2) circle (2pt);
+		
+	\end{tikzpicture}
+	\newpage
+	\chapter{Turing Machine}
+	\section{Deterministic Turing Machine, The class P}
+	\section{Non-deterministic Turing Machine, The class NP}
+	
+	\newpage
+	\chapter{NP Problem}
+	\section{Decidability (The Halting Problem)}
+	\section{NP-completeness Theory}
+	% End document
+\end{document}
