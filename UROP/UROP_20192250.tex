@@ -12,6 +12,7 @@
 \definecolor{lemcolor}{RGB}{155, 89, 182}
 \definecolor{corcolor}{RGB}{46, 204, 113}
 \definecolor{procolor}{RGB}{241, 196, 15}
+\definecolor{execolor}{RGB}{85, 123, 122}
 
 % Fonts
 \usepackage[T1]{fontenc}
@@ -22,7 +23,7 @@
 
 % Page layout
 \usepackage{geometry}
-\geometry{a4paper,left=1in,right=.7in,top=1in,bottom=1in,heightrounded}
+\geometry{a4paper,left=.85in,right=.62in,top=1in,bottom=1in,heightrounded}
 \usepackage{fancyhdr}
 \fancyhf{}
 \fancyhead[LE,RO]{\thepage}
@@ -120,8 +121,10 @@
 \usepackage{tikz}
 \usepackage{tikz-cd}
 \usetikzlibrary{calc}
-\usetikzlibrary{arrows, arrows.meta, positioning, shapes.multipart}
+\usetikzlibrary{arrows, arrows.meta, positioning, shapes, shapes.multipart}
 \usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usepackage{caption}
 
 %Tcolorbox
 \usepackage[most]{tcolorbox}
@@ -168,7 +171,7 @@
 \renewcommand{\abs}[1]{\left\lvert #1 \right\rvert}
 \renewcommand{\norm}[1]{\left\| #1 \right\|}
 
-\newcommand{\sol}{\textcolor{magenta}{\bf Sol}}
+\newcommand{\sol}{\textcolor{magenta}{\bf Solution}}
 
 \newcommand{\KeyGen}{\mathsf{KeyGen}}
 \newcommand{\Enc}{\mathsf{Enc}}
@@ -182,7 +185,7 @@
 \newcommand{\zero}{\textcolor{red}{\texttt{0}}}
 \newcommand{\one}{\textcolor{red}{\texttt{1}}}
 
-\newcommand{\tab}{\hspace{8pt}}
+\newcommand{\tab}{\hspace{12pt}}
 \newcommand{\xor}{\oplus}
 \newcommand{\adversary}{\mathcal{A}}
 \newcommand{\isequal}{\overset{?}{=}}
@@ -217,7 +220,36 @@
 			\vspace{0.5in}
 			{\Large Ji Yong-Hyeon, Kim Dong-Hyeon\par}
 			\vspace{1in}
-			\includegraphics[scale=2.5]{urop.jpg}\par
+			%\includegraphics[scale=2.5]{urop.jpg}\par
+			\begin{figure}[h!]\centering
+				\begin{tikzpicture}[node distance=3cm]
+					
+					% Define block styles
+					\tikzstyle{decision} = [diamond, draw, fill=pink!30, 
+					text width=4.5em, text badly centered, inner sep=0pt]
+					\tikzstyle{block} = [rectangle, draw, fill=cyan!30, 
+					text width=5em, text centered, rounded corners, minimum height=4em]
+					\tikzstyle{line} = [draw, -latex', color=gray!70]
+					
+					% Nodes
+					\node [block] (init) {Start};
+					\node [decision, right of=init] (decide) {Choose b $\in$ \{0,1\}};
+					\node [block, above right of=decide, node distance=3cm] (game0) {$\mathcal{E}_0$};
+					\node [block, below right of=decide, node distance=3cm] (game1) {$\mathcal{E}_1$};
+					\node [block, right of=decide, node distance=4cm] (output) {Output to adversary};
+					\node [decision, right of=output] (adversary) {Adversary's guess b'};
+					\node [block, right of=adversary] (end) {Win if $b = b'$};
+					
+					% Paths
+					\path [line] (init) -- (decide);
+					\path [line] (decide) |- (game0);
+					\path [line] (decide) |- (game1);
+					\path [line] (game0) -| (output);
+					\path [line] (game1) -| (output);
+					\path [line] (output) -- (adversary);
+					\path [line] (adversary) -- (end);
+				\end{tikzpicture}
+			\end{figure}
 			\vspace{1in}
 			{\bf Department of Information Security, Cryptology, and Mathematics\par}
 			{College of Science and Technology\par}
@@ -245,7 +277,7 @@
 	
 	\chapter{One-Time Pad \& Kerckhoff's Principle}
 	
-	\begin{tcolorbox}[colback=white,colframe=gray,arc=5pt,title={\color{white}\bf }]
+	\begin{tcolorbox}[colback=white,colframe=magenta,arc=5pt,title={\color{white}\bf }]
 		\textbf{Kerchkhoffs' Principle:}
 		\begin{quote}
 			Design your system to be secure even if the attacker has complete knowledge of all its algorithms.
@@ -546,87 +578,89 @@
 	
 	\newpage
 	\section*{Exercises}
-	
-	\begin{itemize}
-		\item[\bf 2.5.] In abstract algebra, a (finite) group is a finite set $\mathbb{G}$ of items together with an operator $\otimes$ satisfying the following axioms:
-		\begin{itemize}
-			\item \textbf{Closure:} for all \(a,b\in\mathbb{G}\), we have $a\otimes b\in \mathbb{G}$
-			\item \textbf{Identity:} there is a special \textit{identity element} $e\in\G$ that satisfies \(e\otimes a = a\otimes e = a\) for
-			all \(a\in\G\). We typically write ``1'' rather than $e$ for the identity element.
-			\item \textbf{Associativity:} for all \(a, b, c\in\G\), we have \((a\otimes b)\otimes c = a\otimes (b\otimes c)\).
-			\item \textbf{Inverses:} for all \(a\in\G\), there exists an inverse element \(b\in\G\) such that \(a\otimes b = b\otimes a\)
-			is the identity element of $\G$. We typically write ``$a^{-1}$'' for the inverse of $a$.
-		\end{itemize}
-	
-		Define the following encryption scheme in terms of an arbitrary group \((\G, \otimes)\):
-		\begin{center}
-			\begin{tabular}{|clll|}
-				\hline
-				\(\keyspace=\G\) & \(\underline{\KeyGen:}\) & \(\underline{\Enc(k,m):}\) &\(\underline{\Dec(k,c):}\) \\
-				\(\messagespace=\G\) & \tab\(k\gets\G\) & \tab return \(k\otimes m\) & \tab ??\\
-				\(\ciphertextspace=\G\) & \tab return \(k\) &&\\
-				\hline
-			\end{tabular}
-		\end{center}
+	\begin{tcolorbox}[colback=white,colframe=execolor,arc=5pt,title={\color{white}\bf }]
+		\begin{exercise}
+			In abstract algebra, a (finite) group is a finite set $\mathbb{G}$ of items together with an operator $\otimes$ satisfying the following axioms:
+			\begin{itemize}
+				\item \textbf{Closure:} for all \(a,b\in\mathbb{G}\), we have $a\otimes b\in \mathbb{G}$
+				\item \textbf{Identity:} there is a special \textit{identity element} $e\in\G$ that satisfies \(e\otimes a = a\otimes e = a\) for
+				all \(a\in\G\). We typically write ``1'' rather than $e$ for the identity element.
+				\item \textbf{Associativity:} for all \(a, b, c\in\G\), we have \((a\otimes b)\otimes c = a\otimes (b\otimes c)\).
+				\item \textbf{Inverses:} for all \(a\in\G\), there exists an inverse element \(b\in\G\) such that \(a\otimes b = b\otimes a\)
+				is the identity element of $\G$. We typically write ``$a^{-1}$'' for the inverse of $a$.
+			\end{itemize}
+			
+			Define the following encryption scheme in terms of an arbitrary group \((\G, \otimes)\):
+			\begin{center}
+				\begin{tabular}{|clll|}
+					\hline
+					\(\keyspace=\G\) & \(\underline{\KeyGen:}\) & \(\underline{\Enc(k,m):}\) &\(\underline{\Dec(k,c):}\) \\
+					\(\messagespace=\G\) & \tab\(k\gets\G\) & \tab return \(k\otimes m\) & \tab ??\\
+					\(\ciphertextspace=\G\) & \tab return \(k\) &&\\
+					\hline
+				\end{tabular}
+			\end{center}
+			\begin{enumerate}[(a)]
+				\item Prove that \(\binaryfield^\lambda\) is a group with respect to the xor operator. What is the identity
+				element, and what is the inverse of a value $x\in\binaryfield^\lambda$?
+				\item Fill in the details of the $\Dec$ algorithm and prove (using the group axioms) that the scheme satisfies correctness.
+				\item Prove that the scheme satisfies one-time secrecy.
+			\end{enumerate}
+		\end{exercise}
+	\end{tcolorbox}
+	\iffalse
+	\begin{proof}[\sol]
 		\begin{enumerate}[(a)]
-			\item Prove that \(\binaryfield^\lambda\) is a group with respect to the xor operator. What is the identity
-			element, and what is the inverse of a value $x\in\binaryfield^\lambda$?
-			\item Fill in the details of the $\Dec$ algorithm and prove (using the group axioms) that the scheme satisfies correctness.
-			\item Prove that the scheme satisfies one-time secrecy.
-		\end{enumerate}
-		\begin{tcolorbox}[colframe=magenta, breakable, enhanced]
-			\begin{proof}[\sol]
-				\begin{enumerate}[(a)]
-					\item We show that \((\binaryfield^\lambda,\xor)\) satisfies the group axioms:
-					\begin{itemize}
-						\item[] \textbf{Closure:} \(x,y\in\binaryfield^\lambda\implies x\xor y\in\binaryfield^\lambda\)
-						\item[] \textbf{Associativity:} The XOR operation is associative, so this property holds.
-						\item[] \textbf{Identity:} The identity for XOR is the all-zero \(\lambda\)-bit string \(\zero^\lambda\) because \[
-						(\forall x\in\binaryfield^\lambda)\quad x\xor\zero^\lambda=\zero^\lambda\xor x= x.
-						\]
-						\item[] \textbf{Inverse:} The inverse of $x$ under XOR is $x$ itself because \[
-						x\xor x=\zero^\lambda.
-						\]
-					\end{itemize}
-					\vspace{4pt}
-					\item Decryption Algorithm: \begin{center}
+			\item We show that \((\binaryfield^\lambda,\xor)\) satisfies the group axioms:
+			\begin{itemize}
+				\item[] \textbf{Closure:} \(x,y\in\binaryfield^\lambda\implies x\xor y\in\binaryfield^\lambda\)
+				\item[] \textbf{Associativity:} The XOR operation is associative, so this property holds.
+				\item[] \textbf{Identity:} The identity for XOR is the all-zero \(\lambda\)-bit string \(\zero^\lambda\) because \[
+				(\forall x\in\binaryfield^\lambda)\quad x\xor\zero^\lambda=\zero^\lambda\xor x= x.
+				\]
+				\item[] \textbf{Inverse:} The inverse of $x$ under XOR is $x$ itself because \[
+				x\xor x=\zero^\lambda.
+				\]
+			\end{itemize}
+			\vspace{4pt}
+			\item Decryption Algorithm: \begin{center}
+				\begin{tabular}{l}
+					\(\underline{\Dec(k,c):}\) \\ \tab return \(\inv{k}\otimes c\)
+				\end{tabular}
+			\end{center}
+			Proof of Correctness: \begin{align*}
+				\Dec(k,\Enc(k,m))&=\inv{k}\otimes\Enc(k,m)\\
+				&=\inv{k}\otimes(k\otimes m)\\
+				&=(\inv{k}\otimes k)\otimes m\\
+				&=1\otimes m\\
+				&=m.
+			\end{align*}
+			\item Let $m_L,m_R\in\G$ with $m_L\neq m_R$, and let $k\in\G$. The ciphertexts for theses message are \begin{align*}
+				&c_L:=m_L\otimes k,\\
+				&c_R:=m_R\otimes k.
+			\end{align*} Let $\G:=\binaryfield^\lambda$ and $\otimes:=\xor$. Then \begin{align*}
+				c_L\otimes c_R&=(m_L\otimes k)\otimes(m_R\otimes k)\\
+				&=m_L\otimes m_R\otimes(k\otimes k)\\
+				&=m_L\otimes m_R.
+			\end{align*} This result does not reveal any information about $k$, and it would be the same if the attacker knew $m_L$ and $m_R$ but did not know $k$. Therefore, the scheme satisfies one-time secrecy.
+			
+			Note that if $\G=\binaryfield^\lambda$ and $\otimes=\xor$ then
+			\begin{center}
+				\begin{minipage}{.46\textwidth}
+					\begin{tabular}{|c|}
+						\hline
+						\cellcolor{blue!25}$\library_{\ots-\sL}^\scheme$ \\
+						\hline
 						\begin{tabular}{l}
-							\(\underline{\Dec(k,c):}\) \\ \tab return \(\inv{k}\otimes c\)
-						\end{tabular}
-					\end{center}
-					Proof of Correctness: \begin{align*}
-						\Dec(k,\Enc(k,m))&=\inv{k}\otimes\Enc(k,m)\\
-						&=\inv{k}\otimes(k\otimes m)\\
-						&=(\inv{k}\otimes k)\otimes m\\
-						&=1\otimes m\\
-						&=m.
-					\end{align*}
-					\item Let $m_L,m_R\in\G$ with $m_L\neq m_R$, and let $k\in\G$. The ciphertexts for theses message are \begin{align*}
-						&c_L:=m_L\otimes k,\\
-						&c_R:=m_R\otimes k.
-					\end{align*} Let $\G:=\binaryfield^\lambda$ and $\otimes:=\xor$. Then \begin{align*}
-						c_L\otimes c_R&=(m_L\otimes k)\otimes(m_R\otimes k)\\
-						&=m_L\otimes m_R\otimes(k\otimes k)\\
-						&=m_L\otimes m_R.
-					\end{align*} This result does not reveal any information about $k$, and it would be the same if the attacker knew $m_L$ and $m_R$ but did not know $k$. Therefore, the scheme satisfies one-time secrecy.
-					
-					Note that if $\G=\binaryfield^\lambda$ and $\otimes=\xor$ then
-					\begin{center}
-						\begin{minipage}{.46\textwidth}
-							\begin{tabular}{|c|}
-								\hline
-								\cellcolor{blue!25}$\library_{\ots-\sL}^\scheme$ \\
-								\hline
-								\begin{tabular}{l}
-									\underline{\texttt{Eve}($m_L,m_R\in\G$):}\\
-									\tab $k\gets\G$\quad\textcolor{gray}{//\(\scheme.\KeyGen\)}\\
-									\tab $c\gets k\otimes m_L$\quad\textcolor{gray}{//\(\scheme.\Enc(k,m_L)\)}\\
-									\tab return $c$
-								\end{tabular}\\
-								\hline
-							\end{tabular}
-						\end{minipage}$\equiv$
-					\begin{minipage}{.46\textwidth}
+							\underline{\texttt{Eve}($m_L,m_R\in\G$):}\\
+							\tab $k\gets\G$\quad\textcolor{gray}{//\(\scheme.\KeyGen\)}\\
+							\tab $c\gets k\otimes m_L$\quad\textcolor{gray}{//\(\scheme.\Enc(k,m_L)\)}\\
+							\tab return $c$
+						\end{tabular}\\
+						\hline
+					\end{tabular}
+				\end{minipage}$\equiv$
+				\begin{minipage}{.46\textwidth}
 					\begin{tabular}{|c|}
 						\hline
 						\cellcolor{blue!25}$\library_{\ots-\sR}^\scheme$ \\
@@ -640,33 +674,22 @@
 						\hline
 					\end{tabular}
 				\end{minipage}
-					\end{center}
-				\end{enumerate}
-			\end{proof}
-		\end{tcolorbox}
-		\vspace{8pt}
-		\item[\bf 2.11] \(\mathcolorbox{yellow}{\text{Prove that if an encryption scheme}\ \scheme\ \text{has}\ \abs{\scheme.\keyspace}<\abs{\scheme.\messagespace}}\) \hl{then it cannot satisfy one-time secrecy}. Try to structure your proof as an explicit attack on such a scheme (\ie, a distinguisher against the appropriate libraries).
-		
-		The $\Enc$ algorithm of one-time pad is deterministic, but our definitions of encryption allow $\Enc$ to be randomized (\ie, it may give different outputs when called twice with the same $k$ and $m$).
-		\textbf{For full credit}, you should prove the statement even for the case of $\Enc$ is randomized. However, you may assume that $\Dec$ is deterministic.
-		
-		\textcolor{gray}{[Hint: The definition of interchangeability does not place any restriction on the running time of the distinguisher/calling program. Even an exhaustive brute-force attack would be valid]}
-		\begin{tcolorbox}[colframe=magenta]
-			\begin{proof}[\sol]
-				There must exists at least one message that cannot be encrypted by and key in the key space.
-				
-				Let's consider two distinct messages
-				
-				The adversary's goal is to distinguish between these two libraries. If the adversary can do this with a probability significantly better than random guessing, then the encryption scheme does not satisfy one-time secrecy.
-				
-				Let \(\abs{\scheme.\keyspace}<\abs{\scheme.\messagespace}\) then \[
-				\exists m^*\in\scheme.\messagespace:m^*\notin\img(\Enc_{k\in\scheme.\keyspace}).
-				\]
-			\end{proof}
-		\end{tcolorbox}
-		
-	\end{itemize}
-	
+			\end{center}
+		\end{enumerate}
+	\end{proof}
+	\fi
+	\vspace{20pt}
+	\begin{tcolorbox}[colback=white,colframe=execolor,arc=5pt,title={\color{white}\bf }]
+		\begin{exercise}
+			Prove that if an encryption scheme $\scheme$ has $\abs{\scheme.\keyspace}<\abs{\scheme.\messagespace}$ then it cannot satisfy one-time secrecy.\\
+			\\
+			\textcolor{gray}{[Hint: The definition of interchangeability does not place any restriction on the running time of the distinguisher/calling program. Even an exhaustive brute-force attack would be valid]}
+		\end{exercise}
+	\end{tcolorbox}
+	\begin{proof}[\sol]
+		content...
+	\end{proof}
+
 	\newpage
 	\chapter{Cryptography on Intractable Computations}
 	
@@ -682,10 +705,11 @@
 	\begin{remark}
 		We see ``\textcolor{blue}{polynomial-time}'' as a synonym for ``\textcolor{blue}{efficient}.''
 	\end{remark}
-
+	\vspace{10pt}
 	\begin{example}
 		\(\gcd(a,b)\) can be computed using \(O((\log_2a)^3)\) bit operation if \(a>b\).
 	\end{example}
+	\vspace{10pt}
 	\begin{example}
 		\ \begin{table}[h!]\centering
 			\begin{tabular}{l|l}
@@ -699,13 +723,12 @@
 	
 		Again, ``efficient'' means polynomial-time. Furthermore, we only consider polynomial-time algorithms that run on standard, \textit{classical} computers. In fact, all of the problems in the right-hand column \textit{do} have known polynomial-time algorithms on \textit{quantum} computers.
 	\end{example}
-
 	\newpage
 	\section{What Qualifies as a ``Negligible'' Success Probability?}
 	For a cryptographic system to be considered secure, we often want the success probability of any polynomial-time adversary to be negligible in the security parameter \(\lambda\).  
 	\vspace{8pt}
 	\begin{tcolorbox}
-		\(\frac{1}{2^\lambda}\) \textbf{approaches zero so fast that no polynomial can ``rescue''}.
+		\textbf{Idea.}\tab \(\displaystyle\frac{1}{2^\lambda}\) \textbf{approaches zero so fast that no polynomial can ``rescue''}.
 	\end{tcolorbox}
 	
 	\begin{proof}
@@ -715,11 +738,12 @@
 					axis lines = left,
 					xlabel = \(\lambda\),
 					ylabel = \(f\),
-					ymin = 0, ymax = 1.5,
-					xmin = 0, xmax = 5,
+					ymin = 0, ymax = 1.1,
+					xmin = 0, xmax = 10,
 					]
 					\addplot [
-					domain=0:5, 
+					line width=.7mm,
+					domain=0:10, 
 					samples=100, 
 					color=red,
 					]
@@ -752,6 +776,9 @@
 	\end{tcolorbox}
 	\begin{remark}
 		As $\textcolor{blue}{\lambda}$ (\textcolor{blue}{security parameter}) gets larger and larger, the product of \(\textcolor{blue}{p(\lambda)}\) (\textcolor{blue}{resources or capabilities for an adversary}) and \(\textcolor{blue}{f(\lambda)}\) (\textcolor{blue}{success probability}) approaches \(0\).
+	\end{remark}
+	\begin{remark}
+		A function $f(\lambda)$ is negligible if $\forall p(\lambda)> 0:\exists\lambda_0:\lambda>\lambda_0\Rightarrow \abs{f(\lambda)}<\frac{1}{p(\lambda)}$.
 	\end{remark}
 	\vspace{8pt}
 	\begin{tcolorbox}[colframe=procolor,title={\color{white}\bf }]
@@ -813,7 +840,183 @@
 			\item Two libraries are indistinguishable if all polynomial-time calling programs have negligible advantage in distinguishing them.
 		\end{enumerate}
 	\end{remark}
+	\vspace{10pt}
+	\begin{example}
+		Two indistinguishable libraries:
+		\begin{center}
+			\begin{minipage}{.25\textwidth}
+				\begin{tabular}{|c|}
+					\hline
+					\cellcolor{blue!25}$\library_1$\\
+					\hline
+					\begin{tabular}{l}
+						\underline{\texttt{Predict}($x$):}\\
+						\tab $s\uniform\binaryfield^\lambda$\\
+						\tab \textbf{return} $x\isequal s$
+					\end{tabular}\\
+					\hline
+				\end{tabular}
+			\end{minipage}
+			\begin{minipage}{.25\textwidth}
+				\begin{tabular}{|c|}
+					\hline
+					\cellcolor{blue!25}$\library_2$\\
+					\hline
+					\begin{tabular}{l}
+						\underline{\texttt{Predict}($x$):}\\
+						\tab \textbf{return} \texttt{false}
+					\end{tabular}\\
+					\hline
+				\end{tabular}
+			\end{minipage}
+		\end{center}
+		The calling program $\adversary$ repeatedly invokes the `\texttt{Predict}' functions and returns `1' if it ever obtains a `$\true$' value from the response:
+		\begin{figure}[h!]\centering
+			\begin{tabular}{|c|}
+				\hline
+				\cellcolor{blue!25}$\adversary$\\
+				\hline
+				\begin{tabular}{l}
+					\textbf{do} $q$ times:\\
+					\tab \textbf{if} \texttt{Predict}$(\zero^\lambda) = \true$\\
+					\tab\tab \textbf{return} 1\\
+					\textbf{return} 0
+				\end{tabular}\\
+				\hline
+			\end{tabular}
+		\end{figure}
 	
+		Then \begin{enumerate}[(1)]
+			\item $\library_2$ can never return $\true$, \ie, \[
+			\Pr\sbr{\adversary\linking\library_2\outputs 1}=0.
+			\]
+			\item $\Pr\sbr{\adversary\linking\library_{2}\outputs 1}$ is surely non-zero.
+			\begin{align*}
+				\Pr\sbr{\adversary\linking\outputs 1}&=1-\Pr\left[\adversary\linking\library_{1}\outputs 0\right]\\
+				&=1-\del{1-\frac{1}{2^\lambda}}^q.
+			\end{align*}
+			Using the union bound, we get: \begin{align*}
+				\Pr\sbr{\adversary\linking\outputs 1}&\leq\Pr[\text{first call to \texttt{Predict} returns $\true$}]\\
+				&\tab+\Pr[\text{second call to \texttt{Predict} returns $\true$}]\\
+				&\tab\tab+\cdots\\
+				&=q\cdot\frac{1}{2^\lambda}.
+			\end{align*}
+		\end{enumerate}
+		We showed that $\adversary$ has non-zero advantage, and so $\library_{1}\nequiv\library_{2}$. We also showed that $\adversary$ has advantage at most $q/2^\lambda$. Since $\adversary$ runs in polynomial time, it can only make a polynomial number $q$ of queries to the library, so $q/2^\lambda$ is negligible.
+	\end{example}
+	\vspace{20pt}
+	\begin{tcolorbox}[colframe=lemcolor,title={\color{white}\bf }]
+		\begin{lemma}
+			\ \begin{enumerate}[(1)]
+				\item $\library_{1}\equiv\library_{2}\implies\library_{1}\indist\library_{2}$.
+				\item $\library_{1}\indist\library_{2}\indist\library_{3}\implies\library_{1}\indist\library_{3}$.
+			\end{enumerate}
+		\end{lemma}
+	\end{tcolorbox}
+	\begin{proof}
+		content...
+	\end{proof}
+	\begin{tcolorbox}[colframe=lemcolor,title={\color{white}\bf }]
+		\begin{lemma}
+			For any polynomial-time library $\library^*$, \[
+			\library_{1}\indist\library_{2}\implies\library^*\linking\library_{1}\indist\library^*\linking\library_2.
+			\]
+		\end{lemma}
+	\end{tcolorbox}
+	\begin{proof}
+		content...
+	\end{proof}
+	\vspace{20pt}
+	\begin{tcolorbox}[colframe=lemcolor,title={\color{white}\bf Bad-Event Lemma}]
+		\begin{lemma}
+			\[
+			\abs{\Pr\sbr{\adversary\linking\library_{1}\outputs 1}-\Pr\sbr{\adversary\linking\library_{2}\outputs 1}}\leq\Pr\sbr{\adversary\linking\library_{1}\ \text{sets bad} = 1}.
+			\]
+		\end{lemma}
+	\end{tcolorbox}
+	\begin{proof}
+		
+	\end{proof}
+
+	\newpage
+	\begin{example}
+		Consider $\library_1$ and $\library_{2}$. They are indistinguishable with the following sequence of hybrids:
+		\begin{figure}[h!]\centering
+			\begin{minipage}{.225\textwidth}
+				\begin{tabular}{|c|}
+					\hline
+					\cellcolor{blue!25}$\library_1$\\
+					\hline
+					\begin{tabular}{l}
+						\underline{\texttt{Predict}($x$):}\\
+						\tab $s\uniform\binaryfield^\lambda$\\
+						\tab \textbf{return} $x\isequal s$
+					\end{tabular}\\
+					\hline
+				\end{tabular}
+			\end{minipage}$\equiv$
+			\begin{minipage}{.225\textwidth}
+				\begin{tabular}{|c|}
+					\hline
+					\cellcolor{blue!25}$\library_{\mathsf{hyb}-1}$\\
+					\hline
+					\begin{tabular}{l}
+						$\text{bad} := 0$\\
+						\\
+						\underline{\texttt{Predict}($x$):}\\
+						\tab $s\uniform\binaryfield^\lambda$\\
+						\tab \textbf{if} $x=s$:\\
+						\tab\tab $\text{bad}:=1$\\
+						\tab\tab \textbf{return} $\true$\\
+						\tab \textbf{return} $\false$
+					\end{tabular}\\
+					\hline
+				\end{tabular}
+			\end{minipage}\hspace{8pt} $\indist$\hspace{4pt} 
+			\begin{minipage}{.225\textwidth}
+				\begin{tabular}{|c|}
+					\hline
+					\cellcolor{blue!25}$\library_{\mathsf{hyb}-2}$\\
+					\hline
+					\begin{tabular}{l}
+						$\text{bad} := 0$\\
+						\\
+						\underline{\texttt{Predict}($x$):}\\
+						\tab $s\uniform\binaryfield^\lambda$\\
+						\tab \textbf{if} $x=s$:\\
+						\tab\tab $\text{bad}:=1$\\
+						\\
+						\tab \textbf{return} $\false$
+					\end{tabular}\\
+					\hline
+				\end{tabular}
+			\end{minipage}$\equiv$
+			\begin{minipage}{.225\textwidth}
+				\begin{tabular}{|c|}
+					\hline
+					\cellcolor{blue!25}$\library_2$\\
+					\hline
+					\begin{tabular}{l}
+						\underline{\texttt{Predict}($x$):}\\
+						\tab \textbf{return} \texttt{false}
+					\end{tabular}\\
+					\hline
+				\end{tabular}
+			\end{minipage}
+		\end{figure}
+		\begin{enumerate}[$\blacktriangleright$]
+			\item $\library_{1}\equiv\library_{\mathsf{hyb}-1}$; Without \textit{accessing} the variable ``bad'', the change can have no effect.
+			\item $\library_{\mathsf{hyb}-1}\indist\library_{\mathsf{hyb}-2}$; By the bad-event lemma, \[
+			\abs{\Pr\sbr{\adversary\linking\library_{\mathsf{hyb}-1}\outputs 1}-\Pr\sbr{\adversary\linking\library_{\mathsf{hyb}-2}\outputs 1}}\leq\Pr\sbr{\adversary\linking\library_{\mathsf{hyb}-1}\ \text{sets bad} = 1}.
+			\]
+			\item $\library_{\mathsf{hyb}-2}\equiv\library_{2}$;  Regardless of input, the subroutine always returns $\false$.
+		\end{enumerate}
+		Hence \[
+		\library_{1}\equiv\library_{\mathsf{hyb}-1}\indist\library_{\mathsf{hyb}-2}\equiv\library_{2}\implies\library_{1}\indist\library_{2}.
+	\]
+	\end{example}
+
+	\newpage
 	\section{Birthday Probabilities \& Sampling With/out Replacement}
 	
 	
@@ -825,112 +1028,239 @@
 		\item[\bf 4.2.] Which of the following are negligible functions in $\lambda$? Justify your answers.\[
 		\frac{1}{2^{\lambda/2}}\quad\frac{1}{2^{\log(\lambda^2)}}\quad\frac{1}{\lambda^{\log(\lambda)}}\quad\frac{1}{\lambda^2}\quad\frac{1}{2^{(\log\lambda)^2}}\quad\frac{1}{(\log\lambda)^2}\quad\frac{1}{\lambda^{1/\lambda}}\quad\frac{1}{\sqrt{\lambda}}\quad\frac{1}{2^{\sqrt{\lambda}}}
 		\]
-		\begin{center}
-			\begin{tikzpicture}
-				\begin{axis}[
-					axis lines = left,
-					xlabel = \(\lambda\),
-					ylabel = \(f\),
-					ymin = 0, ymax = 5,
-					xmin = 0, xmax = 5,
-					legend pos=north east,
-					]
-					% Original plot
-					\addplot [
-					domain=0.1:5, 
-					samples=100, 
-					color=red,
-					]
-					{1/2^x};
-					\addlegendentry{\(\frac{1}{2^\lambda}\)}
-					
-					% New plots
-					\addplot [
-					domain=0.1:5, 
-					samples=100, 
-					color=blue,
-					]
-					{1/2^(x/2)};
-					\addlegendentry{\(\frac{1}{2^{\lambda/2}}\)}
-					
-					\addplot [
-					domain=0.1:5, 
-					samples=100, 
-					color=green,
-					]
-					{1/2^(ln(x^2)/ln(2))};
-					\addlegendentry{\(\frac{1}{2^{\log(\lambda^2)}}\)}
-					
-					\addplot [
-					domain=1.1:5, 
-					samples=100, 
-					color=orange,
-					]
-					{1/x^(ln(x)/ln(2))};
-					\addlegendentry{\(\frac{1}{\lambda^{\log(\lambda)}}\)}
-					
-					\addplot [
-					domain=0.1:5, 
-					samples=100, 
-					color=purple,
-					]
-					{1/x^2};
-					\addlegendentry{\(\frac{1}{\lambda^2}\)}
-					
-					\addplot [
-					domain=1.1:5, 
-					samples=100, 
-					color=brown,
-					]
-					{1/2^(ln(x)*ln(x)/ln(2))};
-					\addlegendentry{\(\frac{1}{2^{(\log\lambda)^2}}\)}
-					
-					\addplot [
-					domain=1.1:5, 
-					samples=100, 
-					color=pink,
-					]
-					{1/(ln(x)*ln(x))};
-					\addlegendentry{\(\frac{1}{(\log\lambda)^2}\)}
-					
-					\addplot [
-					domain=1.1:5, 
-					samples=100, 
-					color=gray,
-					]
-					{1/x^(1/x)};
-					\addlegendentry{\(\frac{1}{\lambda^{1/\lambda}}\)}
-					
-					\addplot [
-					domain=0.1:5, 
-					samples=100, 
-					color=cyan,
-					]
-					{1/sqrt(x)};
-					\addlegendentry{\(\frac{1}{\sqrt{\lambda}}\)}
-					
-					\addplot [
-					domain=0.1:5, 
-					samples=100, 
-					color=olive,
-					]
-					{1/2^(sqrt(x))};
-					\addlegendentry{\(\frac{1}{2^{\sqrt{\lambda}}}\)}
-				\end{axis}
-			\end{tikzpicture}
-		\end{center}
-		\begin{tcolorbox}[colframe=magenta, breakable, enhanced]
-			
-			\begin{proof}[\sol]
-				\ 
-				\begin{enumerate}[(1)]
-					\item $\frac{1}{2^{\lambda/2}},\frac{1}{2^{\log(\lambda^2)}},\frac{1}{\lambda^{\log(\lambda)}},\frac{1}{\lambda^2},\frac{1}{2^{(\log\lambda)^2}},\frac{1}{2^{\sqrt{\lambda}}}$ are negligible functions.
-					\item  $\frac{1}{(\log\lambda)^2},\frac{1}{\lambda^{1/\lambda}},\frac{1}{\sqrt{\lambda}}$ are non-negligible functions.
-				\end{enumerate}
-			\end{proof}
-		\end{tcolorbox}
+		\begin{proof}[\sol]
+			\ \begin{enumerate}[(1)]
+			\item $\displaystyle\frac{1}{2^{\lambda/2}},\frac{1}{2^{\log(\lambda^2)}},\frac{1}{\lambda^{\log(\lambda)}},\frac{1}{\lambda^2},\frac{1}{2^{(\log\lambda)^2}},\frac{1}{(\log\lambda)^2},\frac{1}{\sqrt{\lambda}},\frac{1}{2^{\sqrt{\lambda}}}$ are negligible functions.
+			\begin{figure}[h!]\centering
+				\begin{minipage}{.46\textwidth}
+					\begin{tikzpicture}[scale=.9]
+						\begin{axis}[
+							axis lines = left,
+							xlabel = \(\lambda\),
+							ylabel = \(f\),
+							ymin = 0, ymax = 1.1,
+							xmin = 0, xmax = 25,
+							legend style={at={(.7,.6)},anchor=west}
+							]
+							% Original plot
+							\addplot [
+							line width = .7mm,
+							domain=0.1:25, 
+							samples=100, 
+							color=red,
+							]
+							{1/2^x};
+							\addlegendentry{\(\frac{1}{2^\lambda}\)}
+							
+							% New plots
+							\addplot [
+							line width = .7mm,
+							domain=0.1:25, 
+							samples=100, 
+							color=blue,
+							]
+							{1/2^(x/2)};
+							\addlegendentry{\(\frac{1}{2^{\lambda/2}}\)}
+							
+							\addplot [
+							line width = .7mm,
+							domain=0.1:25, 
+							samples=100, 
+							color=green,
+							]
+							{1/2^(ln(x^2)/ln(2))};
+							\addlegendentry{\(\frac{1}{2^{\log(\lambda^2)}}\)}
+							
+							\addplot [
+							line width = .7mm,
+							domain=1.1:25, 
+							samples=100, 
+							color=orange,
+							]
+							{1/x^(ln(x)/ln(2))};
+							\addlegendentry{\(\frac{1}{\lambda^{\log(\lambda)}}\)}
+							
+							\addplot [
+							line width = .7mm,
+							domain=0.1:25, 
+							samples=100, 
+							color=purple,
+							]
+							{1/x^2};
+							\addlegendentry{\(\frac{1}{\lambda^2}\)}
+							
+							\addplot [
+							line width = .7mm,
+							domain=1.1:25, 
+							samples=100, 
+							color=brown,
+							]
+							{1/2^(ln(x)*ln(x))};
+							\addlegendentry{\(\frac{1}{2^{(\log\lambda)^2}}\)}
+							
+							\addplot [
+							line width = .7mm,
+							domain=1.1:25, 
+							samples=100, 
+							color=pink,
+							]
+							{1/(ln(x)*ln(x))};
+							\addlegendentry{\(\frac{1}{(\log\lambda)^2}\)}
+
+							\addplot [
+							line width = .7mm,
+							domain=1.1:25, 
+							samples=100, 
+							color=cyan,
+							]
+							{1/sqrt(x)};
+							\addlegendentry{\(\frac{1}{\sqrt{\lambda}}\)}
+							
+							\addplot [
+							line width = .7mm,
+							domain=0.1:25, 
+							samples=100, 
+							color=olive,
+							]
+							{1/2^(sqrt(x))};
+							\addlegendentry{\(\frac{1}{2^{\sqrt{\lambda}}}\)}
+						\end{axis}
+					\end{tikzpicture}
+				\end{minipage}\begin{minipage}{.46\textwidth}
+				\begin{tikzpicture}[scale=.9]
+					\begin{axis}[
+						axis lines = left,
+						xlabel = \(\lambda\),
+						ylabel = \(f\),
+						ymin = 0, ymax = 1.1,
+						xmin = 0, xmax = 1024,
+						legend style={at={(.7,.6)},anchor=west}
+						]
+						% Original plot
+						\addplot [
+						line width = .7mm,
+						domain=0.1:1024, 
+						samples=100, 
+						color=red,
+						]
+						{1/2^x};
+						\addlegendentry{\(\frac{1}{2^\lambda}\)}
+						
+						% New plots
+						\addplot [
+						line width = .7mm,
+						domain=0.1:1024, 
+						samples=100, 
+						color=blue,
+						]
+						{1/2^(x/2)};
+						\addlegendentry{\(\frac{1}{2^{\lambda/2}}\)}
+						
+						\addplot [
+						line width = .7mm,
+						domain=0.1:1024, 
+						samples=100, 
+						color=green,
+						]
+						{1/2^(ln(x^2)/ln(2))};
+						\addlegendentry{\(\frac{1}{2^{\log(\lambda^2)}}\)}
+						
+						\addplot [
+						line width = .7mm,
+						domain=1.1:1024, 
+						samples=100, 
+						color=orange,
+						]
+						{1/x^(ln(x)/ln(2))};
+						\addlegendentry{\(\frac{1}{\lambda^{\log(\lambda)}}\)}
+						
+						\addplot [
+						line width = .7mm,
+						domain=0.1:1024, 
+						samples=100, 
+						color=purple,
+						]
+						{1/x^2};
+						\addlegendentry{\(\frac{1}{\lambda^2}\)}
+						
+						\addplot [
+						line width = .7mm,
+						domain=1.1:1024, 
+						samples=100, 
+						color=brown,
+						]
+						{1/2^(ln(x)*ln(x))};
+						\addlegendentry{\(\frac{1}{2^{(\log\lambda)^2}}\)}
+						
+						
+						\addplot [
+						line width = .7mm,
+						domain=1.1:1024, 
+						samples=100, 
+						color=pink,
+						]
+						{1/(ln(x)*ln(x))};
+						\addlegendentry{\(\frac{1}{(\log\lambda)^2}\)}
+						
+						\addplot [
+						line width = .7mm,
+						domain=1.1:1024, 
+						samples=100, 
+						color=cyan,
+						]
+						{1/sqrt(x)};
+						\addlegendentry{\(\frac{1}{\sqrt{\lambda}}\)}
+						
+						\addplot [
+						line width = .7mm,
+						domain=0.1:1024, 
+						samples=100, 
+						color=olive,
+						]
+						{1/2^(sqrt(x))};
+						\addlegendentry{\(\frac{1}{2^{\sqrt{\lambda}}}\)}
+					\end{axis}
+				\end{tikzpicture}
+		\end{minipage}
+				\captionof{figure}{Negligible functions.}
+			\end{figure}
+			\item  $\displaystyle\frac{1}{\lambda^{1/\lambda}}$ is non-negligible functions.
+			\begin{figure}[h!]\centering
+					\begin{tikzpicture}[scale=.9]
+						\begin{axis}[
+							axis lines = left,
+							xlabel = \(\lambda\),
+							ylabel = \(f\),
+							ymin = 0, ymax = 1.1,
+							xmin = 0, xmax = 25,
+							legend style={at={(.7,.5)},anchor=west}
+							]
+							% Original plot
+							\addplot [
+							line width = .7mm,
+							domain=0:25, 
+							samples=100, 
+							color=red,
+							]
+							{1/2^x};
+							\addlegendentry{\(\frac{1}{2^x}\)}
+							
+							\addplot [
+							line width = .7mm,
+							domain=.9:25, 
+							samples=100, 
+							color=gray,
+							]
+							{1/x^(1/x)};
+							\addlegendentry{\(\frac{1}{\lambda^{1/\lambda}}\)}
+						\end{axis}
+					\end{tikzpicture}
+				\captionof{figure}{Non-negligible functions.}
+			\end{figure}
+		\end{enumerate}
+		\end{proof}
 		\item[\bf 4.4.] Show that when $f$ is negligible, then for every polynomial $p$, the function $p(\lambda)f(\lambda)$ not only approaches $0$, but it is also negligible itself.
-		\begin{tcolorbox}[colframe=magenta, breakable, enhanced]
+		%\begin{tcolorbox}[colframe=magenta, breakable, enhanced]
 			\begin{proof}[\sol]
 				We want to show that \[
 				p(\lambda)f(\lambda)\ \text{is non-negligible}\implies\text{$f$ is non-negligible}.
@@ -940,10 +1270,10 @@
 				\lim\limits_{\lambda\to\infty} q(\lambda)=\frac{c}{\lim\limits_{\lambda\to\infty}p(\lambda)f(\lambda)}=\frac{c}{\text{constant}}.
 				\] Thus \(\lim\limits_{\lambda\to\infty}p(\lambda)f(\lambda)\) cannot be a zero.
 			\end{proof}
-		\end{tcolorbox}
+		%\end{tcolorbox}
 		\vspace{8pt}
 		\item[\bf 4.8.] A deterministic program is one that uses no random choices. Suppose $\library_{1}$ and $\library_{2}$ are two deterministic libraries with a common interface. Show that either $\library_{1}\equiv\library_{2}$, or else $\library_{1}\&\library_{2}$ can be distinguished with advantage 1.
-		\begin{tcolorbox}[colframe=magenta, breakable, enhanced]
+		%\begin{tcolorbox}[colframe=magenta, breakable, enhanced]
 			\begin{proof}[\sol]
 				Since both \(\library_{1}\) and \(\library_{2}\) are deterministic libraries,  they will always produce the same output for the same input, \ie, either \[
 				\library_{1}(x)=\library_{2}(x)\quad\text{or}\quad \library_{1}(x)\neq\library_{2}(x)
@@ -961,8 +1291,8 @@
 					\end{enumerate}
 				\end{enumerate}
 			\end{proof}
-		\end{tcolorbox}
-		\vspace{8pt}
+		%\end{tcolorbox}
+		\newpage
 		\item[\bf 4.12.] Suppose you want to enforce password rules so that at least \(2^{128}\) passwords satisfy the
 		rules. How many characters long must the passwords be, in each of these cases?
 		\begin{enumerate}[(a)]
@@ -975,7 +1305,7 @@
 				\caption{Standard US Keyboard ( \url{https://kbd-intl.narod.ru/english/layouts})}
 			\end{figure}
 		\end{enumerate}
-		\begin{tcolorbox}[colframe=magenta, breakable, enhanced]
+		%\begin{tcolorbox}[colframe=magenta, breakable, enhanced]
 			\begin{proof}[\sol]
 				We want to create a password system that allows for at least \(2^{128}\) (16 bytes) different passwords.
 				\begin{enumerate}[(a)]
@@ -997,7 +1327,7 @@
 					\]
 				\end{enumerate}
 			\end{proof}
-		\end{tcolorbox}
+		%\end{tcolorbox}
 		\begin{figure}[h!]
 			\centering
 			\includegraphics[scale=.75]{4_12.png}
@@ -1013,7 +1343,7 @@ Y_values = [26, 52, 62, 95]
 plt.figure(figsize=(10,6))
 
 # Loop through each Y value
-	for Y in Y_values:
+for Y in Y_values:
 	# Calculate the expression for each X value
 	Z = [x * log(2) / log(Y) for x in X_values]
 	
@@ -1030,5 +1360,11 @@ plt.grid(True)
 plt.show()
 \end{lstlisting}
 	\end{itemize}
+
+	\begin{thebibliography}{9}
+		\bibitem{textbook}
+		M. Rosulek, \textit{The Joy of Cryptography}, [Online]. Available: \url{https://joyofcryptography.com}
+	\end{thebibliography}
+
 	% End document
 \end{document}
