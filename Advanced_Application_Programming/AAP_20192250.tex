@@ -1,0 +1,1349 @@
+\documentclass[12pt,openany]{book}
+
+\usepackage{amsmath,amsthm,amsfonts,amscd} % Packages for mathematics
+\usepackage{commath}
+% Colors
+\usepackage[dvipsnames, table]{xcolor}
+\definecolor{titleblue}{RGB}{0,53,128}
+\definecolor{chaptergray}{RGB}{140,140,140}
+\definecolor{sectiongray}{RGB}{180,180,180}
+
+\definecolor{thmcolor}{RGB}{231, 76, 60}
+\definecolor{defcolor}{RGB}{52, 152, 219}
+\definecolor{lemcolor}{RGB}{155, 89, 182}
+\definecolor{corcolor}{RGB}{46, 204, 113}
+\definecolor{procolor}{RGB}{241, 196, 15}
+
+% Fonts
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{newpxtext,newpxmath}
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\color{titleblue}\mdseries}
+
+% Page layout
+\usepackage{geometry}
+\geometry{a4paper,left=.75in,right=.55in,top=1in,bottom=1in,heightrounded}
+\usepackage{fancyhdr}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[LO]{\nouppercase{\rightmark}}
+\fancyhead[RE]{\nouppercase{\leftmark}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Chapter formatting
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+{\normalfont\sffamily\Huge\bfseries\color{titleblue}}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titleformat{\section}
+{\normalfont\sffamily\Large\bfseries\color{titleblue!100!gray}}{\thesection}{1em}{}
+\titleformat{\subsection}
+{\normalfont\sffamily\large\bfseries\color{titleblue!75!gray}}{\thesubsection}{1em}{}
+
+% Table of contents formatting
+\usepackage{tocloft}
+\renewcommand{\cftchapfont}{\sffamily\color{titleblue}\bfseries}
+\renewcommand{\cftsecfont}{\sffamily\color{chaptergray}}
+\renewcommand{\cftsubsecfont}{\sffamily\color{sectiongray}}
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+
+% Hyperlinks
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=titleblue,
+	filecolor=black,      
+	urlcolor=titleblue,
+}
+
+%Listing
+\usepackage{listings} %Code
+\renewcommand{\lstlistingname}{Code}%
+
+\definecolor{sagegreen}{rgb}{0.0,0.6,0.4}
+\definecolor{sagepurple}{rgb}{0.6,0.0,0.4}
+\definecolor{sageblue}{rgb}{0.0,0.4,0.6}
+\definecolor{sageorange}{rgb}{1.0,0.4,0.0}
+\definecolor{sagegray}{rgb}{0.4,0.4,0.4}
+
+\lstdefinestyle{sage}{
+	language=Python,
+	backgroundcolor=\color{white},
+	basicstyle=\small\ttfamily\color{black}, 
+	basicstyle=\footnotesize\ttfamily\color{black},
+	keywordstyle=\color{blue!60!black},
+	commentstyle=\color{green!60!black},
+	stringstyle=\color{purple!60!black},
+	showstringspaces=false,
+	breaklines=true,
+	tabsize=4,
+	morekeywords={True, False, None},
+	frame=leftline, % Remove the border
+	framesep=3pt,
+	frameround=tttt,
+	framexleftmargin=3pt,
+	numbers=left,
+	numberstyle=\small\color{gray},
+	xleftmargin=15pt, % Increase the left margin
+	xrightmargin=5pt,
+	captionpos=b,
+	belowskip=0pt,
+	aboveskip=4pt
+}
+
+\lstdefinestyle{C}{
+	backgroundcolor=\color{white},
+	basicstyle=\ttfamily\color{black},
+	commentstyle=\color{green!70!black},
+	keywordstyle=\bfseries\color{blue},
+	numberstyle=\tiny\color{gray},
+	stringstyle=\color{purple},
+	showstringspaces=false,
+	breaklines=true,
+	morekeywords={True, False, None},
+	frame=single,
+	framesep=3pt,
+	%frameround=tttt,
+	framexleftmargin=3pt,
+	numbers=left,
+	numberstyle=\small\color{gray},
+	xleftmargin=15pt, % Increase the left margin
+	xrightmargin=5pt,
+	language=C,
+	tabsize=4,
+	belowskip=0pt,
+	aboveskip=4pt
+}
+
+%Ceiling and Floor Function
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+
+%Algorithm
+\usepackage[ruled,linesnumbered]{algorithm2e}
+\usepackage{setspace}
+\usepackage{algpseudocode}
+\SetKwComment{Comment}{/* }{ */}
+\SetKw{Break}{break}
+\SetKw{End}{end}
+\SetKw{Downto}{downto}
+\SetKwProg{Fn}{Function}{:}{end}
+\SetKwProg{Procedure}{procedure}{:}{end}
+\SetKwFunction{KeyGen}{KeyGen}
+
+
+%---------------------------My Preamble
+\usepackage{marvosym} %Lightning
+\usepackage{booktabs}
+\usepackage{multicol}
+\setlength{\columnsep}{2cm}
+\setlength{\columnseprule}{1.25pt}
+\usepackage{enumerate}
+\usepackage{soul}
+\newcommand{\mathcolorbox}[2]{\colorbox{#1}{$\displaystyle #2$}}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows, arrows.meta, positioning, shapes.multipart}
+\usepackage{tabularx}
+\usepackage{multirow}
+
+
+%Tcolorbox
+\usepackage[most]{tcolorbox}
+\tcbset{colback=white, arc=5pt}
+%\tcbset{enhanced, colback=white,colframe=black,fonttitle=\bfseries,arc=4mm,boxrule=1pt,shadow={2mm}{-1mm}{0mm}{black!50}}
+%White box with black text and shadow
+%\begin{tcolorbox}[colback=white,colframe=black,fonttitle=\bfseries,title=Black Shadow Box,arc=4mm,boxrule=1pt,shadow={2mm}{-1mm}{0mm}{black!50}]
+%	This is a white box with black text and a subtle shadow. The shadow adds some depth and dimension to the box without overpowering the design.
+%\end{tcolorbox}
+
+%Theorem
+\newtheorem{axiom}{Axiom}[chapter]
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{remark}{Remark}[chapter]
+\newtheorem{exercise}{Exercise}[chapter]
+\newtheorem{example}{Example}[chapter]
+\newtheorem*{note}{Note}
+
+%New Command
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+
+\newcommand{\of}[1]{\left( #1 \right)} 
+
+\newcommand{\ie}{\textnormal{i.e.}}
+\newcommand{\eg}{\textnormal{e.g.}}
+
+\newcommand{\wordlen}{\mathsf{wordlen}}
+\newcommand{\core}{\mathsf{Core}}
+\newcommand{\ADD}{\mathsf{ADD}}
+\newcommand{\SUB}{\mathsf{SUB}}
+\newcommand{\MUL}{\mathsf{MUL}}
+\newcommand{\DIV}{\mathsf{DIV}}
+
+\newcommand{\zero}{\textcolor{red}{\texttt{0}}}
+\newcommand{\one}{\textcolor{red}{\texttt{1}}}
+
+% Begin document
+\begin{document}
+	
+	% Title page
+	\begin{titlepage}
+		\begin{center}
+			{\Huge\textsf{\textbf{Advanced Application Programming}}\par}
+			{\Large\textsf{\textcolor{red!70!white}{\bf - Big Integer Library and DLP Calculator -}}\par}
+			\vspace{0.5in}
+			{\Large Ji Yong-Hyeon\par}
+			\vspace{1in}
+			\includegraphics[scale=2]{aap2.jpg}\par
+%			\includegraphics[scale=.6]{panda4.png}\par
+			\vspace{1in}
+			\large
+			{\bf Department of Information Security, Cryptology, and Mathematics\par}
+			{College of Science and Technology\par}
+			{Kookmin University\par}
+			%\includegraphics[width=1.5in]{school_logo.jpg}\par
+			\vspace{.25in}
+			{\large \today\par}
+		\end{center}
+	\end{titlepage}
+	
+	% Table of contents
+	\tableofcontents
+	
+	% Chapters
+	\mainmatter
+	
+	\chapter{Preliminaries}
+	\section{Set-up}
+	\begin{lstlisting}[style=C, caption={},captionpos=t]
+typedef unsigned char u8;
+typedef unsigned short u16;
+typedef unsigned int u32;
+typedef unsigned long u64;
+
+#define false 0
+#define true !false
+#define MAX(x1, x2) (x1 > x2 ? x1 : x2)
+#define MIN(x1, x2) (x1 < x2 ? x1 : x2)
+
+void exit_on_null_error(const void* ptr, const char* ptr_name, const char* function_name) {
+	if(!ptr) {
+		fprintf(stderr, "Error: '%s' is NULL in '%s'\n", ptr_name, function_name);
+		exit(1);
+	}
+}
+
+#define CHECK_PTR_AND_DEREF(ptr, name, func) \
+do { \
+	exit_on_null_error(ptr, name, func); \
+	exit_on_null_error(*ptr, "*" name, func); \
+} while(0)
+
+#define CHECK_PTR_DEREF_AND_VAL(ptr, name, func) \
+do { \
+	exit_on_null_error(ptr, name, func); \
+	exit_on_null_error(*ptr, "*" name, func); \
+	if(*ptr) exit_on_null_error((*ptr)->val, "(*" name ")->val", func); \
+} while(0)
+	\end{lstlisting}
+	\section{Data Structure}
+	\begin{lstlisting}[style=C, caption={},captionpos=t]
+#define WORD_BITLEN 32
+
+// Supports operations in 8-bit, 32-bit, and 64-bit units.
+#if WORD_BITLEN == 8
+typedef u8 WORD;
+#elif WORD_BITLEN == 64
+typedef u64 WORD:
+#else
+typedef u32 WORD;
+#endif
+
+typedef struct {
+	bool sign;      // 
+	int wordlen;    //
+	WORD* val;      // 
+} BINT;
+	\end{lstlisting}
+	\vspace{30pt}
+	\begin{lstlisting}[style=C, caption={},captionpos=t]
+BINT bint;
+BINT* ptrBint = &bint;
+BINT** pptrBint = &ptrBint;
+	\end{lstlisting}
+	\begin{center}
+	\begin{tikzpicture}[node distance=.05cm, every node/.style={draw, rectangle, align=center, minimum height=1cm}]
+		
+		% First block pptrBint
+		\node (pptrBint) {pptrBint};
+		\node [below=of pptrBint] (address1) {[address]};
+		
+		% Second block ptrBint to the right of pptrBint
+		\node[right=2cm of pptrBint] (ptrBint) {ptrBint};
+		\node [below=of ptrBint] (address2) {[address]};
+		
+		% Arrows from pptrBint to ptrBint
+		\draw[->, thick] (address1.east) -- (ptrBint.west);
+		
+		% Third block bint to the right of ptrBint
+		\node[right=2cm of ptrBint] (bint) {bint};
+		\node [below=0.2cm of bint, draw=none, align=left] (details) {sign: false(+)\\ wordlen: n};
+		\node [below=of details] (address3) {val: [address]};
+		
+		% Arrows from ptrBint to bint
+		\draw[->, thick] (address2.east) -- (bint.west);
+		
+		% Array of WORDs to the right of bint
+		\node [right=1.5cm of address3, minimum width=1cm] (word0) {WORD[0]};
+		\node [right=of word0, minimum width=1cm] (word1) {WORD[1]};
+		\node [right=of word1, draw=none, minimum width=1cm] (dots) {\ldots};
+		\node [right=of dots, minimum width=1cm] (wordn) {WORD[n-1]};
+		
+		% Arrows from val address to WORD array
+		\draw[->, thick] (address3.east) -- (word0.west);
+		
+	\end{tikzpicture}
+%	\begin{tikzpicture}[node distance=1cm, block/.style={rectangle, draw, minimum width=6cm, align=center}]
+%		% BINT Memory Structure
+%		\node[block, fill=blue!10] (sign) {bool sign};
+%		\node[block, fill=green!10, below=0.2cm of sign] (wordlen) {int wordlen};
+%		\node[block, fill=orange!10, below=0.2cm of wordlen] (val) {WORD* val};
+%		
+%		% Label
+%		\node[left=0.5cm of sign] (label) {BINT};
+%		
+%		% Optional: Highlighting that WORD* points to another location
+%		\node[block, fill=red!10, right=2cm of val, minimum width=2.5cm] (wordVal) {WORD};
+%		\draw[->] (val.east) -- node[above, midway] {points to} (wordVal.west);
+%	\end{tikzpicture}
+	\end{center}
+	\newpage
+	\section{Initialization and Delete BINT: \texttt{init\_bint}, \texttt{delete\_bint}}
+	\begin{lstlisting}[style=C, caption={},captionpos=t]
+BINT* init_bint(BINT** pptrBint, int wordlen) {
+	// Allocate memory for BINT structure
+	*pptrBint = (BINT*)malloc(sizeof(BINT));
+	if(!(*pptrBint)) {
+		fprintf(stderr, "Error: Unable to allocate memory for BINT.\n");
+		exit(1);
+	}
+	// Allocate memory for val (array of WORD)
+	(*pptrBint)->val = (WORD*)calloc(wordlen,sizeof(WORD));
+	if (!(*pptrBint)->val) {
+		free(*pptrBint); // freeing the already allocated BINT memory before exiting
+		fprintf(stderr, "Error: Unable to allocate memory for BINT val.\n");
+		exit(1);
+	}
+	// Initialize structure members
+	(*pptrBint)->sign = false;
+	(*pptrBint)->wordlen = wordlen;
+	return *pptrBint;
+}
+
+void delete_bint(BINT** pptrBint) { // ptrBint = *pptrBint
+	if (pptrBint && *pptrBint) {
+		free((*pptrBint)->val); // Free the allocated memory for val
+		free(*pptrBint); // Free the allocated memory for BINT structure
+		*pptrBint = NULL; // Set the pointer to NULL after freeing memory to avoid using a dangling pointer
+	}
+}
+	\end{lstlisting}
+	\newpage
+	\section{Copy BINT: \texttt{copy\_BINT}}
+	\begin{lstlisting}[style=C, caption={},captionpos=t]
+void copy_BINT(BINT** pptrBint_dst, BINT** pptrBint_src) {
+	CHECK_PTR_AND_DEREF(pptrBint_src, "pptrBint_src", "copy_BINT");
+	
+	if(*pptrBint_dst != NULL)
+	delete_bint(pptrBint_dst);
+	
+	*pptrBint_dst = (BINT*)calloc(1, sizeof(BINT));
+	(*pptrBint_dst)->val = (WORD*)calloc((*pptrBint_src)->wordlen, sizeof(WORD));
+	for(int i = 0; i < (*pptrBint_src)->wordlen; i++)
+	(*pptrBint_dst)->val[i] = (*pptrBint_src)->val[i];
+	
+	(*pptrBint_dst)->wordlen = (*pptrBint_src)->wordlen;
+	(*pptrBint_dst)->sign = (*pptrBint_src)->sign;
+}
+	\end{lstlisting}
+	\newpage
+	\chapter{Addition and Subtraction}
+	\section{Addition}
+	\subsection{Memory for Addition}
+	\begin{remark}
+		A positive integer \(A\in\intco{W^{n-1},W^n}\) is a \(n\)-word string.
+	\end{remark}
+	
+	\begin{tcolorbox}[colframe=procolor,title={\color{white}\bf Upper and Lower Bound of Addition}]
+		\begin{proposition}
+			Let $A$ and $B$ are \(n\)-word and \(m\)-word strings, respectively, \ie, \[
+			A\in[W^{n-1},W^{n}-1],\quad B\in[W^{m-1},W^m-1].
+			\] Then \[
+			W^{\max(n,m)-1}<A+B<W^{\max(m,n)+1}.
+			\]
+		\end{proposition}
+	\end{tcolorbox}
+	\begin{proof}
+		$A$ and $B$ can be expressed as follows: 
+		$\begin{cases}
+			A=aW^{n-1}+A'\\
+			B=bW^{m-1}+B'
+		\end{cases}$ where \[
+		a,b\in(0,W),\quad A'\in[0,W^{n-1}-1],\quad B'\in[0,W^{m-1}-1].
+		\]
+		Suppose that \(n\geq m\) then \begin{align*}
+			W^{n-1}\leq\max(A,B)<A+B
+			&=(aW^{n-1}+A')+(bW^{m-1}+B')\\
+			&<(a+b)W^{n-1}+(W^{n-1}+W^{n-1})\\
+			&=(a+b+2)W^{n-1}\\
+			&\leq((W-1)+(W-1)+2)W^{n-1}\\
+			&=2W^n\leq W^{n+1}.
+		\end{align*} Thus $
+		W^{n-1}<A+B<W^{n+1}.
+		$ Here, \(n=\max(n,m)\).
+	\end{proof}
+
+	\begin{tcolorbox}[colframe=corcolor,title={\color{white}\bf }]
+		\begin{corollary}
+			\[
+			\wordlen(A)=n,\wordlen(B)=m\implies\wordlen(A+B)\leq\max(n,m)+1.
+			\]
+		\end{corollary}
+	\end{tcolorbox}
+
+	\subsection{Single-Word Addition: \texttt{add\_carry}}
+	\begin{example}
+		\ \begin{lstlisting}[style=C, caption={},captionpos=t]
+#include<stdio.h>
+int main() {
+	int x = 0x12345678; int y = 0xffffffff;
+	printf("%08x + %08x = %08x\n", x, y, x+y);
+	
+	return 0;
+}
+/**
+ * 12345678 + ffffffff = 12345677
+*/
+		\end{lstlisting}
+		\begin{align*}
+			\texttt{0x12345678}\boxplus\texttt{0xffffffff} &= (\texttt{0x12345678} + \underbrace{\texttt{0xffffffff}}_{2^{32}-1}) \bmod 2^{32}\\
+			&=(\texttt{0x12345678} + (-\texttt{0x01})) \bmod 2^{32}\\
+			&=\texttt{0x12345677}.
+		\end{align*} Note that \(\texttt{0x1234568}+\texttt{0xffffffff}=\texttt{0x112345677}\)
+	\end{example}
+
+	\begin{tcolorbox}[colframe=procolor,title={\color{white}\bf Single-Word Addition \(A+B\)}]
+		\begin{proposition}\hypertarget{prop2.2}{}
+			Let \(A,B\in[0,W-1]\). \begin{enumerate}[(1)]
+				\item \begin{align*}
+					A+B=\floor*{\frac{A+B}{W}}W+((A+B)\bmod W)
+					=\floor*{\frac{A+B}{W}}W+(A\boxplus B).
+				\end{align*}
+				\item (carry) \(\floor*{\frac{A+B}{W}}\in\set{0,1}\).
+				\item \(0\leq A+B< W^2\), \ie, \(\wordlen(A+B)\leq 2\).
+				\item \(\mathcolorbox{yellow}{W\leq A+B,\ie,\floor*{\frac{A+B}{W}}=1\iff (A\boxplus B< A)\lor (A\boxplus B<B)}\).
+			\end{enumerate}
+		\end{proposition}
+	\end{tcolorbox}
+	\begin{proof}
+		\begin{enumerate}[(1)]
+			\item Use Division Algorithm.
+			\item Clearly, \(0\leq A+B<W+W=2W\). Then 
+			\[
+			0\leq\floor*{\frac{A+B}{W}}<\floor{2}\implies0\leq\floor*{\frac{A+B}{W}}\leq 1.
+			\]
+			\item \(0\leq A+B<2W\leq W^2\) for \(W\geq 2\). 
+			\item \begin{itemize}
+				\item[(\(\Rightarrow\))] Suppose that \(A+B\geq W\). Since \(A+B\in[W,2W-1]\), we have \begin{align*}
+					A\boxplus B=(A+B)-W&=A-(W-B)\\
+					&<A\quad\because B<W,\ie, W-B>0.
+				\end{align*}
+				\item[(\(\Leftarrow\))] Let's prove it using contraposition:  \[
+				A+B<W\implies A\boxplus B\geq A.
+				\] Assume that \(A+B<W\) then \[
+				A\boxplus B=A+B\geq A.
+				\]
+			\end{itemize}
+		\end{enumerate}
+	\end{proof}
+
+	\begin{algorithm}[H]
+		\caption{Single Word Addition}
+		\KwIn{Single-word strings \(X,Y\in[0,W-1]\)}
+		\KwOut{$q\in\set{0,1}$ and $r\in[0,W-1]$ s.t. \(X+Y=qW+r\)}
+		\(q\gets 0\)\;
+		\(r\gets X\boxplus Y\)\tcp*{$K\gets X+Y$ in C}
+		\If{\(r<X\)}{
+			\(q\gets 1\)\tcp*{\(r<X\lor r<Y\Rightarrow q\neq 0\Rightarrow q=1\)}
+		}
+		\Return \(q,r\)\;
+	\end{algorithm}
+	\vspace{8pt}
+	\begin{tcolorbox}[colframe=procolor,title={\color{white}\bf Single-Word Addition with Carry \(A+B+c\)}]
+		\begin{proposition}
+			Let \(A,B\in[0,W-1]\) and \(c\in\set{0,1}\). \begin{enumerate}[(1)]
+				\item (carry) \(\displaystyle\floor*{\frac{A+B+c}{W}}\in\set{0,1}\).
+				\item \(0\leq A+B+c< W^2\), \ie, \(\wordlen(A+B+c)\leq 2\).
+				\item \({W\leq A+B\implies 0\leq (A\boxplus B)+c<W}\). In other words, \[
+				\mathcolorbox{yellow}{\floor*{\frac{A+B}{W}}=1
+				\implies\floor*{\frac{A\boxplus B+c}{W}}=0
+				}.
+				\]
+			\end{enumerate}
+		\end{proposition}
+	\end{tcolorbox}
+	\begin{proof}
+		\begin{enumerate}[(1)]
+			\item $ 0\leq A+B+c\leq (W-1)+(W-1)+1=2W-1<2W
+				\implies 0\leq\frac{A+B+c}{W}<2.$
+			\item \(0\leq A+B+c<2W\leq W^2\).
+			\item Suppose that \(W\leq A+B\). By \hyperlink{prop2.2}{\bf Proposition 2.2}, we have \[
+			0\leq (A\boxplus B)+c<A+c\leq (W-1)+1=W.
+			\]
+		\end{enumerate}
+	\end{proof}
+
+	\begin{algorithm}[H]
+		\caption{\(\ADD^{\mathsf{XYk}}(X,Y,k)\)}
+		\KwIn{Single-word strings \(X,Y\in[0,W-1]\) and carry \(k\in\set{0,1}\)}
+		\KwOut{$q\in\set{0,1}$ and $r\in[0,W-1]$ s.t. \(X+Y+k=qW+r\)}
+		\Fn{$\ADD^{\mathsf{XYk}}(X,Y,k)$}{
+			$q\gets 0$\;
+			\(r\gets X\)\;
+			\If{\(r<X\)}{
+				\(q\gets1\)\;
+			}
+			\(r\gets r\boxplus k\)\tcp*{\(X\boxplus Y\boxplus k\)}
+			\If{\(r<k\)}{
+				\Comment{\((X\boxplus Y\boxplus k)=r<k\iff W\leq X\boxplus Y\boxplus k\implies q=\floor*{(X\boxplus Y\boxplus k)/W}=1\)}
+				\(q\gets q+1\)\;
+			}
+			\Comment{By Prop. 2.3 - (3), if line 4 is Ture then line 8 must be False}
+			\Return \(q,r\)\;
+		}
+	\end{algorithm}
+	\vspace{20pt}
+	\begin{lstlisting}[style=C, caption={},captionpos=t]
+void add_carry(WORD x, WORD y, WORD k, WORD* ptrQ, WORD* ptrR) {
+	if (WORD_BITLEN == 8 || WORD_BITLEN == 32) {
+		u64 result = (u64)x + (u64)y + (u64)k;
+		*ptrR = (WORD)result;
+		*ptrQ = result >> WORD_BITLEN;
+	} else if (WORD_BITLEN == 64) {
+		const WORD HALF_MASK = (1ULL << 32) - 1;
+		const u64 LOW_X = x & HALF_MASK;
+		const u64 HIGH_X = x >> 32;
+		const u64 LOW_Y = y & HALF_MASK;
+		const u64 HIGH_Y = y >> 32;
+		
+		// Add the lower halves
+		u64 low_result = LOW_X + LOW_Y + (k & HALF_MASK);
+		// Check if there was a carry from the lower half
+		u64 low_carry = (low_result > HALF_MASK) ? 1 : 0;
+		// Add the upper halves
+		u64 high_result = HIGH_X + HIGH_Y + (k >> 32) + low_carry;
+		// Return results
+		*ptrR = (high_result << 32) | (low_result & HALF_MASK);
+		*ptrQ = (high_result >> 32);  // Carry from the higher half
+	} else {
+		fprintf(stderr, "Unsupported WORD size in 'add_carry'\n");
+		exit(1);
+	}
+	// *ptrR = x + y; *ptrQ = (*ptrR < x);
+	// *ptrR += k; *ptrQ += (*ptrR < (x+y));
+}
+	\end{lstlisting}
+
+	\subsection{Muti-Precision Addition: \texttt{add\_core\_xyz}}
+	\begin{algorithm}[H]
+		\caption{\(\ADD^{\core}(X,Y)\)}
+		\KwIn{\(n\)-word string \(X=(-1)^{\mathsf{sign}}\sum_{i=0}^{n-1}x_iW^i\) and \(m\)-word string \(Y=(-1)^{\mathsf{sign}}\sum_{i=0}^{m-1}y_iW^i\), where \(a_i,b_i\in[0,W-1],\mathsf{sign}\in\set{0,1}\) and \(n\geq m\).}
+		\KwOut{\(Z=X+Y=(-1)^\mathsf{sign}\sum_{i=0}^lz_iW^i\), where \(z_i\in[0,W-1]\) and \(l\in\set{n-1,n}\)}
+		\Fn{$\ADD^{\core}(X,Y)$}{
+			\For{\(i=m\) \KwTo \(n-1\)}{
+				\(y_i\gets0\)\tcp*{\(0\cdots0\parallel y_{m-1}\cdots y_0\)}
+			}
+			\(k\gets 0\)\;
+			\For{\(i=0\) \KwTo \(n-1\)}{
+				\(k,z_i\gets\ADD^{\mathsf{XYk}}(x_i,y_i,k)\)\;
+			}
+			\(z_n\gets k\)\;
+			\eIf{\(z_n==1\)}{
+				\Return \((-1)^\mathsf{sign}\sum_{i=0}^nz_iW^i\)\;
+			}{
+				\Return \((-1)^\mathsf{sign}\sum_{i=0}^{n-1}z_iW^i\)\;
+			}
+		}
+	\end{algorithm}
+	\vspace{20pt}
+	\begin{lstlisting}[style=C, caption={},captionpos=t]
+void add_core_xyz(BINT* ptrX, BINT* ptrY, BINT** pptrZ) {
+	BINT* ptrZ = *pptrZ;
+	
+	int n = ptrX->wordlen;
+	int m = ptrY->wordlen;
+	
+	WORD k = 0;
+	WORD res = 0;
+	WORD carry = 0;
+	
+	// Loop until the shorter of the two numbers ends
+	int i;
+	for (i = 0; i < m; i++) {
+		// add_xyk(ptrX->val[i], ptrY->val[i], k, &res, &carry);
+		add_carry(ptrX->val[i], ptrY->val[i], k, &carry, &res);
+		ptrZ->val[i] = res;
+		k = carry;
+	}
+	// Continue adding any remaining X values with the carry, since Y is shorter
+	for (; i < n; i++) {
+		res = ptrX->val[i] + k;
+		carry = (res < k);
+		ptrZ->val[i] = res;
+		k = carry;
+	}
+	
+	if(k) {
+		ptrZ->val[n] = k;
+		ptrZ->wordlen = n+1;
+	} else {
+		ptrZ->wordlen = n;
+	}
+	
+	refine_BINT(ptrZ);
+	//return Z;
+}
+	\end{lstlisting}
+	\vspace{20pt}
+	\begin{algorithm}[H]
+		\caption{\(\ADD(X,Y)\)}
+		\KwIn{\(X,Y\in\Z\)}
+		\KwOut{\(X+Y\in\Z\)}
+		\Fn{$\ADD(X,Y)$}{
+			\Comment{line 2-7 are optional}
+			\If{$X=0$}{
+				\Return \(Y\)\;
+			}\If{\(Y=0\)}{
+				\Return \(X\)\;
+			}
+			\Comment{*****************************************************************}
+			\If{\(X>0\ \&\&\ Y<0\)}{
+				\Return \(\SUB(X,\abs{Y})\)\;
+			}\If{\(X<0\ \&\&\ Y>00\)}{
+				\Return \(\SUB(Y,\abs{X})\)\;
+			}
+			\Comment{*****************************************************************}
+			\eIf{\(\wordlen(X)\geq\wordlen(Y)\)}{
+				\Return \(\ADD^{\mathsf{XY}}(X,Y)\)\;
+			}{\Return \(\ADD^{\mathsf{XY}}(Y,X)\)\;}
+		}
+	\end{algorithm}
+
+	\newpage
+	\section{Subtraction}
+	\subsection{Memory for Subtraction}
+	\begin{tcolorbox}[colframe=procolor,title={\color{white}\bf Upper and Lower Bound of Subtraction}]
+		\begin{proposition}
+			Let $A$ and $B$ are \(n\)-word and \(m\)-word strings, respectively, \ie, \[
+			A\in[W^{n-1},W^{n}-1],\quad B\in[W^{m-1},W^m-1].
+			\] Then, for \(A\geq B\), \[
+			0\leq A-B<A<W^n.
+			\]
+		\end{proposition}
+	\end{tcolorbox}
+
+	\subsection{Sing-Word Subtraction}
+	
+	\begin{example}
+		\ \begin{lstlisting}[style=C, caption={},captionpos=t]
+#include<stdio.h>
+
+typedef unsigned int u32;
+
+int main() {
+	u32 x = 0xffffffff;
+	u32 y = 0x12345678;
+	u32 z = y - x; //z1 <- y - x mod 2^(32)
+	printf("%08x - %08x = %08x\n", y, x, z2);
+	
+	return 0;
+}
+/*
+Output:
+12345678 - ffffffff = 12345679
+*/
+		\end{lstlisting}
+		\begin{align*}
+			\texttt{0x12345678}\boxminus\texttt{0xffffffff} &= (\texttt{0x12345678} - \underbrace{\texttt{0xffffffff}}_{2^{32}-1}) \bmod 2^{32}\\
+			&=(\texttt{0x12345678} - (-\texttt{0x01})) \bmod 2^{32}\\
+			&=\texttt{0x12345679} \bmod 2^{32}\\
+			&=\texttt{0x12345679}.
+		\end{align*} Note that \(-2^{32}+\texttt{0x12345679} = -\texttt{0xedcba987}\).
+	\end{example}
+	
+	\begin{tcolorbox}[colframe=procolor,title={\color{white}\bf Single-Word Subtraction \(A-B\)}]
+		\begin{proposition}
+			Let \(A,B\in[0,W-1]\). \begin{enumerate}[(1)]
+				\item \(A-B\in[-(W-1), W-1]\subseteq(-W,W)\)
+				\item \(\displaystyle A-B=\begin{cases}
+					A-B &:A\geq B,\\
+					-(B-A)=-W+(\underbrace{W-(B-A)}_{A\boxminus B\in[0,W-1]}) &:A<B.
+				\end{cases}\)
+			\end{enumerate}
+		\end{proposition}
+	\end{tcolorbox}
+
+	\begin{algorithm}[H]
+		\caption{Single Word Subtraction}
+		\KwIn{Single-word strings \(X,Y\in[0,W-1]\)}
+		\KwOut{$q\in\set{0,1}$ and $r\in[0,W-1]$ s.t. \(X-Y=-qW+r\)}
+		\(q\gets 0\)\;
+		\(r\gets X\boxminus Y\)\tcp*{$r\gets X-Y$ in C}
+		\(q\gets(X<Y)\)\;
+		\Return \(q,r\)\;
+	\end{algorithm}
+	\vspace{8pt}
+	\begin{tcolorbox}[colframe=procolor,title={\color{white}\bf Single-Word Subtraction with Borrow \(A-b-B\)}]
+		\begin{proposition}
+			Let \(A,B\in[0,W-1]\) and \(b\in\set{0,1}\). \begin{enumerate}[(1)]
+				\item \(-W\leq A-b-B<W\)
+				\item \(\displaystyle\floor*{\frac{A-b-B}{W}}\in\set{-1,0}\).
+				\item \(-W\leq A-b-B<0\implies A-b-B=-W+(A\boxminus b\boxminus B)\).
+				\item \(A-b<0\implies A-b=-1=-W+(W-1)\implies(A\boxminus b)-B\in[0,W-1]\).
+			\end{enumerate}
+		\end{proposition}
+	\end{tcolorbox}
+	\begin{proof}
+		\begin{enumerate}[(1)]
+			\item 
+			\item By (1), it holds.
+			\item \(A\boxminus b\boxminus B=A-b-B+W\)
+			\item \((A\boxminus b)-B=(W-1)-B\in[0,W-1] \)
+		\end{enumerate}
+	\end{proof}
+
+	\begin{algorithm}[H]
+		\caption{\(\SUB^{\mathsf{XbY}}(X,b,Y)\)}
+		\KwIn{Single-word strings \(X,Y\in[0,W-1]\) and borrow \(b\in\set{0,1}\)}
+		\KwOut{$q\in\set{0,1}$ and $r\in[0,W-1]$ s.t. \(X-b-Y=-qW+r\)}
+		\Fn{$\SUB^{\mathsf{XbY}}(X,b,Y)$}{
+			$q\gets 0$\;
+			\(r\gets X\boxminus b\)\;
+			\(q\gets (X<b)\)\;
+			\(q\gets q+(r<Y)\)\;
+			\(r\gets r\boxminus Y\)\;
+			\Return \(q,r\)\;
+		}
+	\end{algorithm}
+
+	\subsection{Multi-Precision Subtraction}
+	
+	\begin{algorithm}[H]
+		\caption{\(\SUB^{\mathsf{XY}}(X,Y)\)}
+		\KwIn{\(X=\sum_{i=0}^{n-1}x_iW^i\) and \(Y= \sum_{i=0}^{m-1}y_iW^i\), where \(a_i,b_i\in[0,W-1]\) and \(X\geq Y>0\).}
+		\KwOut{\(Z=X-Y=\sum_{i=0}^{l-1}z_iW^i\)}
+		\Fn{$\SUB^{\mathsf{XY}}(X,Y)$}{
+			\For{\(i=m\) \KwTo \(n-1\)}{
+				\(y_i\gets0\)\tcp*{\(0\cdots0\parallel y_{m-1}\cdots y_0\)}
+			}
+			\(b\gets 0\)\;
+			\For{\(i=0\) \KwTo \(n-1\)}{
+				\(b,z_i\gets\SUB^{\mathsf{XbY}}(x_i,b,y_i)\)\;
+			}
+			\(l\gets\min\set{i:z_{n-1}=z_{n-2}=\cdots=z_i=0}\)\;
+			\Return \(\sum_{i=0}^{l-1}z_iW^i\)\;
+		}
+	\end{algorithm}
+	
+	\begin{algorithm}[H]
+		\caption{\(\SUB(X,Y)\)}
+		\KwIn{\(X,Y\in\Z\)}
+		\KwOut{\(X-Y\in\Z\)}
+		\Fn{$\SUB(X,Y)$}{
+			\If{$X=0$}{
+				\Return \(-Y\)\;
+			}\If{\(Y=0\)}{
+				\Return \(X\)\;
+			}
+			\If{\(X=Y\)}{\Return \(0\)\;}
+			\Comment{}
+			\uIf{\(0<Y\leq X\)}{\Return \(\SUB^{\mathsf{XY}}(X,Y)\)}
+			\uElseIf{\(0<X<Y\)}{
+				\Return \(-\SUB^{\mathsf{XY}}(Y,X)\)\;
+			}\End
+		
+			\uIf{\(0>X\geq Y\)}{
+				\Return \(\SUB^{\mathsf{XY}}(\abs{Y},\abs{X})\)\;
+			}\uElseIf{\(0>Y>X\)} {
+				\Return \(-\SUB^{\mathsf{XY}}(\abs{X},\abs{Y})\)\;
+			}\End
+			
+			\eIf{\(X>0\ \&\&\ Y<0\)}{
+				\Return \(\ADD(X,\abs{Y})\)\;
+			}{
+				\Return \(-\ADD(\abs{X},Y)\)
+			}
+		}
+	\end{algorithm}
+	\newpage
+	\chapter{Multiplication}
+	\begin{note}[\bf Memory for Addition]
+		\[\begin{cases}
+			A\in\intco{W^{n-1},W^{n}}\\
+			B\in\intco{W^{n-1},W^{n}}
+		\end{cases}\implies\wordlen(AB)\in\set{n+m-1, n+m}
+		\]
+		\begin{proof}
+			Since \begin{align*}
+				W^{n-1}\cdot W^{m-1}\leq&\ AB<W^n\cdot W^m,\\
+				W^{n+m-2}\leq&\ AB<W^{n+m},
+			\end{align*} we have $AB\in\intco{W^{n+m-2}, W^{n+m}}=\intco{W^{n+m-2}, W^{n+m-1}}\cup\intco{W^{n+m-1}, W^{n+m}}$. Thus, either \[
+			\wordlen(AB)=n+m-1\quad\text{or}\quad\wordlen(AB)=n+m.
+			\]
+		\end{proof}
+	\end{note}
+
+	\section{Single-Word Multiplication: \texttt{mul\_xyz}}
+	Note that \[
+	P,Q\in\intco{0,W^{1/2}}\implies PQ\in\intco{0,W}.
+	\]
+	Let $A,B$ satisfy the following: \[
+	\begin{cases}
+		A = A_1W^{1/2}+A_0\\
+		B = B_1W^{1/2}+B_0
+	\end{cases},\ \text{where}\ A_i, B_i\in\intco{0,W^{1/2}}\ \text{for $i=0,1$}.
+	\]
+	The product $AB$ can be calculated using four $w/2$-bit integer multiplication operations:
+	\begin{center}
+	\begin{minipage}{.4\textwidth}\centering
+		\begin{tabular}{|c|c|c|c|}
+			\multicolumn{2}{l}{} & \multicolumn{2}{l}{$A_1\parallel A_0$}\\
+			\multicolumn{2}{l}{$\times$} & \multicolumn{2}{l}{$B_1\parallel B_0$} \\ \specialrule{1.5pt}{1pt}{1pt}
+			\hline
+			\hspace{15pt} & \hspace{15pt} & \multicolumn{2}{c|}{$A_0B_0$}\\ \hline
+			 & \multicolumn{2}{c|}{$A_1B_0$} & \hspace{10pt} \\ \hline
+			 & \multicolumn{2}{c|}{$A_0B_1$} & ~ \\ \hline
+			\multicolumn{2}{|c|}{$A_1B_1$} & \hspace{15pt} & ~ \\ \hline
+		\end{tabular}
+	\end{minipage}
+	\begin{minipage}{.4\textwidth}
+		\begin{align*}
+			AB&=(A_1W^{1/2}+A_0)(B_1W^{1/2}+B_0)\\
+			&=(A_1B_1)W + A_0B_0 + (A_1B_0 + A_0B_1)W^{1/2}\\
+			&=((A_1B_1\ll w) + A_0B_0) + ((A_1B_0+A_0B_1)\ll w/2).
+		\end{align*}
+	\end{minipage}
+	\end{center}
+
+	\begin{algorithm}[H]
+		\caption{Single-Word Multiplication}
+		\BlankLine
+		\KwIn{\(X,Y\in\intco{0,W}\)}
+		\KwOut{\(Z=XY\in\intco{0,W^2}\)}
+		\BlankLine
+		\Fn{$\MUL^{XY}(X,Y)$}{
+			$X_1,X_0\gets X_{[w:w/2]},X_{[w/2:0]}$\;
+			$Y_1,Y_0\gets Y_{[w:w/2]},Y_{[w/2:0]}$\;
+			$T_1,T_0\gets X_1Y_0, X_0Y_1$\tcp*{$T_1,T_0\in\intco{0,W}$}
+			\BlankLine
+			$T_0\gets T_1\boxplus T_0$\;
+			$T_1\gets T_0< T_1$\tcp*{$T_1W+T_0=X_1Y_0+X_0Y_1$, where $T_1\in\set{0,1}$ is carry}
+			\BlankLine
+			$Z_1,Z_0\gets X_1Y_1,X_0Y_0$\tcp*{$Z_1,Z_0\in\intco{0,W}$}
+			$T\gets Z_0$\;
+			\BlankLine
+			$Z_0\gets Z_0\boxplus(T_0\ll w/2)$\;
+			\Comment{$Z_0=\sbr{X_0Y_0 + (X_1Y_0+X_0Y_1)2^{w/2}}\bmod 2^w$}
+			$Z_1\gets Z_1 + (T_1\ll w/2) + (T_0\gg w/2) + (Z_0<T)$\tcp*{$Z_1\in\intco{0,W}$}
+			\Comment{$Z_1=X_1Y_1 + (T_0<T_1)2^{w/2} + \floor*{T_0/2^{w/2}} + $ (carry in line 9)}
+			\BlankLine
+			\Return $(Z_1\ll w) + Z_0$\tcp*{$Z\gets Z_1\parallel Z_0\in\intco{0,W^2}$}
+		}
+	\end{algorithm}
+	\ \\
+	\begin{lstlisting}[style=C, caption={},captionpos=t]
+void mul_xyz(WORD valX, WORD valY, BINT** pptrZ) {
+	if (!pptrZ || !*pptrZ || !(*pptrZ)->val) { return; }
+	
+	int half_w = WORD_BITLEN / 2; // if w=32, half_w = 16 = 2^4
+	WORD MASK = (1 << half_w) - 1;
+	
+	// Split the WORDs into halves
+	WORD X0 = valX & MASK; WORD X1 = valX >> half_w;
+	WORD Y0 = valY & MASK; WORD Y1 = valY >> half_w;
+	// Cross multiplication
+	WORD T0 = X0 * Y1; WORD T1 = X1 * Y0;
+	T0 = T0 + T1;
+	T1 = T0 < T1; // overflow
+	// Direct multiplication
+	WORD Z0 = X0 * Y0; WORD Z1 = X1 * Y1;
+	// Adjust for overflows
+	WORD T = Z0;
+	Z0 += (T0 << half_w);
+	Z1 += (T1 << half_w) + (T0 >> half_w) + (Z0 < T);
+	// Set results
+	(*pptrZ)->val[0] = Z0;
+	(*pptrZ)->val[1] = Z1;
+}
+	\end{lstlisting}
+
+	\section{Multi-Precision Multiplication}
+
+	\begin{table}[h!]\centering{\renewcommand{\arraystretch}{1.5} 
+		\begin{tabularx}{\textwidth}{XXc}
+			\toprule[1.2pt]
+			$\MUL^{\mathsf{Core}}$ & Computational Complexity & Year\\
+			\hline
+			TextBook & $O(n^2)$ & -\\
+			Karatsuba & $O(n^{\log_23})=O(n^{1.585})$ & 1960\\
+			Toom-Cook & $O(n^{\log_35})=O(n^{1.465})$ & 1963\\
+			\bottomrule[1.2pt]
+		\end{tabularx}}
+	\end{table}
+	\iffalse
+	\begin{algorithm}[H]
+		\caption{$\MUL(X,Y)$}
+		\BlankLine
+		\KwIn{\(X,Y\in\Z\)}
+		\KwOut{\(Z=XY\in\Z\)}
+		\BlankLine
+		\Fn{$\MUL(X,Y)$}{
+			\If{$X=0$ or $Y=0$}{ \Return $0$ }
+			\If{$X=\pm 1$}{ \Return $\pm Y$ }
+			\If{$Y=\pm 1$}{ \Return $\pm X$ }
+			$Z\gets\MUL^{\mathsf{Core}}\of{\abs{X},\abs{Y}}$\;
+			\Return $(-1)^{\mathsf{sgn}(X)+\mathsf{sgn}(Y)}Z$\;
+		}
+	\end{algorithm}
+	\fi
+	\subsection{Textbook}
+	Let $\begin{cases}
+		A=A_{n-1}\parallel\cdots\parallel A_0=\sum_{i=0}^{n-1}A_iW^i\\
+		B=B_{m-1}\parallel\cdots\parallel B_0=\sum_{j=0}^{m-1}B_jW^j
+	\end{cases}$ with $A_i, B_i\in\intco{0,W}$. Then 
+	\begin{center}
+		\begin{minipage}{.4\textwidth}
+			\begin{tabular}{|l|l|l|l|l|l|}
+				\multicolumn{3}{l}{} & \multicolumn{3}{l}{$A_2\parallel A_1\parallel A_0$} \\
+				\multicolumn{3}{l}{$\times$} & \multicolumn{3}{l}{$B_2\parallel B_1\parallel B_0$} \\
+				\specialrule{1.5pt}{1pt}{1pt}
+				\hline
+				\hspace{15pt} & \hspace{15pt} & \hspace{15pt} & \hspace{15pt} & \multicolumn{2}{c|}{$A_0B_0$} \\ \hline
+				~ & ~ & ~ & \multicolumn{2}{c|}{$A_1B_0$} & ~ \\ \hline
+				~ & ~ & \multicolumn{2}{c|}{$A_2B_0$} & \hspace{15pt} & \hspace{15pt} \\ \hline\hline
+				~ & ~ & ~ & \multicolumn{2}{c|}{$A_0B_1$} & ~ \\ \hline
+				~ & ~ & \multicolumn{2}{c|}{$A_1B_1$} & ~ & ~ \\ \hline
+				~ & \multicolumn{2}{c|}{$A_2B_1$} & ~ & ~ & ~ \\ \hline\hline
+				~ & ~ & \multicolumn{2}{c|}{$A_0B_2$} & ~ & ~ \\ \hline
+				~ & \multicolumn{2}{c|}{$A_1B_2$} & ~ & ~ & ~ \\ \hline
+				\multicolumn{2}{|c|}{$A_2B_2$} & ~ & ~ & ~ & ~ \\ \hline
+			\end{tabular}
+		\end{minipage}
+		\begin{minipage}{.4\textwidth}
+		\begin{align*}
+			C=AB&=\of{\sum_{i=0}^{n-1}A_iW^i}\of{\sum_{j=0}^{m-1}B_jW^j}\\
+			&=\sum_{j=0}^{m-1}\of{\sum_{i=0}^{n-1}(A_iB_j)W^{i+j}}\in\intco{0,W^{n+m}}.
+		\end{align*}
+		\end{minipage}
+	\end{center}
+	\vspace{20pt}
+	\begin{algorithm}[H]
+		\caption{Textbook Multiplication}
+		\BlankLine
+		\KwIn{\(X=\sum_{i=0}^{n-1}x_iW^i,Y=\sum_{j=0}^{m-1}y_jW^j\), where $x_i,y_i\in\intco{0,W}$}
+		\KwOut{\(Z=XY\in\intco{0,W^{n+m}}\)}
+		\BlankLine
+		\Fn{$\MUL^{\mathsf{Core}-\mathsf{TxtBk}}(X,Y)$}{
+			$Z\gets 0$\;
+			\For{$i=0$ \KwTo $n-1$}{
+				\For{$j=0$ \KwTo $m-1$}{
+					$T\gets x_iy_j$\;
+					$T\gets T\ll w(i+j)$\;
+					$Z\gets \ADD^{\mathsf{Core}}(Z,T)$\;
+				}
+			}\Return $Z$\;
+		}
+	\end{algorithm}
+	
+	\subsection{Improved Textbook}
+	Let $n=2p$ and $m=2q$, and let $\begin{cases}
+		A=A_{2p-1}\parallel\cdots\parallel A_0=\sum_{i=0}^{2p-1}A_iW^i\\
+		B=B_{2q-1}\parallel\cdots\parallel B_0=\sum_{j=0}^{2q-1}B_jW^j
+	\end{cases}$ with $A_i, B_i\in\intco{0,W}$. Then 
+	\begin{center}
+		\begin{minipage}{.45\textwidth}
+			\begin{tabular}{|l|l|l|l|l|l|l|l|}
+				\multicolumn{4}{l}{} & \multicolumn{4}{l}{$A_3\parallel A_2\parallel A_1\parallel A_0$} \\
+				\multicolumn{4}{l}{\textcolor{blue}{$\boldsymbol{\times}$}} & \multicolumn{4}{l}{$B_3\parallel B_2\parallel B_1\parallel B_0$} \\
+				\specialrule{1.5pt}{1pt}{1pt}
+				\hline
+				\hspace{15pt} & \hspace{15pt} & \hspace{15pt} & \hspace{15pt} & \multicolumn{2}{c|}{$A_2B_0$} & \multicolumn{2}{c|}{$A_0B_0$}\\ \hline\hline
+				&&&\multicolumn{2}{c|}{$A_3B_0$}& \multicolumn{2}{c|}{$A_1B_0$} &\\ \hline
+				&&&\multicolumn{2}{c|}{$A_2B_1$}& \multicolumn{2}{c|}{$A_0B_1$} &\\ \hline\hline
+				&&\multicolumn{2}{c|}{$A_3B_1$}&\multicolumn{2}{c|}{$A_1B_1$} & \hspace{15pt} &\\ \hline
+				&&\multicolumn{2}{c|}{$A_2B_2$}&\multicolumn{2}{c|}{$A_0B_2$} &&\\ \hline\hline
+				&\multicolumn{2}{c|}{$A_3B_2$}&\multicolumn{2}{c|}{$A_1B_2$}&&&\\ \hline
+				&\multicolumn{2}{c|}{$A_2B_3$}&\multicolumn{2}{c|}{$A_0B_3$}&&&\\ \hline\hline
+				\multicolumn{2}{|c|}{$A_3B_3$}&\multicolumn{2}{c|}{$A_1B_3$}& \hspace{15pt} & \hspace{15pt} & \hspace{15pt} & \hspace{15pt}\\ \hline
+			\end{tabular}
+		\end{minipage}$\longrightarrow$\quad
+		\begin{minipage}{.45\textwidth}
+			\begin{tabular}{|c|c|c|c|c|c|c|c|}
+				\multicolumn{4}{l}{} & \multicolumn{4}{l}{$A_3\parallel A_2\parallel A_1\parallel A_0$} \\
+				\multicolumn{4}{l}{\textcolor{red}{$\boldsymbol{\times}$}} & \multicolumn{4}{l}{$B_3\parallel B_2\parallel B_1\parallel B_0$} \\
+				\specialrule{1.5pt}{1pt}{1pt}
+				\hline
+				\multicolumn{2}{|c|}{$A_3B_3$}&\multicolumn{2}{c|}{$A_1B_3$} & \multicolumn{2}{c|}{$A_2B_0$} & \multicolumn{2}{c|}{$A_0B_0$}\\ \hline\hline
+				\hspace{15pt} & \hspace{15pt} & \hspace{15pt} & \multicolumn{2}{c|}{$A_3B_0$}& \multicolumn{2}{c|}{$A_1B_0$} &\\ \hline
+				&&&\multicolumn{2}{c|}{$A_2B_1$}& \multicolumn{2}{c|}{$A_0B_1$} &\\ \hline\hline
+				&&\multicolumn{2}{c|}{$A_3B_1$}&\multicolumn{2}{c|}{$A_1B_1$} & \hspace{15pt} &\\ \hline
+				&&\multicolumn{2}{c|}{$A_2B_2$}&\multicolumn{2}{c|}{$A_0B_2$} &&\\ \hline\hline
+				&\multicolumn{2}{c|}{$A_3B_2$}&\multicolumn{2}{c|}{$A_1B_2$}&&&\\ \hline
+				&\multicolumn{2}{c|}{$A_2B_3$}&\multicolumn{2}{c|}{$A_0B_3$}& \hspace{15pt} & \hspace{15pt} & \hspace{15pt}\\ \hline
+			\end{tabular}
+		\end{minipage}
+	\end{center}
+	\begin{align*}
+		AB=\of{\sum_{i=0}^{2p-1}A_iW^i}\of{\sum_{j=0}^{2q-1}B_jW^j}
+		&=\sum_{j=0}^{2q-1}\of{\sum_{i=0}^{2p-1}(A_iB_j)W^{i+j}}\\
+		&=\sum_{j=0}^{2q-1}\of{\sum_{k=0}^{p-1}(A_{2k}B_j)W^{2k+j}+
+			\sum_{k=0}^{p-1}(A_{2k+1}B_j)W^{2k+1+j}}\\
+		&=\sum_{j=0}^{2q-1}\of{\of{\sum_{k=0}^{p-1}(A_{2k}B_j)W^{2k}}W^j+
+			\of{\sum_{k=0}^{p-1}(A_{2k+1}B_j)W^{2k}}W^{j+1}}\\
+		&=\textcolor{blue}{\sum_{j=0}^{2q-1}\of{\of{\sum_{k=0}^{p-1}(A_{2k}B_j)W^{2k}}+
+			\of{\sum_{k=0}^{p-1}(A_{2k+1}B_j)W^{2k}}W}W^j}\\
+		&=\textcolor{red}{\sum_{j=0}^{2q-1}\of{\of{\sum_{k=0}^{p-1}(A_{2k}B_j)W^{2k}}+
+		\of{\sum_{k=0}^{p-1}(A_{2k+1}B_j)W^{2k}}W}W^j}.
+	\end{align*}
+	\begin{algorithm}[H]
+		\caption{Improved Textbook Multiplication}
+		\BlankLine
+		\KwIn{\(X=\sum_{i=0}^{n-1}x_iW^i,Y=\sum_{j=0}^{m-1}y_jW^j\), where $n=2p$, $m=2q$, and $x_i,y_i\in\intco{0,W}$}
+		\KwOut{\(Z=XY\in\intco{0,W^{n+m}}=\intco{0,W^{2(p+q)}}\)}
+		\BlankLine
+		\Fn{$\MUL^{\mathsf{Core}-\mathsf{ImpTxtBk}}(X,Y)$}{
+			$Z\gets 0$\;
+			\For{$j=0$ \KwTo $2q-1$}{
+				$T_0,T_1\gets \texttt{NULL}, \zero^w$\;
+				\For{$k=0$ \KwTo $p-1$}{
+					$T_0\gets x_{2k}y_j\parallel T_0$\;
+					$T_1\gets x_{2k+1}y_j\parallel T_1$\;
+				}
+				$T\gets\ADD^{\core}(T_1,T_0)$\tcp*{$\wordlen(T_1)\geq\wordlen(T_0)$}
+				$T\gets T\ll wj$\;
+				$Z\gets\ADD^{\core}(Z,T)$\tcp*{$\wordlen(Z)=\wordlen(T)$}
+			}\Return $Z$\;
+		}
+	\end{algorithm}
+
+	\begin{table}[h]
+		\centering{\renewcommand{\arraystretch}{1.3} 
+		\begin{tabular}{|c|c|c|c|c|c|}
+			\hline
+			\( j \) & \( k \) & \( T_0 \) & \( T_1 \) & $\wordlen(T_0)$ & $\wordlen(T_1)$\\
+			\hline
+			\hline
+			\multirow{5}{*}{0} & 0 & \( x_0y_0\parallel\texttt{NULL} \) & \( x_1y_0\parallel\zero^w \) & $W^2$ & $W^2W$\\
+			 & 1 & \( x_2y_0\parallel x_0y_0 \) & \( x_3y_0\parallel x_1y_0\parallel\zero^w \) & $W^2W^2$& $W^2W^2W$\\
+			 & 2 & \( x_4y_0\parallel x_2y_0\parallel x_0y_0 \) & \( x_5y_0\parallel x_3y_0\parallel x_1y_0\parallel\zero^w \) & $W^{2\cdot 3}$& $W^{2\cdot 3 +1}$\\
+			 & \vdots & \vdots & \vdots & \vdots & \vdots \\
+			 & \( p-1 \) & \( x_{2(p-1)}y_0\parallel \cdots \parallel x_0y_0\) & \( x_{2p-1}y_0\parallel \cdots\parallel \zero^w \) & $W^{2p}$ & $W^{2p+1}$\\
+			\hline\hline
+			\multirow{5}{*}{1} & 0 & \( x_0y_1\parallel\texttt{NULL} \) & \( x_1y_1\parallel\zero^w \) & $W^2$ & $W^2W$\\
+			 & 1 & \( x_2y_1\parallel x_1y_1 \) & \( x_3y_1\parallel x_1y_1\parallel\zero^w \) & $W^2W^2$& $W^2W^2W$\\
+			 & 2 & \( x_4y_1\parallel x_2y_1\parallel x_0y_1 \) & \( x_5y_1\parallel x_3y_1\parallel x_1y_1\parallel\zero^w \) & $W^{2\cdot 3}$& $W^{2\cdot 3 +1}$\\
+			 & \vdots & \vdots & \vdots & \vdots & \vdots \\
+			 & \( p-1 \) & \( x_{2(p-1)}y_1\parallel \cdots \parallel x_0y_1\) & \( x_{2p-1}y_1\parallel \cdots\parallel \zero^w \) & $W^{2p}$ & $W^{2p+1}$\\
+			\hline\hline
+			\vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+			\hline\hline
+			\multirow{5}{*}{$2q-1$} & 0 & \( x_0y_{2q-1}\parallel\texttt{NULL} \) & \( x_1y_{2q-1}\parallel\zero^w \) & $W^2$ & $W^2W$\\
+			 & 1 & \( x_2y_{2q-1}\parallel x_1y_{2q-1} \) & \( x_3y_{2q-1}\parallel x_1y_{2q-1}\parallel\zero^w \) & $W^2W^2$& $W^2W^2W$\\
+			 & 2 & \( x_4y_{2q-1}\parallel x_2y_{2q-1}\parallel x_1y_{2q-1} \) & \( x_5y_{2q-1}\parallel \cdots\parallel\zero^w \) & $W^2W^2$& $W^2W^2W$\\
+			 & \vdots & \vdots & \vdots & \vdots & \vdots \\
+			 & \( p-1 \) & \( x_{2(p-1)}y_{2q-1}\parallel \cdots \parallel x_0y_{2q-1}\) & \( x_{2p-1}y_{2q-1}\parallel \cdots\parallel \zero^w \) & $W^{2p}$ & $W^{2p+1}$\\
+			\hline
+		\end{tabular}}
+		\caption{Values of \( T_0 \) and \( T_1 \) for different \( j \) and \( k \)}
+	\end{table}
+
+
+	\subsection{Karatsuba (\textcolor{red}{$\star$})}
+	\begin{note}[Divide and Conquer]
+		\begin{align*}
+			AB&=(A_1W^l +A_0)(B_1W^l+B_0)\\
+			&=\of{(A_1B_1)W^{2l}+(A_0B_0)}+(A_0B_1+A_1B_0)W^l\\
+			&=\of{(A_1B_1)W^{2l}+(A_0B_0)}+\of{(A_0-A_1)(B_1-B_0)+A_0B_0+A_1B_1}W^l.
+		\end{align*}
+	\end{note}
+	\begin{note}
+		$A_0B_1+A_1B_0=(A_0+A_1)(B_1+B_0)-A_0B_0-A_1B_1$ but $(A_0+A_1)(B_1+B_0)\in\intco{0,W^{2(l+1)}}$.
+	\end{note}
+	\vspace{20pt}
+	\begin{tcolorbox}[colframe=procolor,title={\color{white}\bf Time Complexity of Karatsuba}]
+		\begin{proposition}
+			The Karatsuba multiplication of n-word integers has a computational complexity of 
+			$O(n\log_23)$ based on a 1-word multiplication operation.
+		\end{proposition}
+	\end{tcolorbox}
+	\vspace{20pt}
+	\begin{algorithm}[H]
+		\caption{Karatsuba Multiplication}
+		\BlankLine
+		\KwIn{\(\texttt{flag}, X=\sum_{i=0}^{n-1}x_iW^i\in\intco{0,W^n},Y=\sum_{j=0}^{m-1}y_jW^j\in\intco{0,W^m}\), where $x_i,y_i\in\intco{0,W}$}
+		\KwOut{\(Z=XY\in\intco{0,W^{n+m}}\)}
+		\BlankLine
+		\Fn{$\MUL^{\mathsf{Core}-\mathsf{Krtsb}}(X,Y)$}{
+			\Comment{$n=\wordlen(X)$ and $m=\wordlen(Y)$}
+			\If{$\texttt{flag}\geq \min(n,m)$}{
+				\Return $\MUL^{\mathsf{Core}-\mathsf{ImpTxtBk}}(X,Y)$\tcp*{Improved Textbook Multiplication}
+			}
+			\BlankLine
+			$l\gets\max(n,m+1) \gg 1$\;
+			\BlankLine
+			$X_1,X_0\gets X\gg lw, X\bmod 2^{lw}$\tcp*{$X_i\in\intco{0,W^l}$}
+			$Y_1,Y_0\gets X\gg lw, Y\bmod 2^{lw}$\tcp*{$Y_i\in\intco{0,W^l}$}
+			\BlankLine
+			$T_1,T_0\gets\MUL^{\mathsf{Core}-\mathsf{Krtsb}}(X_1,Y_1),\MUL^{\mathsf{Core}-\mathsf{Krtsb}}(X_0,Y_0)$\tcp*{$T_i\in\intco{0,W^{2l}}$}
+			$Z\gets (T_1\ll 2lw)+T_0$\tcp*{$Z=T_1\parallel T_0\in\intco{0,W^{4l}}$}
+			\BlankLine
+			$S_1,S_0\gets\SUB(X_0,X_1),\SUB(Y_1,Y_0)$\;
+			$S\gets(-1)^{\mathsf{sgn}(S_1)\oplus\mathsf{sgn}(S_2)}\MUL^{\mathsf{Core}-\mathsf{Krtsb}}(\abs{S_1},\abs{S_0})$\;
+			$S\gets\ADD(S,T_1)$\;
+			$S\gets\ADD(S,T_0)$\tcp*{$S\geq 0$}
+			$S\gets S\ll lw$\;
+			\BlankLine
+			$Z\gets\ADD(Z,S)$\tcp*{$R\gets\ADD^{\core}(Z,S)$};
+			\Return $Z$\;
+		}
+	\end{algorithm}
+	\vspace{20pt}
+\begin{lstlisting}[style=sage, caption={Karatsuba C ver.},captionpos=t]
+BINT* Mul_K(BINT* a, BINT* b) {
+	int n = floor(lenBits(a) / w) + 1;
+	int m = floor(lenBits(b) / w) + 1;
+	if (THRESHOLD >= (n < m ? n : m)) {
+		// TODO: Simple multiplication (using double-loop and adding results) 
+		return NULL;  // placeholder
+	}
+	
+	int l = (n > m ? n : m) + 1;
+	l >>= 1;
+	int lw = l * w;
+	
+	// Splitting 'a' and 'b' into 'a1', 'a0', 'b1', 'b0' based on 'lw'
+	// This code assumes w is a power of 2, e.g., 8, 16, 32
+	BINT* a1 = shiftLeft(a, -lw);  // Equivalent to right shift by lw bits
+	BINT* a0 = createBINT(a->wordlen);
+	for (int i = 0; i < l && i < a->wordlen; i++) {
+		a0->val[i] = a->val[i];
+	}
+	
+	BINT* b1 = shiftLeft(b, -lw);  // Equivalent to right shift by lw bits
+	BINT* b0 = createBINT(b->wordlen);
+	for (int i = 0; i < l && i < b->wordlen; i++) {
+		b0->val[i] = b->val[i];
+	}
+	
+	// Recursive Karatsuba steps
+	BINT* t1 = Mul_K(a1, b1);
+	BINT* t0 = Mul_K(a0, b0);
+	
+	BINT* s1 = subtractBINT(a0, a1);
+	BINT* s0 = subtractBINT(b1, b0);
+	
+	bool sign = s1->sign ^ s0->sign;  // Calculate overall sign
+	
+	BINT* s = Mul_K(s1, s0);
+	s->sign = sign;
+	
+	// Reconstructing the result
+	BINT* t1Shifted = shiftLeft(t1, 2 * lw);
+	BINT* sShifted = shiftLeft(s, lw);
+	
+	BINT* r1 = addBINT(t1Shifted, t0);
+	BINT* r = addBINT(r1, sShifted);
+	
+	freeBINT(a1); freeBINT(a0); freeBINT(b1); freeBINT(b0);
+	freeBINT(t1); freeBINT(t0); freeBINT(s1); freeBINT(s0);
+	freeBINT(t1Shifted); freeBINT(sShifted); freeBINT(r1);
+	
+	return r;
+}
+\end{lstlisting}
+\newpage
+\begin{lstlisting}[style=sage, caption={Karatsuba C ver.},captionpos=t]
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+#define w 8
+#define WORD uint32_t
+#define K 1024
+#define THRESHOLD 10
+
+typedef struct {
+	bool sign;
+	int wordlen;
+	WORD* val;
+} BINT;
+
+BINT* createBINT(int len) {
+	BINT* b = (BINT*)malloc(sizeof(BINT));
+	b->sign = false;
+	b->wordlen = len;
+	b->val = (WORD*)calloc(len, sizeof(WORD));
+	return b;
+}
+
+void freeBINT(BINT* b) {
+	free(b->val);
+	free(b);
+}
+
+int lenBits(BINT* a) {
+	int lastWordIdx = a->wordlen - 1;
+	while (lastWordIdx >= 0 && a->val[lastWordIdx] == 0)
+	lastWordIdx--;
+	
+	if (lastWordIdx == -1)
+	return 0;
+	
+	WORD lastWord = a->val[lastWordIdx];
+	return lastWordIdx * w + (int)log2(lastWord) + 1;
+}
+
+// Shifts BINT to left by 'bits' bits
+BINT* shiftLeft(BINT* a, int bits) {
+	int offset = bits / w;
+	int bitShift = bits % w;
+	
+	BINT* result = createBINT(a->wordlen + offset + 1);
+	
+	for (int i = 0; i < a->wordlen; i++) {
+		result->val[i + offset] = a->val[i] << bitShift;
+		if (i + offset - 1 >= 0) {
+			result->val[i + offset - 1] |= (a->val[i] >> (w - bitShift));
+		}
+	}
+	
+	return result;
+}
+
+// Helper functions for addition and subtraction of two positive BINTs
+BINT* addBINT(BINT* a, BINT* b) {
+	int len = (a->wordlen > b->wordlen) ? a->wordlen : b->wordlen;
+	BINT* result = createBINT(len + 1);  // +1 for potential carry
+	
+	WORD carry = 0;
+	for (int i = 0; i < len; i++) {
+		WORD sum = carry;
+		if (i < a->wordlen) sum += a->val[i];
+		if (i < b->wordlen) sum += b->val[i];
+		result->val[i] = sum;  // Only the last 'w' bits
+		carry = sum >> w;      // Overflow bits
+	}
+	result->val[len] = carry;
+	
+	return result;
+}
+
+BINT* subtractBINT(BINT* a, BINT* b) {
+	int len = a->wordlen;  // Assuming a >= b
+	BINT* result = createBINT(len);
+	
+	WORD borrow = 0;
+	for (int i = 0; i < len; i++) {
+		long diff = (long)a->val[i] - borrow;
+		if (i < b->wordlen) diff -= b->val[i];
+		if (diff < 0) {
+			diff += (1L << w);
+			borrow = 1;
+		} else {
+			borrow = 0;
+		}
+		result->val[i] = (WORD)diff;
+	}
+	
+	return result;
+}
+
+BINT* Mul_K(BINT* a, BINT* b) {
+	...
+}
+
+int main() {
+	// TODO: Test the functions with some sample BINTs and validate the multiplication.
+	return 0;
+}
+\end{lstlisting}
+\newpage
+\begin{lstlisting}[style=sage, caption={Karatsuba SAGE ver.},captionpos=t]
+reset ()
+
+w = 8
+
+def get_sign(a):
+	if a < 0:
+		return 1
+	return 0
+
+def Mul_K (a, b):
+	n = floor(len(a.bits())/w) + 1
+	m = floor(len(b.bits())/w) + 1
+	
+	if 10 >= min(n, m):
+	return a * b
+	l = (max(n,m)+1) >> 1
+	lw = l * w
+	a1 , a0 = a >> lw , a %(2^lw)
+	b1 , b0 = b >> lw , b %(2^lw)
+	t1 , t0 = Mul_K(a1, b1), Mul_K(a0, b0)
+	r = ( t1 << 2*lw ) + t0
+	s1, s0 = a0 - a1, b1 - b0
+	s = (-1)^(get_sign(s1) + get_sign(s0))\
+	* Mul_K(abs(s1), abs(s0))
+	s = s + t1
+	s = s + t0
+	s = s << lw
+	r = r + s
+	return r
+
+cnt = 0
+while cnt < 100:
+	print(cnt)
+	k = 1024
+	a = ZZ.random_element(2^k)
+	b = ZZ.random_element(2^k)
+	print(hex(a))
+\end{lstlisting}
+	\newpage
+	\chapter{Division}
+	\begin{note}[\bf Memory for Division]
+		content...
+	\end{note}
+	\section{Naive Division}
+	\section{Long Division}
+	\subsection{Binary Long Division}
+	\subsection{General Long Division (\textcolor{red}{$\star$})}
+	\chapter{EEA and Primality Test}
+	% End document
+\end{document}
